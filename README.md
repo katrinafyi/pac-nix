@@ -40,13 +40,17 @@ From this directory, run this as your normal user:
 ```bash
 nix-env -f ./pkgs.nix -iA aslp  # or bap-aslp or basil
 ```
-For the tools listed above, this should build
-and make available an executable ~/.nix-profile/bin.
+This will build and make available an executable in ~/.nix-profile/bin.
 
-Note that these will fetch each tool's repository
-at a particular hash and build from that revision.
+Note that these fetch each tool's repository
+at a particular hash and build at that revision.
 The next sections will discuss building a package
 from local sources and setting up development environments.
+
+To list installed package:
+```bash
+nix-env -q
+```
 
 To uninstall, use:
 ```bash
@@ -121,7 +125,10 @@ See also: [nix-shell manual page](https://nixos.org/manual/nix/stable/command-re
 
 ## miscellany
 
-[Nix pills](https://nixos.org/guides/nix-pills/) are useful 
+[search.nixos.org](https://search.nixos.org/)
+is very useful for searching package names.
+
+[Nix pills](https://nixos.org/guides/nix-pills/) are a good resource 
 if you wish to write your own packages.
 It is also a good idea to browse the [nixpkgs](https://github.com/NixOS/nixpkgs/) monorepo for similar derivations.
 
