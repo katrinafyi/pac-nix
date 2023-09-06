@@ -1,4 +1,4 @@
-{ stdenv, makeBinaryWrapper, bap-plugins, asli, asli-plugin }:
+{ stdenv, makeBinaryWrapper, bap-plugins, asli, bap-asli-plugin }:
   let _bap = (bap-plugins.override { plugins = [ asli-plugin ]; });
   in stdenv.mkDerivation {
     pname = "bap-aslp";
