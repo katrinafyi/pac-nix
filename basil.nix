@@ -2,14 +2,16 @@
 { lib,
   fetchFromGitHub,
   mkSbtDerivation,
-  jdk
+  makeBinaryWrapper,
+  jdk,
+  jre
 }:
 
 mkSbtDerivation rec {
   pname = "basil";
   version = src.rev;
 
-  nativeBuildInputs = [ jdk ];
+  nativeBuildInputs = [ jdk makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
@@ -23,12 +25,28 @@ mkSbtDerivation rec {
   buildPhase = ''
     javac -version
     sbt compile
+    sbt package
   '';
 
   installPhase = ''
-    ls -lR target/
-    # cp target/my-app.jar $out
-    touch $out
+    mkdir -p $out/bin
+    mkdir -p $out/share/target
+
+    JAR=wptool-boogie_3-0.0.1.jar
+    SCALA=scala-3.1.0
+
+    CP=$(sbt 'export runtime:fullClasspath')
+    CP=''${CP//$(pwd)/$out/share}
+
+    # copy jar to output directory
+    cp -r target/$SCALA $out/share/target
+
+    # make wrapper to run jar with appropriate arguments
+    makeBinaryWrapper "${jre}/bin/java" $out/bin/basil \
+      --append-flags -jar \
+      --append-flags "$out/share/target/$SCALA/$JAR" \
+      --append-flags -cp \
+      --append-flags "$CP"
   '';
 
   meta = {
