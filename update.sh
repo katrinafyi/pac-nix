@@ -52,9 +52,9 @@ update-github() {
     echo "$compare" | jq '{ html_url, status, ahead_by, behind_by, total_commits }' 
 
     if [[ $(echo "$compare" | jq .total_commits) != 0 ]]; then
-      echo "::warning title=Package outdated: $attr::$attr differs by $(echo "$compare" | jq .total_commits) commits ($(echo "$compare" | jq .html_url -r))"
+      echo "::warning title=Package outdated: $attr::$attr differs by $(echo "$compare" | jq .total_commits) commits from $branch ($(echo "$compare" | jq .permalink_url -r))"
     else
-      echo "::notice title=Package current: $attr::$attr differs by $(echo "$compare" | jq .total_commits) commits ($(echo "$compare" | jq .html_url -r))"
+      echo "::notice   title=Package current: $attr::$attr differs by $(echo "$compare" | jq .total_commits) commits from $branch ($(echo "$compare" | jq .permalink_url -r))"
     fi
   fi
 }
