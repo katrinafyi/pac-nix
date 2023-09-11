@@ -2,6 +2,8 @@ name: "Build Nix packages"
 on:
   pull_request:
   push:
+  schedule:
+  - cron: '0 0 * * *'
 jobs:
   nix:
     strategy:
