@@ -20,9 +20,13 @@ The **pkgs.nix** file defines the package set as
 the usual \<nixpkgs\> extended with those from this repo.
 
 For users of tools, the main packages are:
-- **aslp**: the ASLp partial evaluator with ARM's MRA,
-- **bap-aslp**: a version of BAP with an integrated ASLp plugin, and
-- **basil**: the Basil tool for analysis and transpilation to Boogie code.
+- **[aslp][]**: the ASLp partial evaluator with ARM's MRA,
+- **[bap-aslp][]**: a version of BAP with an integrated ASLp plugin, and
+- **[basil][]**: the Basil tool for analysis and transpilation to Boogie code.
+
+[aslp]: https://github.com/UQ-PAC/aslp
+[bap-aslp]: https://github.com/UQ-PAC/bap-asli-plugin
+[basil]: https://github.com/UQ-PAC/bil-to-boogie-translator
 
 These are each defined in a .nix file of the same name,
 then instantiated within overlay.nix and
@@ -31,9 +35,11 @@ built into a package set in pkgs.nix.
 ## usage
 
 To use these, you will need the Nix package manager
-from https://nixos.org/download (if able, a multi-user install is preferred).
+from [nixos.org][] (if able, a multi-user install is preferred).
 This should extend your PATH with ~/.nix-profile/bin which is where
 installed binaries will go.
+
+[nixos.org]: https://nixos.org/download
 
 Installing a package is straightforward.
 From this directory, run this as your normal user:
@@ -43,7 +49,7 @@ nix-env -f ./pkgs.nix -iA aslp  # or bap-aslp or basil
 This will build and make available an executable in ~/.nix-profile/bin.
 
 Note that these fetch each tool's repository
-at a particular hash and build at that revision.
+at a particular hash and build that revision.
 The next sections will discuss building a package
 from local sources and setting up development environments.
 
@@ -68,10 +74,10 @@ Otherwise, it will be useful to search as far as you can.
 ## local sources / customisation
 
 It is often useful to build a package from
-a copy of the repository on your local computer
+a clone of the repository on your local computer
 (e.g. to test your un-committed changes).
 
-To do this, we will need to override the _src_ attribute of
+To do this, we will override the _src_ attribute of
 the corresponding build package.
 In overlay.nix, some packages have commented overrideAttrs lines.
 These are the build packages which are wrapped into the user-facing tools.
