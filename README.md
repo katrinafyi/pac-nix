@@ -71,6 +71,25 @@ Nix is powerful but the documentation is of mixed quality.
 introduces some other commands.
 Otherwise, it will be useful to search as far as you can.
 
+### bonus: binary cache
+
+The GitHub Actions workflow maintains a custom binary cache for this repository.
+Using this cache, you can install these Nix packages while avoiding the need to run any compilations yourself.
+This can save a fair bit of bandwidth and time.
+
+The cache is served at [pac-nix.cachix.org](https://pac-nix.cachix.org/) and can be used like so:
+```bash
+# install the cachix tool
+nix-env -iA cachix -f https://cachix.org/api/v1/install
+# configure nix to use cache. you may need to trust your username
+cachix use pac-nix
+```
+Then, `nix-env` should draw from this cache in addition to the usual Nixpkgs cache. This will be visible in its output:
+```
+copying path '/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-ocaml4.14.1-bap-2.5.0' from 'https://cache.nixos.org'...
+copying path '/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bap-aslp-2.5.0' from 'https://pac-nix.cachix.org'...
+```
+
 ## local sources / customisation
 
 It is often useful to build a package from
