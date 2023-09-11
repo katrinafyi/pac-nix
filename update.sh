@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash --packages nix-update jq curl cacert git nix vim --pure --keep GITHUB_TOKEN --keep NIX_PATH
+#! nix-shell -i bash --packages nix-update curl jq cacert git nix vim --pure --keep GITHUB_TOKEN --keep NIX_PATH
 
 # updates the revision hash for each upstream package.
 # for each updated package, this checks the derivation can be built
@@ -19,11 +19,21 @@ do-upgrade() {
 PKGS=./pkgs.nix
 TMP=$(mktemp)
 
+PID=$$
 curl() {
+  TMP=$(mktemp)
   if ! [[ -z "$GITHUB_TOKEN" ]]; then
-    command curl -s --header "Authorization: Bearer $GITHUB_TOKEN" "$@"
+    command curl --fail-with-body -s --header "Authorization: Bearer $GITHUB_TOKEN" "$@" >$TMP
   else
-    command curl -s "$@"
+    command curl --fail-with-body -s "$@" >$TMP
+  fi
+  EXIT=$?
+  if [[ $EXIT != 0 ]]; then
+    echo "::error title=curl failure ($EXIT)::curl $@" >&2
+    cat $TMP >&2
+    kill -ABRT $PID
+  else 
+    cat $TMP
   fi
 }
 
@@ -79,5 +89,7 @@ update-github bap-asli-plugin UQ-PAC/bap-asli-plugin
 test-build bap-aslp
 
 update-github basil UQ-PAC/bil-to-boogie-translator
+
+update-github bap-uq-pac UQ-PAC/bap aarch64-pull-request-2
 
 rm -fv ./result

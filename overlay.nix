@@ -15,7 +15,7 @@ final: prev:
     bap-aslp = prev.callPackage ./bap-aslp.nix {};
 
     bap-uq-pac = prev.ocamlPackages.bap.overrideAttrs rec {
-      version = "uq-pac";
+      version = src.rev;
       src = prev.fetchFromGitHub {
         owner = "UQ-PAC";
         repo = "bap";
