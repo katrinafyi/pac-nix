@@ -129,6 +129,22 @@ tools to inherit the environment.
 
 See also: [nix-shell manual page](https://nixos.org/manual/nix/stable/command-ref/nix-shell).
 
+## updating packages
+
+Periodically, these Nix files will need to be updated with new changes from upstream.
+This involves updating the src attribute with the latest commit hash from each GitHub repository.
+
+Most of this is automated by a script:
+```bash
+export GITHUB_TOKEN=github_pat_11...  # not necessary but avoids rate limiting
+./update.sh
+```
+This will update the hash in each Nix file with the latest, then attempt to build the new packages.
+If successful, this will commit the changes.
+
+The basil derivation is more unstable since it relies on SBT to fetch its dependencies.
+The depsSha256 will need to be changed manually if the script fails at that point.
+
 ## miscellany
 
 [search.nixos.org](https://search.nixos.org/)
