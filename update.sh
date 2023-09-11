@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash --packages nix-update jq curl cacert git nix vim --pure --keep GITHUB_TOKEN
+#! nix-shell -i bash --packages nix-update jq curl cacert git nix vim --pure --keep GITHUB_TOKEN --keep NIX_PATH
 
 # updates the revision hash for each upstream package.
 # for each updated package, this checks the derivation can be built
