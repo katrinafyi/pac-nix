@@ -12,8 +12,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bap-asli-plugin";
-    rev = "6802ea4a2a39b8655dcc1833651011ee01018308";
-    sha256 = "sha256-INlPlm33Z+Fv04I+b5nROLRsCuthOzvf094WQC7nqrg=";
+    rev = "cfe67145faaf43b29e9e12d533cce34b95c28ed1";
+    sha256 = "sha256-CsdUjXHHVisfiTP2XGOHfm+Aa23KZep4IdgoYHQsnXg=";
   };
 
   buildInputs = [ asli ocamlPackages.bap ocamlPackages.findlib ];
