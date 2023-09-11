@@ -16,11 +16,11 @@ mkSbtDerivation rec {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "4046201adc5d48e53c88edafb13f167754344956";
-    sha256 = "sha256-oJZSEZgfWqE2um7xhZ1WqhuPze/FJGnWie1v4j9sKi4=";
+    rev = "e1b435acbd913fe1b33e9fbb3482f5e0ec3a836d";
+    sha256 = "sha256-Nfhf4GEf4p4sAmArjqm0KizAxQrUMWapfUNwI0vGyZA=";
   };
 
-  depsSha256 = "sha256-jjCOODfTgjsAK31RENvSnNnVRHLMIhDgabXBmNXwKUE=";
+  depsSha256 = "sha256-ed6eE4n2YWcCTYmFKy4mCOhJHprAj2tPfVwRw1zdklQ=";
 
   buildPhase = ''
     javac -version
