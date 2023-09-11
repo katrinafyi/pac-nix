@@ -15,8 +15,8 @@ ocamlPackages.buildDunePackage rec {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "7ae708d305d740bc97448f296155b80a83f5c3ab";
-    sha256 = "sha256-lkKDmgCjmWH1BmMajf/OoGVFiMo8A0/sakDcQqv920U=";
+    rev = "672f3556a06904b31590d13ee697bd53c127801b";
+    sha256 = "sha256-oWBumTlfWHf6fwX5jfzzc+3uR9oMFX5BrnQuIc23Leg=";
   };
 
   checkInputs = [ ocamlPackages.alcotest ];
