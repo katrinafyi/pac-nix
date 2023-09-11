@@ -3,11 +3,10 @@ on:
   pull_request:
   push:
   schedule:
-  - cron: '0 0 * * *'
+  - cron: '53 21 * * *'  # AEST 7:53 am
 jobs:
   nix:
     strategy:
-      max-parallel: 1
       matrix:
         pkg: [aslp, bap-aslp, basil, bap-uq-pac]
     runs-on: ubuntu-latest
