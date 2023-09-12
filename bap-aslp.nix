@@ -1,4 +1,4 @@
-{ stdenv, makeBinaryWrapper, bap-plugins, asli, bap-asli-plugin }:
+{ stdenv, makeBinaryWrapper, bap-plugins, asli, bap-asli-plugin, testers, bap-aslp }:
   let _bap = (bap-plugins.override { plugins = [ bap-asli-plugin ]; });
   in stdenv.mkDerivation {
     pname = "bap-aslp";
@@ -31,4 +31,10 @@
           --append-flags --asli-specs=$ASLI_PATH/tests/override.asl
       done
     '';
+
+    passthru.tests.asli = testers.testVersion {
+      package = bap-aslp;
+      command = "bap-aslp --help";
+      version = "asli-specs";
+    };
   }

@@ -19,7 +19,12 @@ jobs:
       with:
         name: pac-nix
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix-build ./pkgs.nix -A ${{matrix.pkg}} -o result-${{matrix.pkg}} 
+    - run: nix-build -A ${{matrix.pkg}}
+    - name: nix-build -A ${{matrix.pkg}}.tests
+      run: |
+        if nix-instantiate --eval -A ${{matrix.pkg}}.tests; then
+          nix-build -A ${{matrix.pkg}}.tests
+        fi
     - run: ls -l
   update-check:
     runs-on: ubuntu-latest

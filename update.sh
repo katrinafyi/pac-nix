@@ -28,7 +28,7 @@ do-upgrade() {
   [[ $MODE == upgrade ]]
 }
 
-PKGS=./pkgs.nix
+PKGS=. # uses default.nix in current directory
 TMP=$(mktemp)
 
 PID=$$
@@ -66,7 +66,7 @@ update-github() {
   if do-upgrade; then
     nix-update -f "$PKGS" $attr --version branch=$branch --commit "${ARGS[@]}"
   else
-    current=$(nix-instantiate --eval -E "(import ./$PKGS {}).$attr.src.rev" | jq -r)
+    current=$(nix-instantiate --eval $PKGS -A $attr.src.rev | jq -r)
     COMPARE="https://api.github.com/repos/$repo/compare/$current...$branch"
     compare=$(curl "$COMPARE")
     
