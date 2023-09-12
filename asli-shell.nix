@@ -1,6 +1,8 @@
 { pkgs ? import ./pkgs.nix {} }:
 pkgs.mkShell {
-  packages = [ pkgs.ocaml pkgs.ott pkgs.ocamlPackages.merlin pkgs.ocamlPackages.ocaml-lsp pkgs.ocamlformat ];
+  packages = 
+    (with pkgs; [ ocaml ott ocamlformat ]) ++ 
+    (with pkgs.ocamlPackages; [ merlin ocaml-lsp odoc ]);
 
   inputsFrom = [ pkgs.asli ];
 
