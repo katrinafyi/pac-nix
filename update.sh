@@ -7,13 +7,22 @@
 
 set -e
 
-ARG="$1"
+case "$1" in
+  check)
+    MODE=check
+    ;;
+  upgrade)
+    MODE=upgrade
+    ;;
+  *)
+    echo "$0: missing required argument" >&2
+    echo "Usage: $0 [ check | upgrade ]" >&2
+    exit 1
+    ;;
+esac
+
 do-upgrade() {
-  if [[ "$ARG" == '--upgrade' ]]; then
-    return 0
-  else
-    return 1
-  fi
+  [[ $MODE == upgrade ]]
 }
 
 PKGS=./pkgs.nix
@@ -52,7 +61,7 @@ update-github() {
   latest=$(curl "$COMMITS_API" | jq -r .sha)
 
   if do-upgrade; then
-    nix-update -f "$PKGS" $attr --version $latest --commit --build
+    nix-update -f "$PKGS" $attr --version branch=$branch --commit --build
   else
     current=$(nix-instantiate --eval -E "(import ./$PKGS {}).$attr.src.rev" | jq -r)
     COMPARE="https://api.github.com/repos/$repo/compare/$current...$branch"

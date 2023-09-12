@@ -1,6 +1,6 @@
 { fetchFromGitHub, ocamlPackages }:
   ocamlPackages.bap.overrideAttrs rec {
-    version = src.rev;
+    version = "acfdc1067afa847fa1eadac9700eae349434dc3b";
     src = fetchFromGitHub {
       owner = "UQ-PAC";
       repo = "bap";

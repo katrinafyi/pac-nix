@@ -9,7 +9,7 @@
 
 mkSbtDerivation rec {
   pname = "basil";
-  version = src.rev;
+  version = "e1b435acbd913fe1b33e9fbb3482f5e0ec3a836d";
 
   nativeBuildInputs = [ jdk makeBinaryWrapper ];
 

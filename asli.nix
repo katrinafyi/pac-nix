@@ -8,7 +8,7 @@
 
 ocamlPackages.buildDunePackage rec {
   pname = "asli";
-  version = src.rev;
+  version = "672f3556a06904b31590d13ee697bd53c127801b";
 
   minimalOCamlVersion = "4.09";
 
