@@ -20,10 +20,10 @@ jobs:
         name: pac-nix
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix-build -A ${{matrix.pkg}}
-    - name: nix-build -A ${{matrix.pkg}}.tests
+    - name: nix-build -A ${{matrix.pkg}}.tests -o result-tests
       run: |
         if nix-instantiate --eval -A ${{matrix.pkg}}.tests; then
-          nix-build -A ${{matrix.pkg}}.tests
+          nix-build -A ${{matrix.pkg}}.tests -o result-tests
         fi
     - run: ls -l
   update-check:

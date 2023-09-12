@@ -1,1 +1,1 @@
-./pkgs.nix
+pkgs.nix

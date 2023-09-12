@@ -1,5 +1,4 @@
-
-{ stdenv, makeBinaryWrapper, asli }:
+{ stdenv, makeBinaryWrapper, asli, testers, aslp }:
   stdenv.mkDerivation {
     pname = "aslp";
     version = asli.version;
@@ -30,4 +29,10 @@
         --append-flags $ASL_PATH/mra_tools/support/stubs.asl \
         --append-flags $ASL_PATH/tests/override.asl
     '';
+
+    passthru.tests.aslp-sem = testers.testVersion {
+      package = aslp;
+      command = ''echo :help | aslp'';
+      version = '':sem'';
+    };
   }
