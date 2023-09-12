@@ -32,4 +32,4 @@ jobs:
       with:
         name: pac-nix
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: ./update.sh
+    - run: ./update.sh check
