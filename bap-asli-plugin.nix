@@ -22,8 +22,8 @@ stdenv.mkDerivation rec {
     runHook preBuild
 
     bapbuild -package asli.libASL asli.plugin
-    mkdir -p $out
-    cp asli.plugin $out/asli.plugin
+    mkdir -p $out/share/bap-asli-plugin
+    cp asli.plugin $out/share/bap-asli-plugin/asli.plugin
 
     runHook postBuild
   '';

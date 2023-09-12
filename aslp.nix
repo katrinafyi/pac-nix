@@ -9,7 +9,7 @@
     installPhase = ''
       mkdir -p $out/bin
 
-      ASL_PATH=${asli}/asl
+      ASL_PATH=${asli}/share/asli
       cd ${asli}/bin
       makeBinaryWrapper "$(pwd)/asli" $out/bin/aslp \
         --append-flags --prelude \

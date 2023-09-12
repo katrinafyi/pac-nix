@@ -16,10 +16,13 @@ case "$1" in
     ;;
   *)
     echo "$0: missing required argument" >&2
-    echo "Usage: $0 [ check | upgrade ]" >&2
+    echo "Usage: $0 [ check | upgrade ] [ NIX-UPDATE OPTION ]... " >&2
     exit 1
     ;;
 esac
+
+shift
+ARGS=("$@")
 
 do-upgrade() {
   [[ $MODE == upgrade ]]
@@ -61,7 +64,7 @@ update-github() {
   latest=$(curl "$COMMITS_API" | jq -r .sha)
 
   if do-upgrade; then
-    nix-update -f "$PKGS" $attr --version branch=$branch --commit --build
+    nix-update -f "$PKGS" $attr --version branch=$branch --commit "${ARGS[@]}"
   else
     current=$(nix-instantiate --eval -E "(import ./$PKGS {}).$attr.src.rev" | jq -r)
     COMPARE="https://api.github.com/repos/$repo/compare/$current...$branch"

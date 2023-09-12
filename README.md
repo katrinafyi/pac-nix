@@ -21,11 +21,14 @@ the usual \<nixpkgs\> extended with those from this repo.
 
 For users of tools, the main packages are:
 - **[aslp][]**: the ASLp partial evaluator with ARM's MRA,
-- **[bap-aslp][]**: a version of BAP with an integrated ASLp plugin, and
+- **[bap-aslp][]**: a version of official BAP with a bundled ASLp plugin, 
+- **[bap-uq-pac][]**: PAC's fork of BAP with the [Primus Lisp PR][] but without ASLp, and
 - **[basil][]**: the Basil tool for analysis and transpilation to Boogie code.
 
 [aslp]: https://github.com/UQ-PAC/aslp
 [bap-aslp]: https://github.com/UQ-PAC/bap-asli-plugin
+[bap-uq-pac]: https://github.com/UQ-PAC/bap/tree/aarch64-pull-request-2
+[Primus Lisp PR]: https://github.com/BinaryAnalysisPlatform/bap/pull/1546
 [basil]: https://github.com/UQ-PAC/bil-to-boogie-translator
 
 These are each defined in a .nix file of the same name,
@@ -155,13 +158,13 @@ This involves updating the src attribute with the latest commit hash from each G
 
 Most of this is automated by a script:
 ```bash
-export GITHUB_TOKEN=github_pat_11...  # not necessary but avoids rate limiting
-./update.sh
+export GITHUB_TOKEN=github_...  # not necessary but avoids rate limiting
+./update.sh upgrade --build     # or `./update.sh check` to check only
 ```
-This will update the hash in each Nix file with the latest, then attempt to build the new packages.
+This will update the hash in each Nix file with the latest then attempt to build the new packages.
 If successful, this will commit the changes.
 
-The basil derivation is more unstable since it relies on SBT to fetch its dependencies.
+The basil derivation is most fragile since it relies on SBT to fetch its dependencies.
 The depsSha256 will need to be changed manually if the script fails at that point.
 
 ## miscellany

@@ -29,17 +29,17 @@ mkSbtDerivation rec {
 
   installPhase = ''
     mkdir -p $out/bin
-    mkdir -p $out/share/target
+    mkdir -p $out/share/basil
 
     JAR=target/scala-3.1.0/wptool-boogie*.jar
 
     # copy jar to output directory
-    cp -r $JAR $out/share/$(basename $JAR)
+    cp -r $JAR $out/share/basil/$(basename $JAR)
 
     # make wrapper to run jar with appropriate arguments
     makeBinaryWrapper "${jre}/bin/java" $out/bin/basil \
       --add-flags -jar \
-      --add-flags "$out/share/$(basename $JAR)"
+      --add-flags "$out/share/basil/$(basename $JAR)"
   '';
 
   meta = {

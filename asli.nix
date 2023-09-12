@@ -27,8 +27,8 @@ ocamlPackages.buildDunePackage rec {
 
   configurePhase = ''
     export ASLI_OTT=${pkgs.ott.out + "/share/ott"}
-    mkdir -p $out/asl
-    cp -rv prelude.asl mra_tools tests $out/asl
+    mkdir -p $out/share/asli
+    cp -rv prelude.asl mra_tools tests $out/share/asli
   '';
 
   outputs = [ "out" ];

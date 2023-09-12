@@ -9,7 +9,7 @@
     installPhase = ''
       mkdir -p $out/bin
 
-      ASLI_PATH=${asli}/asl
+      ASLI_PATH=${asli}/share/asli
       cd ${_bap}/bin
       for b in *; do 
         makeBinaryWrapper "$(pwd)/$b" $out/bin/$b-aslp \
