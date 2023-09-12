@@ -8,14 +8,14 @@
 
 ocamlPackages.buildDunePackage rec {
   pname = "asli";
-  version = "672f3556a06904b31590d13ee697bd53c127801b";
+  version = "unstable-2023-09-11";
 
   minimalOCamlVersion = "4.09";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "672f3556a06904b31590d13ee697bd53c127801b";
+    rev = "partial_eval";
     sha256 = "sha256-oWBumTlfWHf6fwX5jfzzc+3uR9oMFX5BrnQuIc23Leg=";
   };
 
