@@ -15,7 +15,7 @@ ocamlPackages.buildDunePackage rec {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "partial_eval";
+    rev = "672f3556a06904b31590d13ee697bd53c127801b";
     sha256 = "sha256-oWBumTlfWHf6fwX5jfzzc+3uR9oMFX5BrnQuIc23Leg=";
   };
 
