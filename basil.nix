@@ -18,8 +18,8 @@ mkSbtDerivation rec {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "77a98ba7e7371e5c829b4b6d12590a82d35646d2";
-    sha256 = "sha256-vG04dcLz6yuPbVs8+QdzN/3tAdpsMkVs9xtbzKeCWi4=";
+    rev = "7b9472f44c133956191799d49f26e6e58569d6c8";
+    sha256 = "sha256-xBxqfRIDFGf3x/gv71FjDwP2Fc5HDiFQ79rWEvNb1q4=";
   };
 
   depsSha256 = "sha256-ed6eE4n2YWcCTYmFKy4mCOhJHprAj2tPfVwRw1zdklQ=";
