@@ -73,8 +73,8 @@ class Args:
   rest: list[str]
 
 PACKAGES: list[Package] = [
-  Package('asli', 'UQ-PAC/aslp', then=['aslp']),
-  Package('bap-asli-plugin', 'UQ-PAC/bap-asli-plugin', then=['bap-aslp']),
+  Package('asli', 'UQ-PAC/aslp', then=[]), # aslp
+  Package('bap-asli-plugin', 'UQ-PAC/bap-asli-plugin', then=[]), # bap-aslp
   Package('basil', 'UQ-PAC/bil-to-boogie-translator'),
   Package('bap-uq-pac', 'UQ-PAC/bap', 'aarch64-pull-request-2'),
 ]
