@@ -1,7 +1,7 @@
 # pac-nix
 
-[![build Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml/badge.svg?event=schedule)](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml)
-[![update Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml/badge.svg?event=schedule)](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml)
+[![build Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml/badge.svg)](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml)
+[![update Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml/badge.svg)](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml)
 
 An experiment to package [PAC](https://github.com/UQ-PAC)'s
 tools with the Nix package manager.
