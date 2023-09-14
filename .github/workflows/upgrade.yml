@@ -17,6 +17,7 @@ jobs:
         nix-shell ./update-shell.nix --run './update.py check -A ${{inputs.pkg}}'
 
     - run: |
+        git pull
         git config user.name 'github-actions[bot]'
         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
     - run: |
