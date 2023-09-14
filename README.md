@@ -1,5 +1,7 @@
 # pac-nix
 
+[![build Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml/badge.svg?event=schedule)](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml)
+
 An experiment to package [PAC](https://github.com/UQ-PAC)'s
 tools with the Nix package manager.
 

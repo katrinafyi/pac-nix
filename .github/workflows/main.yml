@@ -15,12 +15,12 @@ jobs:
       max-parallel: 1
       matrix:
         pkg: [asli, bap-asli-plugin, bap-uq-pac, basil]
-    uses: ./.github/workflows/nix.yml
+    uses: ./.github/workflows/upgrade.yml
     with:
       pkg: ${{matrix.pkg}}
     secrets: inherit
 
-  tools:
+  packages:
     needs: sources
     if: ${{ !cancelled() }}
     strategy:
