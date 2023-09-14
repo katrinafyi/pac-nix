@@ -1,9 +1,16 @@
+name: "update Nix packages"
 on:
-  workflow_call:
-    inputs:
-      pkg: { required: true, type: string }
+  schedule:
+  - cron: '53 18 * * *'  # AEST 4:53 am
+  workflow_dispatch:
+
 jobs:
-  upgrade:
+  update:
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        pkg: [asli, bap-asli-plugin, bap-uq-pac, basil]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -14,13 +21,13 @@ jobs:
 
     - run: nix-build ./update-shell.nix
     - run: |
-        nix-shell ./update-shell.nix --run './update.py check -A ${{inputs.pkg}}'
+        nix-shell ./update-shell.nix --run './update.py check -A ${{matrix.pkg}}'
 
     - run: |
         git pull
         git config user.name 'github-actions[bot]'
         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
     - run: |
-        nix-shell ./update-shell.nix --run './update.py do-upgrade -A ${{inputs.pkg}}'
+        nix-shell ./update-shell.nix --run './update.py do-upgrade -A ${{matrix.pkg}}'
     - run: git push
 

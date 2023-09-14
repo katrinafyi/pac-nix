@@ -1,6 +1,7 @@
 # pac-nix
 
 [![build Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml/badge.svg?event=schedule)](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml)
+[![update Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml/badge.svg?event=schedule)](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml)
 
 An experiment to package [PAC](https://github.com/UQ-PAC)'s
 tools with the Nix package manager.
@@ -156,12 +157,12 @@ See also: [nix-shell manual page](https://nixos.org/manual/nix/stable/command-re
 ## updating packages
 
 Periodically, these Nix files will need to be updated with new changes from upstream.
-This involves updating the src attribute with the latest commit hash from each GitHub repository.
+A daily GitHub action will attempt to update all packages.
+Its most recent status is shown at the top of this README.
 
-Most of this is automated by a script:
+The update process is automated by a script:
 ```bash
-export GITHUB_TOKEN=github_...  # not necessary but avoids rate limiting
-./update.sh upgrade --build     # or `./update.sh check` to check only
+./update.py do-upgrade  # or `./update.py check` to check only
 ```
 This will update the hash in each Nix file with the latest then attempt to build the new packages.
 If successful, this will commit the changes.
