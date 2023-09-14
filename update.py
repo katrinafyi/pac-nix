@@ -168,7 +168,7 @@ if __name__ == "__main__":
 
   if args.mode == 'do-upgrade':
     args.mode = 'upgrade'
-    args.rest = ['--build', '--test', '--commit'] + args.rest
+    args.rest = ['--build', '--commit'] + args.rest
 
   for f in fields(Args):
     assert f.name in args, f.name

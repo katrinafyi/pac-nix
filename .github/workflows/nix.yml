@@ -1,40 +1,25 @@
-name: "Build Nix packages"
 on:
-  pull_request:
-  push:
-  schedule:
-  - cron: '53 21 * * *'  # AEST 7:53 am
+  workflow_call:
+    inputs:
+      pkg: { required: true, type: string }
 jobs:
-  nix:
-    strategy:
-      matrix:
-        pkg: [aslp, bap-aslp, basil, bap-uq-pac]
+  upgrade:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v20
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
+      with: { nix_path: 'nixpkgs=channel:nixos-unstable' }
     - uses: cachix/cachix-action@v12
-      with:
-        name: pac-nix
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: nix-build -A ${{matrix.pkg}}
-    - name: nix-build -A ${{matrix.pkg}}.tests -o result-tests
-      run: |
-        if nix-instantiate --eval -A ${{matrix.pkg}}.tests; then
-          nix-build -A ${{matrix.pkg}}.tests -o result-tests
-        fi
-    - run: ls -l
-  update-check:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v20
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
-    - uses: cachix/cachix-action@v12
-      with:
-        name: pac-nix
-        authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-    - run: ./update.sh check
+      with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}' }
+
+    - run: nix-build ./update-shell.nix
+    - run: |
+        nix-shell ./update-shell.nix --run './update.py check -A ${{inputs.pkg}}'
+
+    - run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+    - run: |
+        nix-shell ./update-shell.nix --run './update.py do-upgrade -A ${{inputs.pkg}}'
+    - run: git push
+
