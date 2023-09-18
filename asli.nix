@@ -8,15 +8,15 @@
 
 ocamlPackages.buildDunePackage rec {
   pname = "asli";
-  version = "unstable-2023-09-14";
+  version = "unstable-2023-09-18";
 
   minimalOCamlVersion = "4.09";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "f20cec4454375fa4d0ff83028f3aee14c8089a62";
-    sha256 = "sha256-x6uak84JFUBApIp2+NvghO67o/A2PmqJB7Ve06UideM=";
+    rev = "758815e22144f6645839dd81b83d235fab53d3ee";
+    sha256 = "sha256-1jRxKCMOvmVy7N4vMq8kt7HPOavfwDNWi7yBk8hcrDs=";
   };
 
   checkInputs = [ ocamlPackages.alcotest ];
