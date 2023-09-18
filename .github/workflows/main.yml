@@ -20,7 +20,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pkg: [aslp, bap-aslp, bap-uq-pac, basil]
+        # end-user packages to ci build for cache
+        pkg: 
+          [aslp, bap-aslp, bap-uq-pac, basil,
+          alive2, retdec-tools, asl-translator]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
