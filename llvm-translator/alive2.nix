@@ -3,10 +3,12 @@
   fetchpatch,
   fetchFromGitHub,
   cmake, ninja, git, z3, re2c, zlib, ncurses,
-  llvm-rtti-eh 
+  llvm-rtti-eh,
+  llvmPackages_15
 }:
 
-stdenv.mkDerivation rec {
+let _llvm = llvm-rtti-eh.override { llvmPackages = llvmPackages_15; };
+in stdenv.mkDerivation rec {
   pname = "alive2";
   version = "2022-10-26";
 
@@ -26,7 +28,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ cmake ninja git re2c ];
   buildInputs = [ z3 zlib ncurses ];
 
-  cmakeFlags = [ "-DBUILD_TV=1" "-DLLVM_DIR=${llvm-rtti-eh.dev}/lib/cmake/llvm" ];
+  cmakeFlags = [ "-DBUILD_TV=1" "-DLLVM_DIR=${_llvm.dev}/lib/cmake/llvm" ];
 
   patchPhase = ''
     runHook prePatch

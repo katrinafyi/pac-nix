@@ -1,6 +1,6 @@
-{ llvmPackages_15 }:
+{ llvmPackages }:
 
-llvmPackages_15.libllvm.overrideAttrs (final: prev: {
+llvmPackages.libllvm.overrideAttrs (final: prev: {
   cmakeFlags = prev.cmakeFlags ++ [ 
     "-DLLVM_ENABLE_RTTI=ON" 
     "-DLLVM_ENABLE_EH=ON"
