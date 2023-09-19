@@ -1,3 +1,7 @@
+result
+result-*
+source/
+
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

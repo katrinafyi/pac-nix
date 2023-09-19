@@ -128,9 +128,6 @@ let
       echo "The ${dep.dep_name} dependency has the wrong version: ${dep.rev} while $expected_rev is expected."
       exit 1
     fi
-
-    # patch the CMakeLists.txt file to use our local copy of the dependency instead of fetching it at build time
-    sed -i -e 's|"https\?://.*/${dep.dep_name}/.*"|"${dep}"|' "cmake/deps.cmake"
   '';
 
 in stdenv.mkDerivation rec {
@@ -171,7 +168,11 @@ in stdenv.mkDerivation rec {
     zlib
   ];
 
-  cmakeFlags = [
+  cmakeFlags_deps = builtins.map 
+    (dep: "-D${lib.toUpper dep.dep_name}_URL=${dep}")
+    external_deps;
+
+  cmakeFlags = cmakeFlags_deps ++ [
     "-DRETDEC_TESTS=${if doInstallCheck then "ON" else "OFF"}" # build tests
   ];
 
@@ -191,7 +192,6 @@ in stdenv.mkDerivation rec {
     (yaracpp // { dep_name = "yara"; })
     (yaramod // { dep_name = "yaramod"; })
     (retdec-support // { dep_name = "support_pkg"; dep_key = "_VERSION"; })
-
   ];
 
   patches = [];
@@ -213,7 +213,6 @@ ExternalProject_Add_Step(yara chmod
 	COMMAND chmod -R u+rw .
 )
 EOF
-
 
     # the CMakeLists assumes CMAKE_INSTALL_BINDIR, etc are path components but in Nix, they are absolute.
     # therefore, we need to remove the unnecessary CMAKE_INSTALL_PREFIX prepend.
