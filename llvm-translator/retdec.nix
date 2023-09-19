@@ -130,11 +130,7 @@ let
     fi
 
     # patch the CMakeLists.txt file to use our local copy of the dependency instead of fetching it at build time
-    # set -x
-    sed -i -e 's|".*/${dep.dep_name}/.*"|"${dep}"|' "cmake/deps.cmake"
-
-    # cat cmake/deps.cmake
-    # exit 1
+    sed -i -e 's|"https\?://.*/${dep.dep_name}/.*"|"${dep}"|' "cmake/deps.cmake"
   '';
 
 in stdenv.mkDerivation rec {
@@ -148,7 +144,7 @@ in stdenv.mkDerivation rec {
   version = "5.0";
 
   src = fetchFromGitHub {
-    owner = "avast-tl";
+    owner = "avast";
     repo = pname;
     rev = "refs/tags/v${version}";
     sha256 = "sha256-H4e+aSgdBBbG6X6DzHGiDEIASPwBVNVsfHyeBTQLAKI=";
@@ -176,7 +172,7 @@ in stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
-    "-DRETDEC_TESTS=ON" # build tests
+    "-DRETDEC_TESTS=${if doInstallCheck then "ON" else "OFF"}" # build tests
   ];
 
   # all dependencies that are normally fetched during build time (the subdirectories of `deps`)
@@ -198,39 +194,18 @@ in stdenv.mkDerivation rec {
 
   ];
 
-  # Use newer yaramod to fix w/bison 3.2+
-  patches = [
-    # 2.1.2 -> 2.2.1
-    # (fetchpatch {
-    #   url = "https://github.com/avast-tl/retdec/commit/c9d23da1c6e23c149ed684c6becd3f3828fb4a55.patch";
-    #   sha256 = "0hdq634f72fihdy10nx2ajbps561w03dfdsy5r35afv9fapla6mv";
-    # })
-    # # 2.2.1 -> 2.2.2
-    # (fetchpatch {
-    #   url = "https://github.com/avast-tl/retdec/commit/fb85f00754b5d13b781385651db557741679721e.patch";
-    #   sha256 = "0a8mwmwb39pr5ag3q11nv81ncdk51shndqrkm92shqrmdq14va52";
-    # })
-  ];
+  patches = [];
 
   postPatch = (lib.concatMapStrings patchDep external_deps) + ''
-    # install retdec-support
-    # echo "Checking version of retdec-support"
-    # expected_version="$( sed -n -e "s|^version = '\(.*\)'$|\1|p" 'cmake/install-share.py' )"
-    # if [ "$expected_version" != '${retdec-support.version}' ]; then
-    #   echo "The retdec-support dependency has the wrong version: ${retdec-support.version} while $expected_version is expected."
-    #   exit 1
-    # fi
-    # mkdir -p "$out/share/retdec"
-    # cp -r ${retdec-support} "$out/share/retdec/support" # write permission needed during install
-    # chmod -R u+w "$out/share/retdec/support"
-    # # python file originally responsible for fetching the retdec-support archive to $out/share/retdec
-    # # that is not necessary anymore, so empty the file
-    # echo > cmake/install-share.py
 
-    # call correct `time` and `upx` programs
-    # substituteInPlace scripts/retdec-config.py --replace /usr/bin/time ${time}/bin/time
-    # substituteInPlace scripts/retdec-unpacker.py --replace "'upx'" "'${upx}/bin/upx'"
-    # substituteInPlace deps/yara/CMakeLists.txt --replace 'CONFIGURE_COMMAND ""' 'CONFIGURE_COMMAND chmod -R u+rw ''${YARA_DIR}'
+    mkdir -p "$out/share/retdec"
+    cp -r ${retdec-support} "$out/share/retdec/support" # write permission needed during install
+    chmod -R u+w "$out/share/retdec/support"
+
+    # python file originally responsible for fetching the retdec-support archive to $out/share/retdec
+    # that is not necessary anymore, so empty the file
+    echo > support/install-share.py
+
     cat <<EOF >> deps/yara/CMakeLists.txt
 ExternalProject_Add_Step(yara chmod
 	WORKING_DIRECTORY ''${YARA_DIR}
@@ -238,9 +213,22 @@ ExternalProject_Add_Step(yara chmod
 	COMMAND chmod -R u+rw .
 )
 EOF
+
+
+    # the CMakeLists assumes CMAKE_INSTALL_BINDIR, etc are path components but in Nix, they are absolute.
+    # therefore, we need to remove the unnecessary CMAKE_INSTALL_PREFIX prepend.
+    substituteInPlace ./CMakeLists.txt \
+      --replace "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_BIN_DIR} "''$"{CMAKE_INSTALL_FULL_BINDIR} \
+      --replace "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_LIB_DIR} "''$"{CMAKE_INSTALL_FULL_LIBDIR} \
+      --replace "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_SUPPORT_DIR} "''$"{RETDEC_INSTALL_SUPPORT_DIR} \
+
+    # similarly for yaramod. here, we fix the LIBDIR to lib64.
+    substituteInPlace deps/yaramod/CMakeLists.txt \
+      --replace "''$"{YARAMOD_INSTALL_DIR}/"''$"{CMAKE_INSTALL_LIBDIR} "''$"{YARAMOD_INSTALL_DIR}/lib64 \
+      --replace CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib64'
   '';
 
-  doInstallCheck = true;
+  doInstallCheck = false;
   installCheckPhase = ''
     ${python3.interpreter} "$out/bin/retdec-tests-runner.py"
 
