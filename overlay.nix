@@ -33,7 +33,7 @@ let
       # llvm-translator packages 
       asl-translator = prev.callPackage ./llvm-translator/asl-translator.nix {};
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix {};
-      retdec-tools = prev.callPackage ./llvm-translator/retdec-tools.nix { retdec = final.retdec5; };
+      retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
       llvm-rtti-eh = prev.callPackage ./llvm-translator/llvm-rtti-eh.nix {};
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {};
 

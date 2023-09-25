@@ -26,7 +26,7 @@ jobs:
         # end-user packages to ci build for cache
         pkg: 
           [aslp, bap-aslp, bap-uq-pac, basil,
-          alive2, retdec-tools, asl-translator]
+          alive2, retdec-uq-pac, asl-translator]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
