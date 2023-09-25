@@ -14,7 +14,7 @@ Further, since each dependency is itself a static derivation, these can be cache
 z3 and BAP, which previously took dozens of minutes each,
 are fetched in seconds.
 
-Overall, Nix is an effective and well-suited to this task
+Overall, Nix is an effective tool and well-suited to this task
 of a consistent meta-build and dependency manager system.
 
 ## structure
@@ -47,15 +47,20 @@ installed binaries will go.
 
 [nixos.org]: https://nixos.org/download
 
-Installing a package is straightforward.
-From this directory, run this as your normal user:
+First, add this repository as a Nix channel called "pac" and update its contents.
+As your usual user, run:
 ```bash
-nix-env -f ./pkgs.nix -iA aslp  # or bap-aslp or basil
+nix-channel --add https://github.com/katrinafyi/pac-nix/archive/refs/heads/main.tar.gz pac
+nix-channel --update
+```
+
+Installing a package is straightforward.
+```bash
+nix-env -iA pac.aslp  # or pac.bap-aslp or pac.basil
 ```
 This will build and make available an executable in ~/.nix-profile/bin.
 
-Note that these fetch each tool's repository
-at a particular hash and build that revision.
+Note that this will install the package at a particular commit hash from the upstream repository.
 The next sections will discuss building a package
 from local sources and setting up development environments.
 
@@ -64,9 +69,9 @@ To list installed package:
 nix-env -q
 ```
 
-To uninstall, use:
+To uninstall, use the name from `-q` with `--uninstall`.
 ```bash
-nix-env --uninstall aslp
+nix-env --uninstall aslp-unstable-2023-09-18
 ```
 
 To re-install or rebuild a changed package,
