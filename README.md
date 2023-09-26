@@ -56,6 +56,22 @@ nix-channel --add https://github.com/katrinafyi/pac-nix/archive/refs/heads/main.
 nix-channel --update
 ```
 
+<blockquote>
+<details>
+  <summary>
+    <b>note</b>: if you see &ldquo;error: file 'nixpkgs' was not found in the Nix search path&rdquo;
+  </summary>
+
+  Use these commands to add the \<nixpkgs\> repository.
+  ```bash
+  nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs
+  nix-channel --update
+  ```
+  If these commands raise "permission denied", you can also try them with `sudo`.
+  Be aware that using sudo here might require sudo in later commands as well.
+</details>
+</blockquote>
+
 Installing a package is straightforward.
 ```bash
 nix-env -iA pac.aslp  # or pac.bap-aslp or pac.basil
