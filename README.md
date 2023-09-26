@@ -24,19 +24,21 @@ the usual \<nixpkgs\> extended with those from this repo.
 
 For users of tools, the main packages are:
 - **[aslp][]**: the ASLp partial evaluator with ARM's MRA,
-- **[bap-aslp][]**: a version of official BAP with a bundled ASLp plugin, 
-- **[bap-uq-pac][]**: PAC's fork of BAP with the [Primus Lisp PR][] but without ASLp, and
+- **[bap-aslp][]**[^1]: a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), 
+- **[bap-primus][]**: PAC's fork of BAP with the [Primus Lisp PR][] but without ASLp (provides `bap-primus`), and
 - **[basil][]**: the Basil tool for analysis and transpilation to Boogie code.
 
 [aslp]: https://github.com/UQ-PAC/aslp
 [bap-aslp]: https://github.com/UQ-PAC/bap-asli-plugin
-[bap-uq-pac]: https://github.com/UQ-PAC/bap/tree/aarch64-pull-request-2
+[bap-primus]: https://github.com/UQ-PAC/bap/tree/aarch64-pull-request-2
 [Primus Lisp PR]: https://github.com/BinaryAnalysisPlatform/bap/pull/1546
 [basil]: https://github.com/UQ-PAC/bil-to-boogie-translator
 
 These are each defined in a .nix file of the same name,
 then instantiated within overlay.nix and
 built into a package set in pkgs.nix.
+
+[^1]: Due to the plugin loading method, `bap-mc -- [bytecode]` will not work to disassemble one opcode. Instead, you should omit the `--` or pipe the bytes via stdin `echo [bytecode] | bap-mc`.
 
 ## usage
 

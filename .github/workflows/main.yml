@@ -25,7 +25,7 @@ jobs:
       matrix:
         # end-user packages to ci build for cache
         pkg: 
-          [aslp, bap-aslp, bap-uq-pac, basil,
+          [aslp, bap-aslp, bap-primus, basil,
           alive2, retdec-uq-pac, asl-translator]
     runs-on: ubuntu-latest
     steps:

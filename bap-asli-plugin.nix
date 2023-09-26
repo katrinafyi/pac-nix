@@ -2,7 +2,7 @@
   lib,
   asli,
   ocamlPackages, 
-  fetchFromGitHub
+  fetchFromGitHub,
 }:
 
 stdenv.mkDerivation rec {
@@ -16,14 +16,20 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-CsdUjXHHVisfiTP2XGOHfm+Aa23KZep4IdgoYHQsnXg=";
   };
 
-  buildInputs = [ asli ocamlPackages.bap ocamlPackages.findlib ];
+  buildInputs = [ asli ocamlPackages.bap ocamlPackages.findlib  ];
 
   buildPhase = ''
     runHook preBuild
 
     bapbuild -package asli.libASL asli.plugin
     mkdir -p $out/lib/bap
-    cp asli.plugin $out/lib/bap
+
+    # needed to maintain runtime dependencies.
+    # asli.plugin loses these because it is a compressed file.
+    mkdir $out/lib/bap/asli.plugin-deps/
+    cp -rv _build/*.cmxs $out/lib/bap/asli.plugin-deps/
+
+    cp -v asli.plugin $out/lib/bap
 
     runHook postBuild
   '';

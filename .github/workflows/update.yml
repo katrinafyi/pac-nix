@@ -10,7 +10,7 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        pkg: [asli, bap-asli-plugin, bap-uq-pac, basil]
+        pkg: [asli, bap-asli-plugin, bap-primus, basil]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

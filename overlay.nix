@@ -20,7 +20,7 @@ let
 
       bap-aslp = prev.callPackage ./bap-aslp.nix {};
 
-      bap-uq-pac = prev.callPackage ./bap-uq-pac.nix {};
+      bap-primus = prev.callPackage ./bap-primus.nix {};
 
       basil = (prev.callPackage ./basil.nix {})
         # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
