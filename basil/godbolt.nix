@@ -9,7 +9,7 @@
   basil-tool,
 
   nodejs,
-  godbolt-basil,
+  godbolt,
 }:
 
 let
@@ -54,13 +54,19 @@ let
       runHook postBuild
     '';
 
+    preInstall = ''
+      npm uninstall --omit=dev --ignore-scripts ts-node monaco-editor monaco-vim @fortawesome/fontawesome-free
+    '';
+
     postInstall = ''
       lib=$out/lib/node_modules/compiler-explorer
-      cp -r out $lib
+
+      cp -r out $src/package.json $src/package-lock.json $lib
+      rm -rf $lib/test $lib/node_modules/.cache
     '';
   };
 in stdenv.mkDerivation {
-  pname = "godbolt-basil";
+  pname = "godbolt";
   version = ce-ailrst.version;
 
   buildInputs = [ bash nodejs ];

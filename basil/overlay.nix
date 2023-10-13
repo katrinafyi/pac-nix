@@ -10,7 +10,7 @@ let
         # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
         ;
 
-      godbolt-basil = (prev.callPackage ./godbolt-basil.nix {});
+      godbolt = (prev.callPackage ./godbolt.nix {});
       basil-tool = prev.callPackage ./basil-tool.nix {};
 
       jre = final.temurin-jre-bin-17;
