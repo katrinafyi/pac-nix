@@ -1,9 +1,4 @@
 let 
-  sbt-drv-repo = builtins.fetchTarball {
-    url = "https://github.com/zaninime/sbt-derivation/archive/master.tar.gz";
-  };
-  sbt-drv-overlay = import "${sbt-drv-repo}/overlay.nix";
-
   overlay = final: prev: 
     {
       asli = (prev.callPackage ./asli.nix {})
@@ -22,16 +17,8 @@ let
 
       bap-primus = prev.callPackage ./bap-primus.nix {};
 
-      basil = (prev.callPackage ./basil.nix {})
-        # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
-        ;
-
-
-      godbolt-basil = (prev.callPackage ./godbolt-basil.nix {});
-      basil-tool = prev.callPackage ./basil-tool.nix {};
-
-      jre = final.temurin-jre-bin-17;
-      jdk = final.temurin-bin-17;
+      # MOVED: basil-related packages now in ./basil/overlay.nix
+      basil = prev.basil;
 
       # llvm-translator packages 
       asl-translator = prev.callPackage ./llvm-translator/asl-translator.nix {};
@@ -39,7 +26,8 @@ let
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
       llvm-rtti-eh = prev.callPackage ./llvm-translator/llvm-rtti-eh.nix {};
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {};
-
     };
 in final: prev: 
-  prev.lib.composeExtensions sbt-drv-overlay overlay final prev
+  prev.lib.composeManyExtensions
+    [ overlay (import ./basil/overlay.nix) ]
+    final prev
