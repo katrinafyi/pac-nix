@@ -100,6 +100,20 @@ Nix is powerful but the documentation is of mixed quality.
 introduces some other commands.
 Otherwise, it will be useful to search as far as you can.
 
+#### garbage collection
+
+The /nix/store folder can get quite large.
+You can use these commands to clean it up.
+
+```bash
+nix-collect-garbage --delete-older-than 1d  # or --delete-old
+nix-store --gc
+```
+
+nix-env creates a snapshot of your packages (a generation) after each package operation.
+This keeps those old packages inside your Nix store.
+These commands will delete stale generations then delete their packages from the store. 
+
 ### bonus: binary cache
 
 The GitHub Actions workflow maintains a custom binary cache for this repository.
