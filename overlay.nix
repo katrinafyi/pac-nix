@@ -26,9 +26,12 @@ let
         # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
         ;
 
+
+      godbolt-basil = (prev.callPackage ./godbolt-basil.nix {});
+      basil-tool = prev.callPackage ./basil-tool.nix {};
+
       jre = final.temurin-jre-bin-17;
       jdk = final.temurin-bin-17;
-
 
       # llvm-translator packages 
       asl-translator = prev.callPackage ./llvm-translator/asl-translator.nix {};
