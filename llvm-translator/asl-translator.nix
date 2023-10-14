@@ -5,11 +5,11 @@
   ocamlPackages,
   llvmPackages_14,
   asli,
+  ocaml-llvm,
   z3
 }:
 
-let ocaml-llvm = ocamlPackages.llvm.override { libllvm = llvmPackages_14.libllvm; };
-in ocamlPackages.buildDunePackage rec {
+ocamlPackages.buildDunePackage rec {
   pname = "asl-translator";
   version = "unstable-2023-09-18";
 

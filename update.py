@@ -77,6 +77,7 @@ PACKAGES: list[Package] = [
   Package('bap-asli-plugin', 'UQ-PAC/bap-asli-plugin', then=[]), # bap-aslp
   Package('basil', 'UQ-PAC/bil-to-boogie-translator'),
   Package('bap-primus', 'UQ-PAC/bap', 'aarch64-pull-request-2'),
+  Package('asl-translator', 'UQ-PAC/llvm-translator', 'main'),
 ]
 
 
