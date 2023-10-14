@@ -41,7 +41,8 @@ ocamlPackages.buildDunePackage rec {
     runHook preConfigure
 
     substituteInPlace setup.sh \
-      --replace "cp " "cp --no-preserve=mode,ownership "
+      --replace "cp " "cp --no-preserve=mode,ownership " \
+      --replace support_static_mode=true support_static_mode=false
 
     ./setup.sh ${libllvm.dev}/bin/llvm-config
 
