@@ -11,7 +11,7 @@
 
 ocamlPackages.buildDunePackage rec {
   pname = "asl-translator";
-  version = "unstable-2023-09-18";
+  version = "unstable-2023-09-25";
 
   buildInputs = [ z3 ];
   propagatedBuildInputs = [ asli ocaml-llvm ];
@@ -19,8 +19,8 @@ ocamlPackages.buildDunePackage rec {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "llvm-translator";
-    rev = "d86b20f98c0bbe445059b54812cbb15ecb4be67f";
-    sha256 = "sha256-4mB+z/tnE6ghX3Kj0ZUbJHQeU5lz4fVOtADXgcjcRxg=";
+    rev = "2110ff718c2f3bd8f428653b3f6ce471eb399adb";
+    sha256 = "sha256-zIp8HxgLT/5KTSNRXFJo6V38DpMHEMg1aB4ByGEQy8I=";
   };
   sourceRoot = "source/asl-translator";
 
