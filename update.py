@@ -81,9 +81,9 @@ PACKAGES: list[Package] = [
 ]
 
 
-def run(args: list[str], **kwargs) -> subprocess.CompletedProcess:
+def run(args: list[str], check: bool = True, **kwargs) -> subprocess.CompletedProcess:
   log.debug('subprocess: %s', str(args))
-  return subprocess.run(args, **kwargs)
+  return subprocess.run(args, check=check, **kwargs)
 
 
 def curl_raw(url) -> str:
