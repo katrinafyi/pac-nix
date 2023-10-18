@@ -4,6 +4,7 @@
   fetchFromGitHub,
   buildNpmPackage,
   makeBinaryWrapper,
+  writeShellScript,
   testers,
   bash,
   basil-tool,
@@ -65,7 +66,7 @@ let
       rm -rf $lib/test $lib/node_modules/.cache
     '';
   };
-in stdenv.mkDerivation {
+in stdenv.mkDerivation rec {
   pname = "godbolt";
   version = ce-ailrst.version;
 
@@ -73,24 +74,21 @@ in stdenv.mkDerivation {
 
   unpackPhase = ":";
 
-  postInstall = ''
+  script = writeShellScript "godbolt-script"
+    ''
     lib=${ce-ailrst}/lib/node_modules/compiler-explorer
+    cd $lib
 
-    #	env NODE_ENV=production $(NODE) $(NODE_ARGS) ./out/dist/app.js --webpackContent ./out/webpack/static $(EXTRA_ARGS)
+    export NODE_ENV=production
+    export COMPILER_CACHE="''${COMPILER_CACHE:-/tmp/compiler-cache}"
+    export LOCAL_STORAGE="''${LOCAL_STORAGE:-$HOME/.local/state/compiler-explorer}"
+    export BASIL_TOOL="''${BASIL_TOOL:-${basil-tool}/bin/basil-tool}"
+    exec ${nodejs}/bin/node $lib/out/dist/app.js --webpackContent $lib/out/webpack/static "$@"
+    '';
 
+  postInstall = ''
     mkdir -p $out/bin
-    cat <<EOF > $out/bin/godbolt
-#!/bin/bash
-
-cd $lib
-export NODE_ENV=production
-export COMPILER_CACHE="\''${COMPILER_CACHE:-/tmp/compiler-cache}"
-export LOCAL_STORAGE="\''${LOCAL_STORAGE:-\$HOME/.local/state/compiler-explorer}"
-export BASIL_TOOL="\''${BASIL_TOOL:-${basil-tool}/bin/basil-tool}"
-exec ${nodejs}/bin/node $lib/out/dist/app.js --webpackContent $lib/out/webpack/static "\$@"
-EOF
-
-    chmod a+x $out/bin/godbolt
+    cp -v "${script}" $out/bin/godbolt
   '';
 
   passthru = {
