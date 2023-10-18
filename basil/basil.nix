@@ -10,18 +10,18 @@
 
 mkSbtDerivation rec {
   pname = "basil";
-  version = "unstable-2023-10-13";
+  version = "unstable-2023-10-17";
 
   nativeBuildInputs = [ jdk makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "c6a411fa41ce868ce522fc21ce9b1482e7c52638";
-    sha256 = "sha256-P/XV5W29/OO/CjrKsDAJJibM8Cn9mFQDr7sVLCtJl0o=";
+    rev = "fcd2f8e9b45ab80d98a37870540a3a1ecc4652b6";
+    sha256 = "sha256-DZLg4heRiKKFmdcTem1HRwwV5pgOQIGUPG9NiFVyXg0=";
   };
 
-  depsSha256 = "sha256-ed6eE4n2YWcCTYmFKy4mCOhJHprAj2tPfVwRw1zdklQ=";
+  depsSha256 = "sha256-AoHPd8UI0Iprin1Sq7rL0fe+42x8+fNCRYA1bW+5ySQ=";
 
   buildPhase = ''
     javac -version
@@ -32,10 +32,16 @@ mkSbtDerivation rec {
     mkdir -p $out/bin
     mkdir -p $out/share/basil
 
-    JAR=target/scala-3.1.0/wptool-boogie*.jar
+    JAR="$(echo target/scala*/wptool-boogie*.jar)"
+
+    if ! [[ -f "$JAR" ]]; then
+      echo "ERROR: basil jar file not found!" >&2
+      ls -l target/scala*
+      false
+    fi
 
     # copy jar to output directory
-    cp -r $JAR $out/share/basil/$(basename $JAR)
+    cp -v "$JAR" $out/share/basil/$(basename $JAR)
 
     # make wrapper to run jar with appropriate arguments
     makeBinaryWrapper "${jre}/bin/java" $out/bin/basil \
