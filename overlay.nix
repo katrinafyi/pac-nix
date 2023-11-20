@@ -1,6 +1,10 @@
 let 
   overlay = final: prev: 
     {
+      ocamlPackages = prev.ocamlPackages.overrideScope'
+        (ofinal: oprev:
+          { bap = oprev.bap.override { llvm = final.llvm_11; }; });
+
       asli = (prev.callPackage ./asli.nix {})
         # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
         ;
