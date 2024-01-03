@@ -10,7 +10,7 @@
 
 ocamlPackages.buildDunePackage rec {
   pname = "gtirb_semantics";
-  version = "";
+  version = "unstable-2024-01-03";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
