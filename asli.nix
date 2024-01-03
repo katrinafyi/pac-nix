@@ -20,9 +20,9 @@ ocamlPackages.buildDunePackage rec {
   };
 
   checkInputs = [ ocamlPackages.alcotest ];
-  buildInputs = [ pkgs.z3 ];
+  buildInputs = [ ];
   nativeBuildInputs = (with pkgs; [ ott ]) ++ (with ocamlPackages; [ menhir ]);
-  propagatedBuildInputs = [ pkgs.pcre ] ++ (with ocamlPackages; [ linenoise pprint zarith z3 ocaml_pcre ]);
+  propagatedBuildInputs = [ pkgs.z3 pkgs.pcre ] ++ (with ocamlPackages; [ linenoise pprint zarith z3 ocaml_pcre ]);
   doCheck = lib.versionAtLeast ocaml.version "4.09";
 
   configurePhase = ''

@@ -21,6 +21,9 @@ let
 
       bap-primus = prev.callPackage ./bap-primus.nix {};
 
+      gtirb-semantics = prev.callPackage ./gtirb-semantics.nix {};
+      ocaml-hexstring = prev.callPackage ./ocaml-hexstring.nix {};
+
       # MOVED: basil-related packages now in ./basil/overlay.nix
       basil = prev.basil;
 

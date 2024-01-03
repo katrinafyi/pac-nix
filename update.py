@@ -78,6 +78,7 @@ PACKAGES: list[Package] = [
   Package('basil', 'UQ-PAC/bil-to-boogie-translator'),
   Package('bap-primus', 'UQ-PAC/bap', 'aarch64-pull-request-2'),
   Package('asl-translator', 'UQ-PAC/llvm-translator', 'main'),
+  Package('gtirb-semantics', 'UQ-PAC/gtirb-semantics', 'main'),
 ]
 
 
