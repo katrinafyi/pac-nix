@@ -80,6 +80,7 @@ PACKAGES: list[Package] = [
   Package('asl-translator', 'UQ-PAC/llvm-translator', 'main'),
   Package('gtirb-semantics', 'UQ-PAC/gtirb-semantics', 'main'),
 ]
+# NOTE: also change files in ./.github/workflows/*.yml
 
 
 def run(args: list[str], check: bool = True, **kwargs) -> subprocess.CompletedProcess:
