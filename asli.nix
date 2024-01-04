@@ -5,8 +5,7 @@
   ocamlPackages
 }:
 
-
-ocamlPackages.buildDunePackage rec {
+let self = ocamlPackages.buildDunePackage {
   pname = "asli";
   version = "unstable-2023-09-18";
 
@@ -33,9 +32,16 @@ ocamlPackages.buildDunePackage rec {
 
   outputs = [ "out" ];
 
+  passthru = {
+    prelude = "${self.out}/share/asli/prelude.asl";
+    mra_tools = "${self.out}/share/asli/mra_tools";
+    dir = "${self.out}/share/asli";
+  };
+
   meta = {
     homepage = "https://github.com/UQ-PAC/aslp";
     description = "ASL partial evaluator to extract semantics from ARM's MRA.";
     maintainers = [ "Kait Lam <k@rina.fyi>" ];
   };
-}
+};
+in self
