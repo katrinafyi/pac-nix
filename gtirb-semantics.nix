@@ -12,13 +12,13 @@
 
 ocamlPackages.buildDunePackage rec {
   pname = "gtirb_semantics";
-  version = "unstable-2024-01-03";
+  version = "unstable-2024-01-04";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
-    rev = "ee087c10d532867ec160900a8bc688237e22c9b5";
-    sha256 = "sha256-YruvoMo/PJJcETlDBJQukY040RPy1o3XLgerWiO3Zeo=";
+    rev = "ebaf42e9ca0f10d07b84e61598117f0c4f57700b";
+    sha256 = "sha256-UeaU1C8nfXeiW29wG8yyuE4Z1vSHm3nnydoHl35rtzQ=";
   };
 
   checkInputs = [ ];
