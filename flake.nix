@@ -1,8 +1,11 @@
 {
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs.sbt-derivation.url = "github:zaninime/sbt-derivation";
+  inputs.sbt-derivation.flake = false;
 
-  outputs = { self, nixpkgs, ... }:
+  outputs = { self, nixpkgs, sbt-derivation, ... }:
     let
+      lib = nixpkgs.lib;
       overlay = import ./overlay.nix;
 
       systems = [
@@ -10,27 +13,31 @@
         "aarch64-linux"
       ];
 
-      nixpkgss = nixpkgs.lib.genAttrs systems
+      nixpkgss = lib.genAttrs systems
         (system: (import nixpkgs {
           system = system;
-          overlays = [ self.overlays.default ];
+          overlays = [
+            self.overlays.default
+            (import "${sbt-derivation}/overlay.nix")
+          ];
         }));
 
       forAllSystems = f:
-        nixpkgs.lib.genAttrs
+        lib.genAttrs
           systems
           (system: f nixpkgss.${system});
 
+      onlyDerivations = lib.filterAttrs (_: lib.isDerivation);
+
       makeAll = nixpkgs: pkgs':
-        let lib = nixpkgs.lib;
-        in nixpkgs.symlinkJoin {
+        nixpkgs.symlinkJoin {
           name = "pac-nix-all";
-          paths = lib.filter lib.isDerivation (lib.attrValues pkgs');
+          paths = lib.attrValues pkgs';
         };
     in
     {
       packages = forAllSystems (pkgs:
-        let pkgs' = self.overlays.default pkgs pkgs;
+        let pkgs' = onlyDerivations (self.overlays.default pkgs pkgs);
         in pkgs' // { all = makeAll pkgs pkgs'; });
 
       formatter = forAllSystems (pkgs: pkgs.nixpkgs-fmt);
