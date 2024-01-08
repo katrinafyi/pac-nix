@@ -1,9 +1,7 @@
 {
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.sbt-derivation.url = "github:zaninime/sbt-derivation";
-  inputs.sbt-derivation.flake = false;
 
-  outputs = { self, nixpkgs, sbt-derivation, ... }:
+  outputs = { self, nixpkgs, ... }:
     let
       lib = nixpkgs.lib;
       overlay = import ./overlay.nix;
@@ -16,10 +14,7 @@
       nixpkgss = lib.genAttrs systems
         (system: (import nixpkgs {
           system = system;
-          overlays = [
-            self.overlays.default
-            (import "${sbt-derivation}/overlay.nix")
-          ];
+          overlays = [ self.overlays.default ];
         }));
 
       forAllSystems = f:
