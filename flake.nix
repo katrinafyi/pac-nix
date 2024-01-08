@@ -1,4 +1,7 @@
 {
+  nixConfig.extra-substituters = [ "https://pac-nix.cachix.org/" ];
+  nixConfig.extra-trusted-public-keys = [ "pac-nix.cachix.org-1:l29Pc2zYR5yZyfSzk1v17uEZkhEw0gI4cXuOIsxIGpc=" ];
+
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
   outputs = { self, nixpkgs, ... }:
@@ -39,6 +42,5 @@
 
       overlays.default = import ./overlay.nix;
 
-      nixConfig.substituters = [ "https://pac-nix.cachix.org/" ];
     };
 }
