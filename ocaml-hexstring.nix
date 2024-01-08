@@ -1,9 +1,9 @@
-{ lib,
-  fetchFromGitHub,
-  ocaml,
-  pkgs,
-  asli,
-  ocamlPackages
+{ lib
+, fetchFromGitHub
+, ocaml
+, pkgs
+, asli
+, ocamlPackages
 }:
 
 ocamlPackages.buildDunePackage rec {
@@ -19,7 +19,7 @@ ocamlPackages.buildDunePackage rec {
 
   checkInputs = [ ];
   buildInputs = (with ocamlPackages; [ bisect_ppx ]);
-  nativeBuildInputs = [];
+  nativeBuildInputs = [ ];
   propagatedBuildInputs = (with ocamlPackages; [ ppx_inline_test ]);
   doCheck = lib.versionAtLeast ocaml.version "4.09";
 

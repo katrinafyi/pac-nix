@@ -1,7 +1,7 @@
-{ pkgs ? import ./pkgs.nix {} }:
+{ pkgs ? import ./pkgs.nix { } }:
 pkgs.mkShell {
-  packages = 
-    (with pkgs; [ ocaml ott ocamlformat ]) ++ 
+  packages =
+    (with pkgs; [ ocaml ott ocamlformat ]) ++
     (with pkgs.ocamlPackages; [ merlin ocaml-lsp odoc ]);
 
   inputsFrom = [ pkgs.asli ];

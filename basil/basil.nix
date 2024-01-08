@@ -1,11 +1,11 @@
-{ lib,
-  fetchFromGitHub,
-  mkSbtDerivation,
-  makeBinaryWrapper,
-  jdk,
-  jre,
-  testers,
-  basil
+{ lib
+, fetchFromGitHub
+, mkSbtDerivation
+, makeBinaryWrapper
+, jdk
+, jre
+, testers
+, basil
 }:
 
 mkSbtDerivation rec {

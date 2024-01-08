@@ -37,7 +37,8 @@ let
     rev = "998374baace397ea98f3b1d768e81c978b4fba41";
     sha256 = "09n34rdp0wpm8zy30zx40wkkc4gbv2k3cv181y6c1260rllwk5d1";
   };
-  keystone = fetchFromGitHub { # only for tests
+  keystone = fetchFromGitHub {
+    # only for tests
     owner = "keystone-engine";
     repo = "keystone";
     rev = "d7ba8e378e5284e6384fc9ecd660ed5f6532e922";
@@ -86,7 +87,8 @@ let
     rev = "1.8.4";
     sha256 = "1z0gj7a6jypkijmpknis04qybs1hkd04d1arr3gy89lnxmp6qzlm";
   };
-  googletest = fetchFromGitHub { # only for tests
+  googletest = fetchFromGitHub {
+    # only for tests
     owner = "google";
     repo = "googletest";
     rev = "90a443f9c2437ca8a682a1ac625eba64e1d74a8a";
@@ -99,21 +101,25 @@ let
     sha256 = "015g8520a0c55gwmv7pfdsgfz2rpdmh3d1nq5n9bd65n35492s3q";
   };
 
-  retdec-support = let
-    version = "2019-03-08"; # make sure to adjust both hashes (once with withPEPatterns=true and once withPEPatterns=false)
-  in fetchzip {
-    url = "https://github.com/avast-tl/retdec-support/releases/download/${version}/retdec-support_${version}.tar.xz";
-    hash = if withPEPatterns then ""
-                             else "sha256-paeNrxXTE7swuKjP+sN42xnCYS7x5Y5CcUe7tyzsLxs=";
-    stripRoot = false;
-    # Removing PE signatures reduces this from 3.8GB -> 642MB (uncompressed)
-    postFetch = lib.optionalString (!withPEPatterns) ''
-      rm -r "$out/generic/yara_patterns/static-code/pe"
-    '';
-  } // {
-    inherit version; # necessary to check the version against the expected version
-    rev = version;
-  };
+  retdec-support =
+    let
+      version = "2019-03-08"; # make sure to adjust both hashes (once with withPEPatterns=true and once withPEPatterns=false)
+    in
+    fetchzip
+      {
+        url = "https://github.com/avast-tl/retdec-support/releases/download/${version}/retdec-support_${version}.tar.xz";
+        hash =
+          if withPEPatterns then ""
+          else "sha256-paeNrxXTE7swuKjP+sN42xnCYS7x5Y5CcUe7tyzsLxs=";
+        stripRoot = false;
+        # Removing PE signatures reduces this from 3.8GB -> 642MB (uncompressed)
+        postFetch = lib.optionalString (!withPEPatterns) ''
+          rm -r "$out/generic/yara_patterns/static-code/pe"
+        '';
+      } // {
+      inherit version; # necessary to check the version against the expected version
+      rev = version;
+    };
 
   # patch CMakeLists.txt for a dependency and compare the versions to the ones expected by upstream
   # this has to be applied for every dependency (which it is in postPatch)
@@ -130,7 +136,8 @@ let
     fi
   '';
 
-in stdenv.mkDerivation rec {
+in
+stdenv.mkDerivation rec {
   pname = "retdec";
 
   # If you update this you will also need to adjust the versions of the updated dependencies. You can do this by first just updating retdec
@@ -168,7 +175,7 @@ in stdenv.mkDerivation rec {
     zlib
   ];
 
-  cmakeFlags_deps = builtins.map 
+  cmakeFlags_deps = builtins.map
     (dep: "-D${lib.toUpper dep.dep_name}_URL=${dep}")
     external_deps;
 
@@ -194,7 +201,7 @@ in stdenv.mkDerivation rec {
     (retdec-support // { dep_name = "support_pkg"; dep_key = "_VERSION"; })
   ];
 
-  patches = [];
+  patches = [ ];
 
   postPatch = (lib.concatMapStrings patchDep external_deps) + ''
 
@@ -239,6 +246,6 @@ EOF
     homepage = "https://retdec.com";
     license = licenses.mit;
     maintainers = with maintainers; [ dtzWill timokau ];
-    platforms = ["x86_64-linux" "i686-linux"];
+    platforms = [ "x86_64-linux" "i686-linux" ];
   };
 }

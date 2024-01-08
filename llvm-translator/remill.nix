@@ -1,16 +1,17 @@
-{ stdenv,
-  fetchzip,
-  fetchurl,
-  fetchFromGitHub, 
-  symlinkJoin,
-  python3,
-  bash,
-  cmake,
-  ninja,
-  git,
+{ stdenv
+, fetchzip
+, fetchurl
+, fetchFromGitHub
+, symlinkJoin
+, python3
+, bash
+, cmake
+, ninja
+, git
+,
 }:
 
-let 
+let
   cxx-common = fetchzip {
     url = "https://github.com/lifting-bits/cxx-common/releases/download/v0.2.7/vcpkg_ubuntu-20.04_llvm-14_amd64.tar.xz";
     hash = "sha256-FTw/GFLasAM5rKvgbltLNwJ8464x2O5I2TZMtuMSrVo=";
@@ -43,7 +44,8 @@ let
     '';
   };
 
-in stdenv.mkDerivation rec {
+in
+stdenv.mkDerivation rec {
   pname = "remill";
   version = "v5.0.7";
 
@@ -60,34 +62,34 @@ in stdenv.mkDerivation rec {
   configurePhase = "true";
 
   buildPhase = ''
-  which curl 
-  exit 
-    substituteInPlace scripts/build.sh \
-      --replace 'source /etc/os-release' 'ID=arch' \
-      --replace 'curl -LO "''${URL}"' 'true' \
-      --replace 'tar -xJf "''${GITHUB_LIBS}" ''${TAR_OPTIONS}' 'mkdir -p $LIBRARY_VERSION && cp -r ${cxx-common}/. $LIBRARY_VERSION'
+    which curl 
+    exit 
+      substituteInPlace scripts/build.sh \
+        --replace 'source /etc/os-release' 'ID=arch' \
+        --replace 'curl -LO "''${URL}"' 'true' \
+        --replace 'tar -xJf "''${GITHUB_LIBS}" ''${TAR_OPTIONS}' 'mkdir -p $LIBRARY_VERSION && cp -r ${cxx-common}/. $LIBRARY_VERSION'
 
 
-    ghidra=$(mktemp -d)
-    cp -r ${ghidra}/. $ghidra
-    echo ghidra = $ghidra
+      ghidra=$(mktemp -d)
+      cp -r ${ghidra}/. $ghidra
+      echo ghidra = $ghidra
 
-    sleigh=$(mktemp -d)
-    cp -r ${sleigh}/. $sleigh
-    echo sleigh = $sleigh
+      sleigh=$(mktemp -d)
+      cp -r ${sleigh}/. $sleigh
+      echo sleigh = $sleigh
 
-    cat $sleigh/src/setup-ghidra-source.cmake 
-    substituteInPlace $sleigh/src/setup-ghidra-source.cmake \
-      --replace 'GIT_REPOSITORY https://github.com/NationalSecurityAgency/ghidra' "SOURCE_DIR $ghidra"
+      cat $sleigh/src/setup-ghidra-source.cmake 
+      substituteInPlace $sleigh/src/setup-ghidra-source.cmake \
+        --replace 'GIT_REPOSITORY https://github.com/NationalSecurityAgency/ghidra' "SOURCE_DIR $ghidra"
 
-    substituteInPlace CMakeLists.txt \
-      --replace 'GIT_REPOSITORY https://github.com/lifting-bits/sleigh.git' "SOURCE_DIR $sleigh"
+      substituteInPlace CMakeLists.txt \
+        --replace 'GIT_REPOSITORY https://github.com/lifting-bits/sleigh.git' "SOURCE_DIR $sleigh"
 
-    substituteInPlace 
+      substituteInPlace 
 
-    bash scripts/build.sh \
-      --prefix $out \
-      --extra-cmake-args "-DCMAKE_BUILD_TYPE=Release"
+      bash scripts/build.sh \
+        --prefix $out \
+        --extra-cmake-args "-DCMAKE_BUILD_TYPE=Release"
   '';
 
 }

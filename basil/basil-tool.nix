@@ -1,12 +1,12 @@
-{ lib,
-  fetchFromGitHub,
-  stdenv,
-  makeBinaryWrapper,
-  testers,
-  python3,
-  basil-tool,
-
-  basil,
+{ lib
+, fetchFromGitHub
+, stdenv
+, makeBinaryWrapper
+, testers
+, python3
+, basil-tool
+, basil
+,
 }:
 
 stdenv.mkDerivation rec {
@@ -29,25 +29,25 @@ stdenv.mkDerivation rec {
   unpackPhase = ":";
 
   installPhase = ''
-    mkdir -p $out/bin
+        mkdir -p $out/bin
 
-    basiltool=$out/bin/basil-tool
+        basiltool=$out/bin/basil-tool
 
-    cp -v $src/basil-tool.py $basiltool
-    chmod u+rw $basiltool
+        cp -v $src/basil-tool.py $basiltool
+        chmod u+rw $basiltool
 
-    head -n1 $src/basil-tool.py > $basiltool
+        head -n1 $src/basil-tool.py > $basiltool
 
-    cat <<EOF >> $basiltool
-def __raise(e): raise e  # nix
-def __which(x): from shutil import which; p = which(x); return p if p else __raise(FileNotFoundError("'" + x + "' not found in PATH"))  # nix
-EOF
+        cat <<EOF >> $basiltool
+    def __raise(e): raise e  # nix
+    def __which(x): from shutil import which; p = which(x); return p if p else __raise(FileNotFoundError("'" + x + "' not found in PATH"))  # nix
+    EOF
 
-    cat $src/basil-tool.py >> $basiltool
+        cat $src/basil-tool.py >> $basiltool
 
-    substituteInPlace $out/bin/basil-tool \
-      --replace 'shutil.which(' '__which(' \
-      --replace /target/scala-3.1.0/wptool-boogie-assembly-0.0.1.jar \
-        ${basil}/share/basil/*.jar
+        substituteInPlace $out/bin/basil-tool \
+          --replace 'shutil.which(' '__which(' \
+          --replace /target/scala-3.1.0/wptool-boogie-assembly-0.0.1.jar \
+            ${basil}/share/basil/*.jar
   '';
 }

@@ -1,12 +1,12 @@
-{ lib,
-  fetchFromGitHub,
-  ocaml,
-  pkgs,
-  ocamlPackages,
-  llvmPackages_14,
-  asli,
-  ocaml-llvm,
-  z3
+{ lib
+, fetchFromGitHub
+, ocaml
+, pkgs
+, ocamlPackages
+, llvmPackages_14
+, asli
+, ocaml-llvm
+, z3
 }:
 
 ocamlPackages.buildDunePackage rec {

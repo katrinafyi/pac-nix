@@ -1,12 +1,12 @@
-{ lib,
-  fetchFromGitHub,
-  pkgs,
-  ocamlPackages,
-  libllvm,
-
-  zlib,
-  libxml2,
-  ncurses,
+{ lib
+, fetchFromGitHub
+, pkgs
+, ocamlPackages
+, libllvm
+, zlib
+, libxml2
+, ncurses
+,
 }:
 
 ocamlPackages.buildDunePackage rec {

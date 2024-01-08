@@ -1,13 +1,14 @@
-{ lib,
-  fetchFromGitHub,
-  ocaml,
-  pkgs,
-  ocamlPackages,
-  protobuf,
-  asli,
-  ocaml-hexstring,
-  writeShellApplication,
-  makeWrapper,
+{ lib
+, fetchFromGitHub
+, ocaml
+, pkgs
+, ocamlPackages
+, protobuf
+, asli
+, ocaml-hexstring
+, writeShellApplication
+, makeWrapper
+,
 }:
 
 ocamlPackages.buildDunePackage rec {

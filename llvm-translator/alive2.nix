@@ -1,10 +1,16 @@
-{ stdenv,
-  lib,
-  fetchpatch,
-  fetchFromGitHub,
-  cmake, ninja, git, z3, re2c, zlib, ncurses,
-  llvm-rtti-eh,
-  llvmPackages_15
+{ stdenv
+, lib
+, fetchpatch
+, fetchFromGitHub
+, cmake
+, ninja
+, git
+, z3
+, re2c
+, zlib
+, ncurses
+, llvm-rtti-eh
+, llvmPackages_15
 }:
 
 let _llvm = llvm-rtti-eh.override { llvmPackages = llvmPackages_15; };

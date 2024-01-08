@@ -1,4 +1,4 @@
-{ pkgs ? import ./pkgs.nix {} }:
+{ pkgs ? import ./pkgs.nix { } }:
 pkgs.mkShell {
   name = "update-py-shell";
   packages = with pkgs; [
