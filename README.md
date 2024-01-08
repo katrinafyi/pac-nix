@@ -57,6 +57,7 @@ Other Nix files also define dependencies needed by the end-user tools.
 
 ## usage
 
+### first time
 To use these, you will need the Nix package manager
 from [nixos.org][] (if able, a multi-user install is preferred).
 This should extend your PATH with ~/.nix-profile/bin which is where
@@ -64,7 +65,14 @@ installed binaries will go.
 
 [nixos.org]: https://nixos.org/download
 
-First, add this repository as a Nix channel called "pac" and update its contents.
+First, set up your user with Nix:
+```bash
+cat <<EOF | sudo tee -a /etc/nix/nix.conf
+extra-experimental-features = nix-command flakes
+extra-trusted-users = $USER
+EOF
+```
+<!--
 As your usual user, run:
 ```bash
 nix-channel --add https://github.com/katrinafyi/pac-nix/archive/refs/heads/main.tar.gz pac
@@ -86,25 +94,35 @@ nix-channel --update
   Be aware that using sudo here might require sudo in later commands as well.
 </details>
 </blockquote>
+-->
+
+### installing packages
 
 Installing a package is straightforward.
 ```bash
-nix-env -iA pac.aslp  # or pac.bap-aslp or pac.basil
+nix profile install github:katrinafyi/pac-nix#aslp  # add -Lv for more progress output
+# say 'y' to config settings
 ```
-This will build and make available an executable in ~/.nix-profile/bin.
+For other packages, change the term after `#` to bap-aslp, basil, etc. 
+This will build and make available an executable on your PATH (stored in ~/.nix-profile/bin).
 
 Note that this will install the package at a particular commit hash from the upstream repository.
 The next sections will discuss building a package
 from local sources and setting up development environments.
 
-To list installed package:
+To list available packages:
 ```bash
-nix-env -q
+nix flake show github:katrinafyi/pac-nix
 ```
 
-To uninstall, use the name from `-q` with `--uninstall`.
+To list installed packages:
 ```bash
-nix-env --uninstall aslp-unstable-2023-09-18
+nix profile list
+```
+
+To uninstall, use the *index* from `nix profile list` in this command:
+```bash
+nix profile remove 1234
 ```
 
 To re-install or rebuild a changed package,
@@ -135,14 +153,17 @@ The GitHub Actions workflow maintains a custom binary cache for this repository.
 Using this cache, you can install these Nix packages while avoiding the need to run any compilations yourself.
 This can save a fair bit of bandwidth and time.
 
-The cache is served at [pac-nix.cachix.org](https://pac-nix.cachix.org/) and can be used like so:
+The cache is served at [pac-nix.cachix.org](https://pac-nix.cachix.org/) and should be used automatically
+by the instructions above. This will be visible in its output:
+<!--can be used like so:
 ```bash
 # install the cachix tool
 nix-env -iA cachix -f https://cachix.org/api/v1/install
 # configure nix to use cache. you may need to trust your username
 cachix use pac-nix
 ```
-Then, `nix-env` should draw from this cache in addition to the usual Nixpkgs cache. This will be visible in its output:
+-->
+
 ```
 copying path '/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-ocaml4.14.1-bap-2.5.0' from 'https://cache.nixos.org'...
 copying path '/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bap-aslp-2.5.0' from 'https://pac-nix.cachix.org'...
