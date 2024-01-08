@@ -23,20 +23,35 @@ The **pkgs.nix** file defines the package set as
 the usual \<nixpkgs\> extended with those from this repo.
 
 For users of tools, the main packages are:
-- **[aslp][]**: the ASLp partial evaluator with ARM's MRA,
+- **[aslp][]**: the ASLp partial evaluator with ARM's MRA (provides `aslp`),
 - **[bap-aslp][]**[^1]: a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), 
-- **[bap-primus][]**: PAC's fork of BAP with the [Primus Lisp PR][] but without ASLp (provides `bap-primus`), and
-- **[basil][]**: the Basil tool for analysis and transpilation to Boogie code.
+- **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`),
+- **[ddisasm][]**: GrammaTech's datalog disassembler (provides `ddisasm`), and
+- **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`).
+
 
 [aslp]: https://github.com/UQ-PAC/aslp
 [bap-aslp]: https://github.com/UQ-PAC/bap-asli-plugin
 [bap-primus]: https://github.com/UQ-PAC/bap/tree/aarch64-pull-request-2
 [Primus Lisp PR]: https://github.com/BinaryAnalysisPlatform/bap/pull/1546
 [basil]: https://github.com/UQ-PAC/bil-to-boogie-translator
+[ddisasm]: https://github.com/GrammaTech/ddisasm
+[godbolt]: https://github.com/ailrst/compiler-explorer
+[gtirb-semantics]: https://github.com/UQ-PAC/gtirb-semantics
 
-These are each defined in a .nix file of the same name,
+The packages are each defined in a .nix file of the same name,
 then instantiated within overlay.nix and
 built into a package set in pkgs.nix.
+
+<details>
+<summary>Other packages</summary>
+These are less frequently used and might be untested.
+  
+- **[bap-primus][]**: PAC's fork of BAP with the [Primus Lisp PR][] but without ASLp (provides `bap-primus`)
+- **[godbolt][]**: the Godbolt compiler explorer with the Basil toolchain for interactive use (provides `godbolt`)
+
+Other Nix files also define dependencies needed by the end-user tools.
+</details>
 
 [^1]: Due to the plugin loading method, `bap-mc -- [bytecode]` will not work to disassemble one opcode. Instead, you should omit the `--` or pipe the bytes via stdin `echo [bytecode] | bap-mc`.
 
