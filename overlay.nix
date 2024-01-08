@@ -21,7 +21,6 @@ let
 
       bap-primus = prev.callPackage ./bap-primus.nix {};
 
-      gtirb-semantics = prev.callPackage ./gtirb-semantics.nix {};
       ocaml-hexstring = prev.callPackage ./ocaml-hexstring.nix {};
 
       # MOVED: basil-related packages now in ./basil/overlay.nix
@@ -37,5 +36,9 @@ let
     };
 in final: prev: 
   prev.lib.composeManyExtensions
-    [ overlay (import ./basil/overlay.nix) ]
+    [ 
+      overlay 
+      (import ./basil/overlay.nix) 
+      (import ./gtirb/overlay.nix) 
+    ]
     final prev
