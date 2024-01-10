@@ -48,6 +48,8 @@ ocamlPackages.buildDunePackage rec {
     cp -v ${wrapper}/bin/* $out/bin/gtirb-semantics
   '';
 
+  outputs = [ "out" "dev" ];
+
   meta = {
     homepage = "https://github.com/UQ-PAC/gtirb-semantics";
     description = "Add instruction semantics to the IR of a dissassembled ARM64 binary";

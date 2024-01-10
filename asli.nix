@@ -20,9 +20,9 @@ let
     };
 
     checkInputs = [ ocamlPackages.alcotest ];
-    buildInputs = [ ];
+    buildInputs = (with ocamlPackages; [ linenoise ]);
     nativeBuildInputs = (with pkgs; [ ott ]) ++ (with ocamlPackages; [ menhir ]);
-    propagatedBuildInputs = [ pkgs.z3 pkgs.pcre ] ++ (with ocamlPackages; [ linenoise pprint zarith z3 ocaml_pcre ]);
+    propagatedBuildInputs = [ pkgs.z3 pkgs.pcre ] ++ (with ocamlPackages; [ pprint zarith z3 ocaml_pcre ]);
     doCheck = lib.versionAtLeast ocaml.version "4.09";
 
     configurePhase = ''
@@ -31,7 +31,7 @@ let
       cp -rv prelude.asl mra_tools tests $out/share/asli
     '';
 
-    outputs = [ "out" ];
+    outputs = [ "out" "dev" ];
 
     passthru = {
       prelude = "${self.out}/share/asli/prelude.asl";
