@@ -1,12 +1,10 @@
-{ pkgs ? import ./pkgs.nix { } }:
-pkgs.mkShell {
+{ mkShell
+, update
+}:
+mkShell {
   name = "update-py-shell";
-  packages = with pkgs; [
-    python3
-    cacert
-    git
-    nix
-    nix-update
+  inputsFrom = [
+    update
   ];
 
   meta = {

@@ -4,8 +4,8 @@
 # for each updated package, this checks the derivation can be built
 # then commits its results.
 
-# usage in nix-shell: 
-# nix-shell ./update-shell.nix --pure --run './update.py ...'
+# usage in flake: 
+# nix run .#update -- ARGS
 
 import os
 import json
@@ -69,7 +69,7 @@ class Package:
 @dataclass 
 class Args:
   mode: Literal['check', 'upgrade']
-  file: str
+  dir: str
   rest: list[str]
 
 PACKAGES: list[Package] = [
@@ -109,18 +109,19 @@ def arg_path_exists(p: str) -> str:
 
 
 def upgrade(p: Package, args: Args):
+  flakeattr = f'{args.dir}#{p.attr}'
 
   if args.mode == 'upgrade':
 
-    run(['nix-update', '-f', args.file, p.attr, '--version', f'branch={p.branch}'] +
+    run(['nix-update', '--flake', '-f', args.dir, p.attr, '--version', f'branch={p.branch}'] +
         args.rest)
     for p2 in p.then:
       print(f'testing downstream build of {p2}...')
-      run(['nix-build', args.file, '-A', p2, '--no-out-link'])
+      run(['nix', 'build', f'{args.dir}#{p2}', '--no-out-link'])
 
   elif args.mode == 'check':
 
-    current = run(['nix-instantiate', '--eval', args.file, '-A', f'{p.attr}.src.rev'],
+    current = run(['nix', 'eval', flakeattr + '.src.rev'],
                   stdout=subprocess.PIPE).stdout.decode('ascii').strip('"\n')
   
     total_commits = p.fetch_commits_behind(current)
@@ -153,8 +154,8 @@ if __name__ == "__main__":
   p = argparse.ArgumentParser(description=f'updates pac-nix packages. supported packages: {", ".join(attrs)}.')
   p.add_argument('mode', choices=['check', 'upgrade', 'do-upgrade'],
                  help='action to perform. do-upgrade is upgrade but also builds, tests, and commits the changes.')
-  p.add_argument('--file', '-f', default='default.nix', type=arg_path_exists,
-                 help='use the given file as a package set.')
+  p.add_argument('--dir', '-d', default='.', type=arg_path_exists,
+                 help='use the given path as a flake.')
   p.add_argument('--attr', '-A', action='append', choices=attrs, default=[], metavar='PACKAGE', dest='attrs',
                  help='only act on the given packages.')
   p.add_argument('rest', nargs='*', metavar='-- NIX-UPDATE OPTIONS',

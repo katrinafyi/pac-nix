@@ -4,6 +4,8 @@ let
       # MOVED: basil-related packages now in ./basil/overlay.nix
       basil = prev.basil;
 
+      update = prev.callPackage ./update.nix { };
+
       # llvm-translator packages 
       ocaml-llvm = prev.callPackage ./llvm-translator/ocaml-llvm.nix { libllvm = final.llvmPackages_14.libllvm; };
       asl-translator = prev.callPackage ./llvm-translator/asl-translator.nix { };

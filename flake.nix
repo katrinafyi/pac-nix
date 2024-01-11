@@ -42,6 +42,7 @@
 
       devShells = forAllSystems (pkgs: {
         ocaml = pkgs.callPackage ./ocaml-shell.nix { };
+        update = pkgs.callPackage ./update-shell.nix { };
       });
 
       formatter = forAllSystems (pkgs: pkgs.nixpkgs-fmt);

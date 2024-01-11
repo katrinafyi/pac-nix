@@ -15,19 +15,17 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v20
-      with: { nix_path: 'nixpkgs=channel:nixpkgs-unstable' }
     - uses: cachix/cachix-action@v12
       with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}' }
 
-    - run: nix-build ./update-shell.nix
     - run: |
-        nix-shell ./update-shell.nix --run './update.py check -A ${{matrix.pkg}}'
+        nix run .#update -- check -A ${{matrix.pkg}}
 
     - run: |
         git pull
         git config user.name 'github-actions[bot]'
         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
     - run: |
-        nix-shell ./update-shell.nix --run './update.py do-upgrade -A ${{matrix.pkg}}'
+        nix run .#update -- do-upgrade -A ${{matrix.pkg}}
     - run: git push
 
