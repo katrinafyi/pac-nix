@@ -195,15 +195,32 @@ As such, you may want to re-use these when developing instead of
 duplicating them into your local system.
 This may also speed up the getting-started process and make it more reliable. 
 
-This is done with the `nix-shell` which
+This is done with the `nix develop` which
 starts a subshell within a particular Nix environment.
 
-The most basic usage is something like
+For example,
 ```
-nix-shell -p hello
+nix develop github:katrinafyi/pac-nix#ocaml
 ```
-which spawns a shell with the `hello` binary.
+spawns a shell with the build environment for our
+OCaml packages (aslp, gtirb-semantics) and all dependencies
+installed.
+From within this shell, you can start IDEs and
+tools to inherit the environment.
 
+These shells are defined in the \*-shell.nix files (e.g. ocaml-shell.nix).
+You can copy this format to make other shells.
+_inputsFrom_ defines the package(s) whose dependencies we will load
+(i.e. what we want to build),
+and _packages_ are packages to make available for use
+(e.g. language servers, compilers).
+After adding packages to _packages_ or _inputsFrom_, you may
+need to add them to the derivation argument within the braces `{ ... }:`.
+
+Finally, new shells will need to be given a name in flake.nix's _devShells_
+attribute.
+
+<!--
 Unfortunately, this doesn't work for us since
 our packages aren't in \<nixpkgs\>.
 
@@ -222,8 +239,7 @@ To use a shell file, run:
 ```bash
 nix-shell ./asli-shell.nix
 ```
-From within the shell, you can start IDEs and
-tools to inherit the environment.
+-->
 
 See also: [nix-shell manual page](https://nixos.org/manual/nix/stable/command-ref/nix-shell).
 

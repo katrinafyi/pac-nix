@@ -7,4 +7,6 @@ final: prev:
   libehp = prev.callPackage ./libehp.nix { };
 
   gtirb-semantics = prev.callPackage ./gtirb-semantics.nix { };
+
+  ocaml-hexstring = prev.callPackage ./ocaml-hexstring.nix { };
 }

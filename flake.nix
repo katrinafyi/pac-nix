@@ -20,10 +20,12 @@
           overlays = [ self.overlays.default ];
         }));
 
-      forAllSystems = f:
+      forAllSystems' = f:
         lib.genAttrs
           systems
-          (system: f nixpkgss.${system});
+          (sys: f sys nixpkgss.${sys});
+
+      forAllSystems = f: forAllSystems' (_: f);
 
       onlyDerivations = lib.filterAttrs (_: lib.isDerivation);
 
@@ -37,6 +39,10 @@
       packages = forAllSystems (pkgs:
         let pkgs' = onlyDerivations (self.overlays.default pkgs pkgs);
         in pkgs' // { all = makeAll pkgs pkgs'; });
+
+      devShells = forAllSystems (pkgs: {
+        ocaml = pkgs.callPackage ./ocaml-shell.nix { };
+      });
 
       formatter = forAllSystems (pkgs: pkgs.nixpkgs-fmt);
 

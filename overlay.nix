@@ -1,28 +1,6 @@
 let
   overlay = final: prev:
     {
-      ocamlPackages = prev.ocamlPackages.overrideScope'
-        (ofinal: oprev:
-          { bap = oprev.bap.override { llvm = final.llvm_11; }; });
-
-      asli = (prev.callPackage ./asli.nix { })
-        # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
-      ;
-
-      aslp = prev.callPackage ./aslp.nix { };
-
-      bap-asli-plugin = (prev.callPackage ./bap-asli-plugin.nix { })
-        # .overrideAttrs { src = prev.lib.cleanSource ~/progs/bap-asli-plugin; }
-      ;
-
-      bap-plugins = prev.callPackage ./bap-plugins.nix { };
-
-      bap-aslp = prev.callPackage ./bap-aslp.nix { };
-
-      bap-primus = prev.callPackage ./bap-primus.nix { };
-
-      ocaml-hexstring = prev.callPackage ./ocaml-hexstring.nix { };
-
       # MOVED: basil-related packages now in ./basil/overlay.nix
       basil = prev.basil;
 
@@ -39,6 +17,8 @@ final: prev:
 prev.lib.composeManyExtensions
   [
     overlay
+    (import ./aslp/overlay.nix)
+    (import ./bap/overlay.nix)
     (import ./basil/overlay.nix)
     (import ./gtirb/overlay.nix)
   ]
