@@ -36,9 +36,9 @@ jobs:
       with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}' }
 
     - run: nix build .#${{matrix.pkg}}
-    - name: Run nix build .#${{matrix.pkg}}.tests -o result-tests
+    - name: Run nix build .#${{matrix.pkg}}.tests
       run: |
-        if nix-instantiate --eval -A ${{matrix.pkg}}.tests; then
-          nix build .#${{matrix.pkg}}.tests -o result-tests
-        fi
+        for test in $(nix eval .#${{matrix.pkg}}.tests --json | jq -r keys[]); do
+          nix build .#${{matrix.pkg}}.tests.$test --no-link
+        done
     - run: ls -l
