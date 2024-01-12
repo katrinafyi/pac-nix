@@ -8,7 +8,6 @@
 , ocaml-hexstring
 , writeShellApplication
 , makeWrapper
-,
 }:
 
 ocamlPackages.buildDunePackage rec {
@@ -34,7 +33,7 @@ ocamlPackages.buildDunePackage rec {
       # gtirb-semantics-wrapper: wrapper script for executing gtirb_semantics when packaged by Nix.
       # this inserts the required ASLI arguments, and passes through the user's input/output arguments.
 
-      prog="$(dirname "$0")"/_gtirb_semantics
+      prog="$(dirname "$0")"/gtirb_semantics
       input="$1"
       shift
       
@@ -44,8 +43,7 @@ ocamlPackages.buildDunePackage rec {
   };
 
   postInstall = ''
-    mv -v $out/bin/{,_}gtirb_semantics
-    cp -v ${wrapper}/bin/* $out/bin/gtirb-semantics
+    cp -v ${wrapper}/bin/* $out/bin/gtirb-semantics-nix
   '';
 
   outputs = [ "out" "dev" ];
