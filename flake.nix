@@ -49,5 +49,6 @@
 
       overlays.default = import ./overlay.nix;
 
+      lib.nixpkgs = nixpkgss.${builtins.currentSystem};
     };
 }
