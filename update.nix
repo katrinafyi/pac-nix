@@ -1,8 +1,11 @@
-{ writers
+{ lib
+, writers
 , nix
 , nix-update
 }:
 
-writers.writePython3Bin "pac-nix-update"
-{ libraries = [ nix nix-update ]; flakeIgnore = [ "E" "W" ]; }
-  (builtins.readFile ./update.py)
+let binpath = lib.makeBinPath [ nix nix-update ];
+in writers.writePython3Bin "pac-nix-update"
+{ flakeIgnore = [ "E" "W" ]; }
+  (''import os; os.environ['PATH'] += os.pathsep + r"""${binpath}"""; del os'' +
+  builtins.readFile ./update.py)
