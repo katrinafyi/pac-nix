@@ -20,12 +20,14 @@
           overlays = [ self.overlays.default ];
         }));
 
+      applySystem = sys: lib.mapAttrs (k: v: if v ? sys then v.${sys} else v);
+
       forAllSystems' = f:
         lib.genAttrs
           systems
-          (sys: f sys nixpkgss.${sys});
+          (sys: f (applySystem sys self // { pkgs = nixpkgss.${sys}; system = sys; }));
 
-      forAllSystems = f: forAllSystems' (_: f);
+      forAllSystems = f: forAllSystems' (x: f x.pkgs);
 
       onlyDerivations = lib.filterAttrs (_: lib.isDerivation);
 

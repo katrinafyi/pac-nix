@@ -1,8 +1,9 @@
 { lib
 , fetchFromGitHub
-, ocaml
-, pkgs
 , ocamlPackages
+, pcre
+, ott
+, z3
 }:
 
 let
@@ -21,14 +22,17 @@ let
 
     checkInputs = [ ocamlPackages.alcotest ];
     buildInputs = (with ocamlPackages; [ linenoise ]);
-    nativeBuildInputs = (with pkgs; [ ott ]) ++ (with ocamlPackages; [ menhir ]);
-    propagatedBuildInputs = [ pkgs.z3 pkgs.pcre ] ++ (with ocamlPackages; [ pprint zarith z3 ocaml_pcre ]);
-    doCheck = lib.versionAtLeast ocaml.version "4.09";
+    nativeBuildInputs = [ ott ] ++ (with ocamlPackages; [ menhir ]);
+    propagatedBuildInputs = [ z3 pcre ] ++ (with ocamlPackages; [ pprint zarith ocamlPackages.z3 ocaml_pcre ]);
 
     configurePhase = ''
-      export ASLI_OTT=${pkgs.ott.out + "/share/ott"}
+      export ASLI_OTT=${ott.out + "/share/ott"}
       mkdir -p $out/share/asli
       cp -rv prelude.asl mra_tools tests $out/share/asli
+    '';
+
+    shellHook = ''
+      export ASLI_OTT=${ott.out + "/share/ott"}
     '';
 
     outputs = [ "out" "dev" ];

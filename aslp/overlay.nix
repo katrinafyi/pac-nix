@@ -1,6 +1,6 @@
 final: prev:
 {
-  asli = (prev.callPackage ./asli.nix { })
+  asli = (final.callPackage ./asli.nix { })
     # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
   ;
 
