@@ -23,8 +23,8 @@ buildDunePackage rec {
   };
 
   checkInputs = [ ];
-  buildInputs = [ asli ocaml-hexstring ocaml-protoc-plugin ];
-  nativeBuildInputs = [ makeWrapper protobuf ocaml-protoc-plugin yojson ];
+  buildInputs = [ asli ocaml-hexstring ocaml-protoc-plugin yojson ];
+  nativeBuildInputs = [ makeWrapper protobuf ocaml-protoc-plugin ];
   propagatedBuildInputs = [ base64 ];
 
   wrapper = writeShellApplication {
