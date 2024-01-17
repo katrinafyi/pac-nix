@@ -24,7 +24,7 @@ ocamlPackages.buildDunePackage rec {
   checkInputs = [ ];
   buildInputs = [ asli ocaml-hexstring ocamlPackages.ocaml-protoc-plugin ];
   nativeBuildInputs = [ makeWrapper protobuf ocamlPackages.ocaml-protoc-plugin ];
-  propagatedBuildInputs = (with ocamlPackages; [ base64 ]);
+  propagatedBuildInputs = (with ocamlPackages; [ base64 yojson ]);
   doCheck = lib.versionAtLeast ocaml.version "4.09";
 
   wrapper = writeShellApplication {
