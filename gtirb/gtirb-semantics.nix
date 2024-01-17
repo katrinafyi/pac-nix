@@ -13,13 +13,13 @@
 
 buildDunePackage rec {
   pname = "gtirb_semantics";
-  version = "unstable-2024-01-12";
+  version = "unstable-2024-01-16";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
-    rev = "eef1a5a1ef6b2d3082dc1c596bca3d9e649d085f";
-    sha256 = "sha256-lJd4dnEqzT7cWLBf1cKAw8UFC3bOO50qSeiFpQbjdMc=";
+    rev = "bcec746e718ad8e560ef8d49e5797319ca943209";
+    sha256 = "sha256-TwfrCCFqo8rxP8k/t62kJkiQpztrJOmco3g4RAao3SM=";
   };
 
   checkInputs = [ ];
