@@ -27,7 +27,7 @@ jobs:
           [aslp, bap-aslp, bap-primus, basil,
           alive2, retdec-uq-pac, asl-translator,
           gtirb-semantics, ddisasm, 
-          ocamlPackages_pac_4_09.gtirb-semantics]
+          ocamlPackages_pac_4_09.asli]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

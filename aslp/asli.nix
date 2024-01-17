@@ -1,10 +1,10 @@
 { fetchFromGitHub
 , buildDunePackage
-# pkgs
+  # pkgs
 , pcre
 , ott
 , z3
-# ocamlPackages
+  # ocamlPackages
 , alcotest
 , linenoise
 , menhir

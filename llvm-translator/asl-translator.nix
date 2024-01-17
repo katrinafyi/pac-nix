@@ -1,18 +1,15 @@
 { lib
+, buildDunePackage
 , fetchFromGitHub
-, pkgs
-, ocamlPackages
 , asli
 , llvm
-, z3
 }:
 
-ocamlPackages.buildDunePackage rec {
+buildDunePackage rec {
   pname = "asl-translator";
   version = "unstable-2023-09-25";
 
-  buildInputs = [ z3 ];
-  propagatedBuildInputs = [ asli ocamlPackages.llvm ];
+  buildInputs = [ asli llvm ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
