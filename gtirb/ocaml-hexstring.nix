@@ -1,9 +1,10 @@
 { lib
 , fetchFromGitHub
-, ocaml
 , pkgs
 , asli
 , ocamlPackages
+, bisect_ppx
+, ppx_inline_test
 }:
 
 ocamlPackages.buildDunePackage rec {
@@ -18,10 +19,9 @@ ocamlPackages.buildDunePackage rec {
   };
 
   checkInputs = [ ];
-  buildInputs = (with ocamlPackages; [ bisect_ppx ]);
+  buildInputs = [ bisect_ppx ];
   nativeBuildInputs = [ ];
-  propagatedBuildInputs = (with ocamlPackages; [ ppx_inline_test ]);
-  doCheck = lib.versionAtLeast ocaml.version "4.09";
+  propagatedBuildInputs = [ ppx_inline_test ];
 
   meta = {
     homepage = "https://github.com/mimoo/hexstring";

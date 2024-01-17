@@ -17,10 +17,10 @@
       nixpkgss = lib.genAttrs systems
         (system: (import nixpkgs {
           system = system;
-          overlays = [ self.overlays.default ];
+          overlays = [ overlay ];
         }));
 
-      applySystem = sys: lib.mapAttrs (k: v: if v ? sys then v.${sys} else v);
+      applySystem = sys: lib.mapAttrs (k: v: v.${sys} or v);
 
       forAllSystems' = f:
         lib.genAttrs
@@ -36,11 +36,25 @@
           name = "pac-nix-all";
           paths = lib.attrValues pkgs';
         };
+
+      # `restrictOverlays attrs` a given attrset of packages to only those
+      # defined in the latest overlay, identified by _overlay attributes
+      # package sets.
+      restrictOverlays = lib.mapAttrsRecursiveCond
+        (as: !(as.type or null == "derivation" || as ? _overlay))
+        (ks: v:
+          if v ? _overlay
+          then restrictOverlays (v._overlay v v)
+          else v);
     in
     {
-      packages = forAllSystems (pkgs:
-        let pkgs' = onlyDerivations (self.overlays.default pkgs pkgs);
-        in pkgs' // { all = makeAll pkgs pkgs'; });
+      legacyPackages = forAllSystems
+        (pkgs: restrictOverlays (overlay pkgs pkgs));
+
+      packages = forAllSystems'
+        ({ legacyPackages, pkgs, ... }:
+          let drvs = onlyDerivations legacyPackages;
+          in drvs // { all = makeAll pkgs drvs; });
 
       devShells = forAllSystems (pkgs: {
         ocaml = pkgs.callPackage ./ocaml-shell.nix { };
@@ -49,7 +63,7 @@
 
       formatter = forAllSystems (pkgs: pkgs.nixpkgs-fmt);
 
-      overlays.default = import ./overlay.nix;
+      overlays.default = overlay;
 
       lib.nixpkgs = nixpkgss.${builtins.currentSystem};
     };

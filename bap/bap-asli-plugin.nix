@@ -1,9 +1,8 @@
 { stdenv
 , lib
 , asli
-, ocamlPackages
 , fetchFromGitHub
-,
+, bap
 }:
 
 stdenv.mkDerivation rec {
@@ -17,7 +16,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-CsdUjXHHVisfiTP2XGOHfm+Aa23KZep4IdgoYHQsnXg=";
   };
 
-  buildInputs = [ asli ocamlPackages.bap ocamlPackages.findlib ];
+  buildInputs = [ asli bap ];
 
   buildPhase = ''
     runHook preBuild

@@ -6,9 +6,15 @@ final: prev:
   capstone-grammatech = prev.callPackage ./capstone-grammatech.nix { };
 
   libehp = prev.callPackage ./libehp.nix { };
-  ocaml-hexstring = prev.callPackage ./ocaml-hexstring.nix { };
 
-  gtirb-semantics = prev.callPackage ./gtirb-semantics.nix { };
+  overlay_ocamlPackages = ofinal: oprev: {
+    ocaml-hexstring = ofinal.callPackage ./ocaml-hexstring.nix { };
+    gtirb-semantics = ofinal.callPackage ./gtirb-semantics.nix { };
+  };
 
-  proto-json = prev.callPackage ./proto-json.nix { };
+  inherit (final.ocamlPackages_pac) gtirb-semantics;
+
+  proto-json = prev.callPackage ./proto-json.nix {
+    inherit (final.ocamlPackages_pac) gtirb-semantics;
+  };
 }

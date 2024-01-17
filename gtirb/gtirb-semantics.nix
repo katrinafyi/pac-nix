@@ -1,16 +1,17 @@
 { lib
 , fetchFromGitHub
-, ocaml
-, pkgs
-, ocamlPackages
 , protobuf
 , asli
+, buildDunePackage
+, ocaml-protoc-plugin
 , ocaml-hexstring
+, base64
+, yojson
 , writeShellApplication
 , makeWrapper
 }:
 
-ocamlPackages.buildDunePackage rec {
+buildDunePackage rec {
   pname = "gtirb_semantics";
   version = "unstable-2024-01-12";
 
@@ -22,10 +23,9 @@ ocamlPackages.buildDunePackage rec {
   };
 
   checkInputs = [ ];
-  buildInputs = [ asli ocaml-hexstring ocamlPackages.ocaml-protoc-plugin ];
-  nativeBuildInputs = [ makeWrapper protobuf ocamlPackages.ocaml-protoc-plugin ];
-  propagatedBuildInputs = (with ocamlPackages; [ base64 yojson ]);
-  doCheck = lib.versionAtLeast ocaml.version "4.09";
+  buildInputs = [ asli ocaml-hexstring ocaml-protoc-plugin ];
+  nativeBuildInputs = [ makeWrapper protobuf ocaml-protoc-plugin yojson ];
+  propagatedBuildInputs = [ base64 ];
 
   wrapper = writeShellApplication {
     name = "gtirb-semantics-wrapper";

@@ -1,11 +1,9 @@
 { lib
 , fetchFromGitHub
-, ocaml
 , pkgs
 , ocamlPackages
-, llvmPackages_14
 , asli
-, ocaml-llvm
+, llvm
 , z3
 }:
 
@@ -14,7 +12,7 @@ ocamlPackages.buildDunePackage rec {
   version = "unstable-2023-09-25";
 
   buildInputs = [ z3 ];
-  propagatedBuildInputs = [ asli ocaml-llvm ];
+  propagatedBuildInputs = [ asli ocamlPackages.llvm ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";

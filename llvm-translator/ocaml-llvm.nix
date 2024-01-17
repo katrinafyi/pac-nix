@@ -1,15 +1,15 @@
 { lib
 , fetchFromGitHub
-, pkgs
-, ocamlPackages
-, libllvm
+, buildDunePackage
+, llvmPackages
+, ctypes
 , zlib
 , libxml2
 , ncurses
-,
 }:
 
-ocamlPackages.buildDunePackage rec {
+let libllvm = llvmPackages.libllvm;
+in buildDunePackage rec {
   pname = "llvm";
   version = "14.0.6";
 
@@ -30,7 +30,7 @@ ocamlPackages.buildDunePackage rec {
   srcs = [ duneSrc llvmSrc ];
   sourceRoot = "source";
 
-  buildInputs = [ zlib libxml2 ocamlPackages.ctypes ncurses ];
+  buildInputs = [ zlib libxml2 ctypes ncurses ];
 
   prePatch = ''
     rm -rf llvm-project

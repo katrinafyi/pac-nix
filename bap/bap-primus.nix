@@ -1,6 +1,6 @@
-{ stdenv, testers, fetchFromGitHub, ocamlPackages, makeBinaryWrapper, bap-primus }:
+{ stdenv, testers, fetchFromGitHub, bap, makeBinaryWrapper, bap-primus }:
 let
-  _bap = ocamlPackages.bap.overrideAttrs (final: prev: {
+  _bap = bap.overrideAttrs (final: prev: {
     version = "unstable-2022-11-22";
     src = fetchFromGitHub {
       owner = "UQ-PAC";
