@@ -1,0 +1,24 @@
+name: "monthly nixpkgs sync"
+on:
+  schedule:
+  - cron: "53 15 18 * *"  # AEST 1:53 am on 18th day each month
+  workflow_dispatch:
+
+jobs:
+  flake-update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v20
+    - uses: cachix/cachix-action@v12
+      with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}' }
+
+    - run: |
+        git pull
+        git config user.name 'github-actions[bot]'
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+    - run: |
+        nix flake update --commit-lock-file
+    - run: |
+        nix build .#all -Lv
+    - run: git push
