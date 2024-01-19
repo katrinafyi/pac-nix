@@ -25,7 +25,7 @@ stdenv.mkDerivation {
   cmakeFlags = [ "-DGTIRB_ENABLE_TESTS=OFF" ];
 
   preConfigure = ''
-    export CXXFLAGS="-includeset -Wno-error=unused-result" 
+    export CXXFLAGS="-includeset -Wno-error=unused-result -Wno-error=array-bounds"
   '';
 
   meta = {
