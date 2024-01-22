@@ -2,6 +2,7 @@
 
 [![build Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml/badge.svg)](https://github.com/katrinafyi/pac-nix/actions/workflows/main.yml)
 [![update Nix packages](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml/badge.svg)](https://github.com/katrinafyi/pac-nix/actions/workflows/update.yml)
+[![monthly nixpkgs sync](https://github.com/katrinafyi/pac-nix/actions/workflows/monthly.yml/badge.svg)](https://github.com/katrinafyi/pac-nix/actions/workflows/monthly.yml)
 
 An experiment to package [PAC](https://github.com/UQ-PAC)'s
 tools with the Nix package manager.
