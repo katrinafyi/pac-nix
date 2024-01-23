@@ -10,7 +10,6 @@
 , basil-tool
 , nodejs
 , godbolt
-,
 }:
 
 let
@@ -40,6 +39,8 @@ let
       export CYPRESS_INSTALL_BINARY=0
     '';
 
+    dontStrip = false;
+
     buildPhase = ''
       runHook preBuild
 
@@ -49,6 +50,10 @@ let
 
       substituteInPlace etc/config/{c,boogie}.defaults.properties \
         --replace /compiler-explorer/basil-tool.py \''${BASIL_TOOL}
+
+      # https://github.com/compiler-explorer/compiler-explorer/commit/5d776aaae3be2cf07a2442f839812ca6b076df4d
+      substituteInPlace package.json \
+        --replace 'ts-node-esm ' 'node --no-warnings=ExperimentalWarning --loader ts-node/esm '
 
       npm run webpack
       npm run ts-compile
