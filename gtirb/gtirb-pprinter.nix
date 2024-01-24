@@ -28,7 +28,7 @@ stdenv.mkDerivation {
   cmakeFlags = [ "-DGTIRB_PPRINTER_ENABLE_TESTS=OFF" ];
 
   preConfigure = ''
-    export CXXFLAGS='-includeset -Wno-error=unused-result -Wno-error=deprecated-declarations' 
+    export CXXFLAGS='-includecstdint -includeset -Wno-error=unused-result -Wno-error=deprecated-declarations -Wno-error=array-bounds'
   '';
 
   meta = {

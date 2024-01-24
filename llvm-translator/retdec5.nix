@@ -203,6 +203,8 @@ stdenv.mkDerivation rec {
 
   patches = [ ];
 
+  preConfigure = ''export CXXFLAGS='-include cstdint' '';
+
   postPatch = (lib.concatMapStrings patchDep external_deps) + ''
 
     mkdir -p "$out/share/retdec"
