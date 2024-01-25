@@ -6,16 +6,6 @@ let
 
       update = prev.callPackage ./update.nix { };
 
-      inherit (prev.callPackage ./lib.nix { }) writePython3Application;
-
-      boopasd = final.writePython3Application {
-        name = "boop";
-        runtimeInputs = [ prev.basil ];
-        src = final.basil.src + "/lift.sh";
-      };
-
-      # overlay_ocamlPackages = _: _: { };
-
       ocamlPackages_pac = final.ocamlPackages.overrideScope' final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
       ocamlPackages_pac_4_09 = final.ocaml-ng.ocamlPackages_4_09.overrideScope' final.overlay_ocamlPackages
@@ -61,6 +51,7 @@ composeManyOverlays
     (import ./bap/overlay.nix)
     (import ./basil/overlay.nix)
     (import ./gtirb/overlay.nix)
+    (import ./lib.nix)
   ]
   final
   prev

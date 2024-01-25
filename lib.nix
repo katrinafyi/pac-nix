@@ -1,31 +1,59 @@
-{ lib
-, runCommand
-, python3
-}:
+final: prev:
 {
+  makePythonPth =
+    { python, ... } @ pythonPackages: name: runtimeInputs:
+    final.runCommand "${name}-runtimeinputs"
+      {
+        passthru = {
+          pythonModule = python;
+          requiredPythonModules = pythonPackages.requiredPythonModules [ ];
+        };
+      }
+      ''
+        d=$out/${python.sitePackages}
+        mkdir -p $d
+        printf '%s; ' \
+          'import os' \
+          'd=r"""${final.lib.makeBinPath runtimeInputs}"""' \
+          'os.environ["PATH"] += (os.pathsep+d) if d else ""' \
+          > $d/${name}-runtimeinputs.pth
+      '';
+
+
   writePython3Application =
-    { name, text ? "", src ? "", libraries ? [ ], runtimeInputs ? [ ], flakeIgnore ? [ ], flakeSelect ? [ "E9" "W2" ] }:
+    { name
+    , text ? ""
+    , src ? ""
+    , libraries ? [ ]
+    , runtimeInputs ? [ ]
+    , pythonPackages ? final.python3Packages
+    , flakeIgnore ? [ ]
+    , flakeSelect ? [ "E9" "W2" ]
+    }:
     let
       guard = throw "exactly one of `text` or `src` must be given to writePython3Application.";
-      python = (if libraries != [ ] then python3.withPackages (_: libraries) else python3);
-    in
-    runCommand name
-      { src = if (src == "") == (text == "") then guard else src; }
+      python = pythonPackages.python;
+      env =
+        if libraries != [ ] || runtimeInputs != [ ]
+        then python.withPackages (_: libraries ++ [ pth ])
+        else python;
 
+      pth = final.makePythonPth pythonPackages name runtimeInputs;
+    in
+    final.runCommand
+      name
+      { src = if (src == "") == (text == "") then guard else src; }
       ''
         mkdir -p $out/bin
         py=$out/bin/${name}
 
-        echo '#!${python.interpreter}' >> $py
-        p='${lib.makeBinPath runtimeInputs}'
-        [[ -n "$p" ]] && p=":$p"
-        echo "import os; os.environ['PATH'] += r'$p'; del os" >> $py
+        echo '#!${env.interpreter}' > $py
+        chmod +x $py
+
         if [[ -n "$src" ]]; then
           cat $src >> $py
         else
-          echo '${text}' >> $py
+          echo ${final.lib.escapeShellArgs [text]} >> $py
         fi
-
-        chmod +x $py
       '';
 }
