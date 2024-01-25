@@ -2,9 +2,17 @@ let
   overlay = final: prev:
     {
       # MOVED: basil-related packages now in ./basil/overlay.nix
-      basil = prev.basil;
+      # basil = prev.basil;
 
       update = prev.callPackage ./update.nix { };
+
+      inherit (prev.callPackage ./lib.nix { }) writePython3Application;
+
+      boopasd = final.writePython3Application {
+        name = "boop";
+        runtimeInputs = [ prev.basil ];
+        src = final.basil.src + "/lift.sh";
+      };
 
       # overlay_ocamlPackages = _: _: { };
 

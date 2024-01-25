@@ -8,24 +8,17 @@
 , base64
 , yojson
 , writeShellApplication
-, makeWrapper
+, writePython3Application
+, python3Packages
 }:
 
-buildDunePackage rec {
-  pname = "gtirb_semantics";
-  version = "unstable-2024-01-24";
-
+let
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
     rev = "c65af262e6b9396792e24896cbf69d2cd77f4b07";
     sha256 = "sha256-XghS2DT50prDw3crUyuFp1zm9vtyY/Jf/Sg3UyG5K5o=";
   };
-
-  checkInputs = [ ];
-  buildInputs = [ asli ocaml-hexstring ocaml-protoc-plugin yojson ];
-  nativeBuildInputs = [ makeWrapper protobuf ocaml-protoc-plugin ];
-  propagatedBuildInputs = [ base64 ];
 
   wrapper = writeShellApplication {
     name = "gtirb-semantics-wrapper";
@@ -42,8 +35,33 @@ buildDunePackage rec {
     '';
   };
 
+  proto-json = writePython3Application {
+    name = "proto-json.py";
+    src = src + "/scripts/proto-json.py";
+    libraries = [ python3Packages.protobuf ];
+    runtimeInputs = [ protobuf ];
+  };
+
+  debug-gts = writePython3Application {
+    name = "debug-gts.py";
+    src = src + "/scripts/debug-gts.py";
+  };
+
+in
+buildDunePackage {
+  pname = "gtirb_semantics";
+  version = "unstable-2024-01-24";
+
+  inherit src;
+
+  buildInputs = [ asli ocaml-hexstring ocaml-protoc-plugin yojson ];
+  nativeBuildInputs = [ protobuf ocaml-protoc-plugin ];
+  propagatedBuildInputs = [ base64 ];
+
   postInstall = ''
-    cp -v ${wrapper}/bin/* $out/bin/gtirb-semantics-nix
+    ln -sv ${wrapper}/bin/* $out/bin/gtirb-semantics-nix
+    ln -sv ${proto-json}/bin/* $out/bin
+    ln -sv ${debug-gts}/bin/* $out/bin
   '';
 
   outputs = [ "out" "dev" ];
