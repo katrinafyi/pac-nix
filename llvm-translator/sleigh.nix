@@ -25,11 +25,11 @@ let
 in
 stdenv.mkDerivation (self: {
   pname = "sleigh";
-  version = "unstable";
+  version = "unstable-2023-05-03";
 
   src = sleigh-src;
 
-  nativeBuildInputs = [ python3 cmake ninja ];
+  nativeBuildInputs = [ python3 cmake ];
 
   preConfigure = ''
     ghidra=$(mktemp -d)
@@ -48,7 +48,8 @@ stdenv.mkDerivation (self: {
 
   sleigh_ADDITIONAL_PATCHES = [ ];
 
-  cmakeFlags = [ 
-  "-Dsleigh_RELEASE_TYPE=HEAD" 
-  "-Dsleigh_ADDITIONAL_PATCHES=${lib.concatStringsSep ";" self.sleigh_ADDITIONAL_PATCHES}" ];
+  cmakeFlags = [
+    "-Dsleigh_RELEASE_TYPE=HEAD"
+    "-Dsleigh_ADDITIONAL_PATCHES=${lib.concatStringsSep ";" self.sleigh_ADDITIONAL_PATCHES}"
+  ];
 })

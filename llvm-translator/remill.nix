@@ -1,52 +1,30 @@
 { lib
 , stdenv
 , fetchFromGitHub
-, python3
-, cmake
-, ninja
 , llvmPackages
+, cmake
 , xed
 , glog
 , gtest
 , sleigh
-, breakpointHook
-, git-am-shim
 , abseil-cpp
+, glibc_multi
+, git-am-shim
+, git
+, writeShellScript
 }:
-with llvmPackages;
 let
-clang = llvmPackages.libcxxClang;
-  # cxx-all = fetchurl {
-  #   url = "https://github.com/lifting-bits/cxx-common/releases/download/v0.6.4/vcpkg_ubuntu-22.04_llvm-16_amd64.tar.xz";
-  #   hash = "sha256-RiGiHgU4XfC9hZ/bVbBBEHTztSU6OOUAz6VZBXIVpxg=";
-  # };
+  clang = llvmPackages.libcxxClang;
+  llvm = llvmPackages.llvm;
 
-  # cxx-common = runCommand "cxx-common-reduced" {} 
-  # ''
-  #   mkdir $out
-  #   cd $out
-  #   XZ_OPT='-T0' tar xf ${cxx-all} --strip-components=1
-  #   rm -rf installed/*/{tools,share,include}/{llvm,clang,mlir} installed/*/lib/lib{clang,LLVM,MLIR,mlir,LTO}*
-  # '';
-
-  cxx-common = fetchFromGitHub {
-    owner = "lifting-bits";
-    repo = "cxx-common";
-    rev = "v0.6.4";
-    hash = "";
-
-    postFetch = ''
-      substituteInPlace ports/xed/XEDConfig.cmake \
-        --replace "''${ROOT}" '${xed}'
-    '';
-  };
-
-  remill-src = fetchFromGitHub {
-    owner = "lifting-bits";
-    repo = "remill";
-    rev = "391261923a036196ad9dd2c8213c0193ad727cd9";
-    hash = "sha256-DiskkPngmnq4adR5ew2h1vFvD7y3MWdoo0AcNv+OaAU=";
-  };
+  shim-shim = writeShellScript "git-shim-shim" 
+  ''
+    if [[ $1 == show ]] || [[ $1 == describe ]]; then
+      exec ${git}/bin/git "$@"
+    else
+      exec ${git-am-shim} "$@"
+    fi
+  '';
 
   sleigh' = sleigh.overrideAttrs {
     sleigh_ADDITIONAL_PATCHES = [
@@ -69,80 +47,84 @@ clang = llvmPackages.libcxxClang;
     rev = "e7196d8b943519d3aa5eace6a988cda3aa6aca5c";
     hash = "sha256-uOaTY9dYVAyu5eU2tLKNJWRwN98OQkCVynwQvjeBQB8=";
   };
+
+  remill-src = fetchFromGitHub {
+    owner = "lifting-bits";
+    repo = "remill";
+    # sparc working but llvm 17: 391261923a036196ad9dd2c8213c0193ad727cd9
+    rev = "7182636a687e5e005e3336108a653de3aec0362b";
+    hash = "sha256-2PXg/Wbgmo49aK4MO9T5+vLkLuYiaHpNb0DbuCn4P80=";
+    leaveDotGit = true;
+  };
 in
 stdenv.mkDerivation (self: {
   pname = "remill";
-  version = "unstable";
+  version = "unstable-2023-09-27";
 
   src = remill-src;
 
-  nativeBuildInputs = [ python3 cmake clang breakpointHook ];
-  buildInputs = [ sleigh' llvm xed glog gtest abseil-cpp ];
+  nativeBuildInputs = [ cmake ];
+  buildInputs = [ sleigh' llvm xed glog gtest abseil-cpp glibc_multi ];
 
-  # cmakeXED = ''
-  #   include(${cxx-common}/ports/xed/XEDConfig.cmake)
-  # '';
-
-  # NIX_DEBUG = 1;
+  outputs = [ "out" "dev" "lib" ];
 
   preConfigure = ''
+    function check-version() {
+      repo="$1"; nixhash="$2"
+      expected_ghidra=$(grep "FetchContent_Declare($repo" --after-context=3 CMakeLists.txt | grep GIT_TAG | xargs echo | cut -d' ' -f2)
+      if ! (set -x; echo "nix $repo: $nixhash" | grep -q " $expected_ghidra"); then
+        echo "ERROR: mismatched $repo rev."
+        return 1
+      fi
+    }
+    check-version ghidra-fork ${ghidra-fork.rev}
+    check-version sleigh ${sleigh.src.rev}
+
     ghidra=$(mktemp -d)
     cp -r --no-preserve=mode ${ghidra-fork}/. $ghidra
 
     substituteInPlace CMakeLists.txt \
-      --replace 'FetchContent_Declare(sleigh' 'find_package(sleigh REQUIRED COMPONENTS Support) ${"\n"} message(STATUS "ignore FetchContent(Sleigh "' \
-      --replace 'FetchContent_MakeAvailable(sleigh)' ""
-
-    substituteInPlace CMakeLists.txt \
       --replace 'GIT_REPOSITORY https://github.com/trail-of-forks/ghidra.git' "SOURCE_DIR $ghidra"
 
+    substituteInPlace CMakeLists.txt \
+      --replace "sleigh_compile(" "set(sleigh_BINARY_DIR $(mktemp -d)) ${"\n"} sleigh_compile("
+    
+    # these dependencies found via buildInputs
     substituteInPlace CMakeLists.txt \
       --replace 'XED::XED' xed \
       --replace 'find_package(XED CONFIG REQUIRED)' "" \
       --replace 'find_package(Z3 CONFIG REQUIRED)' "" \
       --replace 'InstallExternalTarget(' 'message(STATUS ' \
 
-
+    # sleigh also found via buildInputs
     substituteInPlace CMakeLists.txt \
-      --replace "sleigh_compile(" "set(sleigh_BINARY_DIR $out) ${"\n"} sleigh_compile("
+      --replace 'FetchContent_Declare(sleigh' 'find_package(sleigh REQUIRED COMPONENTS Support) ${"\n"} message(STATUS "ignore FetchContent(Sleigh "' \
+      --replace 'FetchContent_MakeAvailable(sleigh)' ""
 
-    cp -v $(command -v clang++) .
-    substituteInPlace ./clang++ --replace 'cInclude=1' cInclude=0
+    BC_CXX=${clang}/bin/clang++
+    BC_CXXFLAGS="-g0 $(cat ${clang}/nix-support/libcxx-cxxflags) -D_LIBCPP_HAS_NO_THREADS"
+    BC_LD=$(command -v llvm-link)
+    BC_LDFLAGS=""
 
-    platform=${lib.replaceStrings ["-" "."] ["_" "_"] stdenv.targetPlatform.config}
-    LIBCXX=$(
-      source ${clang}/nix-support/utils.bash; 
-      source ${clang}/nix-support/add-flags.sh; 
-      eval 'echo $NIX_CFLAGS_COMPILE_'$platform ' $NIX_CXXSTDLIB_COMPILE_'$platform)
-
+    # manually specify bc compiler. nix's libclang, which provides clangconfig.cmake, is missing the wrapper.
     substituteInPlace cmake/BCCompiler.cmake \
       --replace 'find_package(Clang CONFIG REQUIRED)' "" \
       --replace 'get_target_property(CLANG_PATH clang LOCATION)' "" \
       --replace 'get_target_property(LLVMLINK_PATH llvm-link LOCATION)' "" \
-      --replace '$'{CLANG_PATH} $(pwd)/clang++ \
-      --replace '$'{LLVMLINK_PATH} $(command -v llvm-link) \
-      --replace '$'{include_directory_list} '$'{include_directory_list}" -include cstdlib"
-
-    # failing due to "no thread api" and incorrectly including glibc
-
-    export CXXFLAGS='-include cstdint -include cstdlib'
-
-    substituteInPlace lib/Arch/*/Runtime/CMakeLists.txt \
-      --replace 'c++17' 'c++20'
+      --replace '$'{CLANG_PATH} $BC_CXX \
+      --replace '$'{LLVMLINK_PATH} $BC_LD \
+      --replace '$'{source_file_option_list} '$'{source_file_option_list}" $BC_CXXFLAGS" \
+      --replace '$'{linker_flag_list} '$'{linker_flag_list}" $BC_LDFLAGS"
   '';
 
-  cmakeFlags = [
-    "-DCMAKE_VERBOSE_MAKEFILE=True"
-    # "-DCMAKE_TOOLCHAIN_FILE=${cxx-common}/scripts/buildsystems/vcpkg.cmake"
-    # "-DCMAKE_PREFIX_PATH=${cxx-common}/installed/x64-linux-rel"
-    "-DDVCPKG_TARGET_TRIPLET=x64-linux-rel"
-    "-DGIT_EXECUTABLE=${git-am-shim}"
-    "-DCMAKE_VERBOSE_MAKEFILE=True"
-    "-DFETCHCONTENT_QUIET=OFF"
+  CXXFLAGS = "-include cstdint -g0";
 
-    # "-DCMAKE_BC_COMPILER=${llvmPackages.libcxxClang}/bin/clang"
-    # "-DCMAKE_BC_LINKER=${llvmPackages.llvm}/bin/llvm-link"
-    # "-DCLANG_PATH=${llvmPackages.libcxxClang}/bin/clang"
+  cmakeFlags = [
+    # "-DCMAKE_VERBOSE_MAKEFILE=True"
+    "-DDVCPKG_TARGET_TRIPLET=x64-linux-rel"
+    "-DGIT_EXECUTABLE=${shim-shim}"
+    # "-DFETCHCONTENT_QUIET=OFF"
+    "-DREMILL_BUILD_SPARC32_RUNTIME=False"
   ];
 
 })
