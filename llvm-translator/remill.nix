@@ -17,38 +17,43 @@ let
   clang = llvmPackages.libcxxClang;
   llvm = llvmPackages.llvm;
 
-  shim-shim = writeShellScript "git-shim-shim" 
-  ''
-    if [[ $1 == show ]] || [[ $1 == describe ]]; then
-      exec ${git}/bin/git "$@"
-    else
-      exec ${git-am-shim} "$@"
-    fi
-  '';
+  shim-shim = writeShellScript "git-shim-shim"
+    ''
+      if [[ $1 == show ]] || [[ $1 == describe ]]; then
+        exec ${git}/bin/git "$@"
+      else
+        exec ${git-am-shim} "$@"
+      fi
+    '';
 
-  sleigh' = sleigh.overrideAttrs {
-    sleigh_ADDITIONAL_PATCHES = [
-      "${remill-src}/patches/sleigh/0001-AARCH64base.patch"
-      "${remill-src}/patches/sleigh/0001-AARCH64instructions.patch"
-      "${remill-src}/patches/sleigh/0001-ARM.patch"
-      "${remill-src}/patches/sleigh/0001-ARMTHUMBinstructions.patch"
-      "${remill-src}/patches/sleigh/0001-ppc_common.patch"
-      "${remill-src}/patches/sleigh/0001-ppc_instructions.patch"
-      "${remill-src}/patches/sleigh/0001-ppc_isa.patch"
-      "${remill-src}/patches/sleigh/0001-ppc_vle.patch"
-      "${remill-src}/patches/sleigh/0001-quicciii.patch"
-      "${remill-src}/patches/sleigh/x86-ia.patch"
-    ];
-  };
-
-  ghidra-fork = fetchFromGitHub {
+  ghidra-fork-src = fetchFromGitHub {
     owner = "trail-of-forks";
     repo = "ghidra";
     rev = "e7196d8b943519d3aa5eace6a988cda3aa6aca5c";
     hash = "sha256-uOaTY9dYVAyu5eU2tLKNJWRwN98OQkCVynwQvjeBQB8=";
   };
 
-  remill-src = fetchFromGitHub {
+  sleigh' = remill: sleigh.overrideAttrs {
+    sleigh_ADDITIONAL_PATCHES = [
+      "${remill.src}/patches/sleigh/0001-AARCH64base.patch"
+      "${remill.src}/patches/sleigh/0001-AARCH64instructions.patch"
+      "${remill.src}/patches/sleigh/0001-ARM.patch"
+      "${remill.src}/patches/sleigh/0001-ARMTHUMBinstructions.patch"
+      "${remill.src}/patches/sleigh/0001-ppc_common.patch"
+      "${remill.src}/patches/sleigh/0001-ppc_instructions.patch"
+      "${remill.src}/patches/sleigh/0001-ppc_isa.patch"
+      "${remill.src}/patches/sleigh/0001-ppc_vle.patch"
+      "${remill.src}/patches/sleigh/0001-quicciii.patch"
+      "${remill.src}/patches/sleigh/x86-ia.patch"
+    ];
+  };
+in
+stdenv.mkDerivation (self:
+{
+  pname = "remill";
+  version = "unstable-2023-09-27";
+
+  src = fetchFromGitHub {
     owner = "lifting-bits";
     repo = "remill";
     # sparc working but llvm 17: 391261923a036196ad9dd2c8213c0193ad727cd9
@@ -56,15 +61,12 @@ let
     hash = "sha256-2PXg/Wbgmo49aK4MO9T5+vLkLuYiaHpNb0DbuCn4P80=";
     leaveDotGit = true;
   };
-in
-stdenv.mkDerivation (self: {
-  pname = "remill";
-  version = "unstable-2023-09-27";
 
-  src = remill-src;
+  ghidra-fork-src = ghidra-fork-src;
+  sleigh = sleigh' self;
 
   nativeBuildInputs = [ cmake ];
-  buildInputs = [ sleigh' llvm xed glog gtest abseil-cpp glibc_multi ];
+  buildInputs = [ self.sleigh llvm xed glog gtest abseil-cpp glibc_multi ];
 
   outputs = [ "out" "dev" "lib" ];
 
@@ -77,11 +79,11 @@ stdenv.mkDerivation (self: {
         return 1
       fi
     }
-    check-version ghidra-fork ${ghidra-fork.rev}
-    check-version sleigh ${sleigh.src.rev}
+    check-version ghidra-fork ${self.ghidra-fork-src.rev}
+    check-version sleigh ${self.sleigh.src.rev}
 
     ghidra=$(mktemp -d)
-    cp -r --no-preserve=mode ${ghidra-fork}/. $ghidra
+    cp -r --no-preserve=mode ${self.ghidra-fork-src}/. $ghidra
 
     substituteInPlace CMakeLists.txt \
       --replace 'GIT_REPOSITORY https://github.com/trail-of-forks/ghidra.git' "SOURCE_DIR $ghidra"
