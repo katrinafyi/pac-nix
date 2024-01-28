@@ -21,6 +21,8 @@ let
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
       llvm-rtti-eh = prev.callPackage ./llvm-translator/llvm-rtti-eh.nix { };
       alive2 = prev.callPackage ./llvm-translator/alive2.nix { };
+      remill = prev.callPackage ./llvm-translator/remill.nix { };
+      sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
 
       _overlay = overlay;
     };

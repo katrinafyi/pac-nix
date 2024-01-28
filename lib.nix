@@ -56,4 +56,16 @@ final: prev:
           echo ${final.lib.escapeShellArgs [text]} >> $py
         fi
       '';
+
+
+  git-am-shim = final.writeShellScript "git-am-shim"
+    ''
+      echo $0 "$@"
+      set -e
+      for f in "$@"; do
+        if [[ "$f" == *.patch ]]; then
+          ( set -x ; cat $f | patch -p1 )
+        fi
+      done
+    '';
 }
