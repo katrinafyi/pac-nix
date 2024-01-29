@@ -118,16 +118,15 @@ stdenv.mkDerivation (self:
       --replace '$'{linker_flag_list} '$'{linker_flag_list}" $BC_LDFLAGS"
 
     substituteInPlace lib/Version/Version.cpp.in \
-      --replace @GIT_RETRIEVED_STATE@ "$GIT_RETRIEVED_STATE" \
-      --replace @GIT_IS_DIRTY@ "$GIT_IS_DIRTY" \
-      --replace @GIT_AUTHOR_NAME@ "$GIT_AUTHOR_NAME" \
-      --replace @GIT_AUTHOR_EMAIL@ "$GIT_AUTHOR_EMAIL" \
-      --replace @GIT_HEAD_SHA1@ "$GIT_HEAD_SHA1" \
-      --replace @GIT_COMMIT_DATE_ISO8601@ "$GIT_COMMIT_DATE_ISO8601" \
-      --replace @GIT_COMMIT_SUBJECT@ "$GIT_COMMIT_SUBJECT" \
-      --replace @GIT_COMMIT_BODY@ "$GIT_COMMIT_BODY" \
-      --replace @GIT_DESCRIBE@ "$GIT_DESCRIBE"
-
+      --subst-var GIT_RETRIEVED_STATE \
+      --subst-var GIT_IS_DIRTY \
+      --subst-var GIT_AUTHOR_NAME \
+      --subst-var GIT_AUTHOR_EMAIL \
+      --subst-var GIT_HEAD_SHA1 \
+      --subst-var GIT_COMMIT_DATE_ISO8601 \
+      --subst-var GIT_COMMIT_SUBJECT \
+      --subst-var GIT_COMMIT_BODY \
+      --subst-var GIT_DESCRIBE
   '';
 
   CXXFLAGS = "-include cstdint -g0";
