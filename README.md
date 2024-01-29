@@ -68,10 +68,7 @@ installed binaries will go.
 
 First, set up your user with Nix:
 ```bash
-cat <<EOF | sudo tee -a /etc/nix/nix.conf
-extra-experimental-features = nix-command flakes
-extra-trusted-users = $USER
-EOF
+printf '%s\n' "extra-experimental-features = nix-command flakes" "extra-trusted-users = $USER" | sudo tee -a /etc/nix/nix.conf
 ```
 <!--
 As your usual user, run:
