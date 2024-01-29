@@ -10,21 +10,10 @@
 , abseil-cpp
 , glibc_multi
 , git-am-shim
-, git
-, writeShellScript
 }:
 let
   clang = llvmPackages.libcxxClang;
   llvm = llvmPackages.llvm;
-
-  shim-shim = writeShellScript "git-shim-shim"
-    ''
-      if [[ $1 == show ]] || [[ $1 == describe ]]; then
-        exec ${git}/bin/git "$@"
-      else
-        exec ${git-am-shim} "$@"
-      fi
-    '';
 
   ghidra-fork-src = fetchFromGitHub {
     owner = "trail-of-forks";
@@ -58,9 +47,19 @@ stdenv.mkDerivation (self:
     repo = "remill";
     # sparc working but llvm 17: 391261923a036196ad9dd2c8213c0193ad727cd9
     rev = "7182636a687e5e005e3336108a653de3aec0362b";
-    hash = "sha256-2PXg/Wbgmo49aK4MO9T5+vLkLuYiaHpNb0DbuCn4P80=";
-    leaveDotGit = true;
+    hash = "sha256-4oeHmgkXJlBsLyK359XbfI4Xfq/hRcxqaIA2hsK2piI=";
   };
+
+  GIT_RETRIEVED_STATE = true;
+  GIT_IS_DIRTY = true;
+  GIT_AUTHOR_NAME = "unknown";
+  GIT_AUTHOR_EMAIL = "unknown";
+  GIT_HEAD_SHA1 = self.src.rev;
+  GIT_COMMIT_DATE_ISO8601 = "unknown";
+  GIT_COMMIT_SUBJECT = "unknown";
+  GIT_COMMIT_BODY = "unknown";
+  GIT_DESCRIBE = self.version;
+
 
   ghidra-fork-src = ghidra-fork-src;
   sleigh = sleigh' self;
@@ -117,6 +116,18 @@ stdenv.mkDerivation (self:
       --replace '$'{LLVMLINK_PATH} $BC_LD \
       --replace '$'{source_file_option_list} '$'{source_file_option_list}" $BC_CXXFLAGS" \
       --replace '$'{linker_flag_list} '$'{linker_flag_list}" $BC_LDFLAGS"
+
+    substituteInPlace lib/Version/Version.cpp.in \
+      --replace @GIT_RETRIEVED_STATE@ "$GIT_RETRIEVED_STATE" \
+      --replace @GIT_IS_DIRTY@ "$GIT_IS_DIRTY" \
+      --replace @GIT_AUTHOR_NAME@ "$GIT_AUTHOR_NAME" \
+      --replace @GIT_AUTHOR_EMAIL@ "$GIT_AUTHOR_EMAIL" \
+      --replace @GIT_HEAD_SHA1@ "$GIT_HEAD_SHA1" \
+      --replace @GIT_COMMIT_DATE_ISO8601@ "$GIT_COMMIT_DATE_ISO8601" \
+      --replace @GIT_COMMIT_SUBJECT@ "$GIT_COMMIT_SUBJECT" \
+      --replace @GIT_COMMIT_BODY@ "$GIT_COMMIT_BODY" \
+      --replace @GIT_DESCRIBE@ "$GIT_DESCRIBE"
+
   '';
 
   CXXFLAGS = "-include cstdint -g0";
@@ -124,7 +135,7 @@ stdenv.mkDerivation (self:
   cmakeFlags = [
     # "-DCMAKE_VERBOSE_MAKEFILE=True"
     "-DDVCPKG_TARGET_TRIPLET=x64-linux-rel"
-    "-DGIT_EXECUTABLE=${shim-shim}"
+    "-DGIT_EXECUTABLE=${git-am-shim}"
     # "-DFETCHCONTENT_QUIET=OFF"
     "-DREMILL_BUILD_SPARC32_RUNTIME=False"
   ];

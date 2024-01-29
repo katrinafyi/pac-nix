@@ -60,7 +60,10 @@ final: prev:
 
   git-am-shim = final.writeShellScript "git-am-shim"
     ''
-      echo $0 "$@"
+      if [[ "$1" != am ]]; then
+        exit
+      fi
+      echo "$(basename $0)" "$@"
       set -e
       for f in "$@"; do
         if [[ "$f" == *.patch ]]; then
