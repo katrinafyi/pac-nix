@@ -59,14 +59,12 @@ Other Nix files also define dependencies needed by the end-user tools.
 ## usage
 
 ### first time
-To use these, you will need the Nix package manager
-from [nixos.org][] (if able, a multi-user install is preferred).
-This should extend your PATH with ~/.nix-profile/bin which is where
+
+First, install the Nix package manager by following the instructions at https://nixos.org/download (if able, a multi-user install is preferred).
+This also should extend your PATH with ~/.nix-profile/bin which is where
 installed binaries will go.
 
-[nixos.org]: https://nixos.org/download
-
-First, set up your user with Nix:
+Then, set up your user with Nix and enable some features:
 ```bash
 printf '%s\n' "extra-experimental-features = nix-command flakes" "extra-trusted-users = $USER" | sudo tee -a /etc/nix/nix.conf
 ```
@@ -123,8 +121,10 @@ To uninstall, use the *index* from `nix profile list` in this command:
 nix profile remove 1234
 ```
 
-To re-install or rebuild a changed package,
-you can re-run the install command.
+To upgrade all packages:
+```bash
+nix profile upgrade '.*'  # or use an index instead for specific packages
+```
 
 Nix is powerful but the documentation is of mixed quality.
 [nix-tutorial](https://nix-tutorial.gitlabpages.inria.fr/nix-tutorial/getting-started.html)
@@ -134,16 +134,15 @@ Otherwise, it will be useful to search as far as you can.
 #### garbage collection
 
 The /nix/store folder can get quite large.
-You can use these commands to clean it up.
+nix profile creates a snapshot of your packages (a generation) after each package operation
+which can keep outdated and uninstalled packages inside the Nix store.
+You can use these commands to clear shapshots older than 7 days then delete their packages from the store.
 
 ```bash
-nix-collect-garbage --delete-older-than 1d  # or --delete-old
+nix profile wipe-history --older-than 7d
 nix-store --gc
 ```
 
-nix-env creates a snapshot of your packages (a generation) after each package operation.
-This keeps those old packages inside your Nix store.
-These commands will delete stale generations then delete their packages from the store. 
 
 ### bonus: binary cache
 
@@ -173,16 +172,22 @@ It is often useful to build a package from
 a clone of the repository on your local computer
 (e.g. to test your un-committed changes).
 
-To do this, we will override the _src_ attribute of
+To do this, we can override the _src_ attribute of
 the corresponding build package.
 In overlay.nix, some packages have commented overrideAttrs lines.
 These are the build packages which are wrapped into the user-facing tools.
 
-To use local sources, simply uncomment the line and change the path
-to be your local path.
+To use local sources, check out this repository then
+uncomment the line and change the path to be your local path.
 (It is important the path is not quoted so Nix handles it correctly.)
 
-Further customisation can also be done here.
+When installing packages, you'll need to reference your local clone. 
+For example, from this repository's directory:
+```bash
+nix profile install .#aslp
+```
+
+Further customisation can also be done in the files.
 The JRE and JDK are currently fixed to Java 17,
 and you may also add more Nix files or override other attributes.
 
@@ -262,10 +267,9 @@ The depsSha256 will need to be changed manually if the script fails at that poin
 [search.nixos.org](https://search.nixos.org/)
 is very useful for searching package names.
 
-[Nix pills](https://nixos.org/guides/nix-pills/) are a good resource 
-if you wish to write your own packages.
+[Nix pills](https://nixos.org/guides/nix-pills/) and [nix.dev](https://nix.dev/tutorials/packaging-existing-software.html) 
+are good resources if you wish to write your own packages.
 It is also a good idea to browse the [nixpkgs](https://github.com/NixOS/nixpkgs/) monorepo for similar derivations.
 
-Nix can also bundle a package into a standalone executable or AppImage
+Nix can also bundle a package into a standalone executable, AppImage, or Docker image
 with [nix-bundle](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-bundle).
-
