@@ -29,7 +29,7 @@ let
   };
 
   pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf ];
-  python' = python3Packages.python.withPackages 
+  python' = python3Packages.python.withPackages
     (_: [ python3Packages.protobuf pth ]);
 
 in

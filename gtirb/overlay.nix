@@ -2,6 +2,8 @@ final: prev:
 {
   ddisasm = prev.callPackage ./ddisasm.nix { };
   gtirb = prev.callPackage ./gtirb.nix { };
+  python-gtirb = prev.callPackage ./python-gtirb.nix { };
+  python-retypd = prev.callPackage ./python-retypd.nix { };
   gtirb-pprinter = prev.callPackage ./gtirb-pprinter.nix { };
   capstone-grammatech = prev.callPackage ./capstone-grammatech.nix { };
 
