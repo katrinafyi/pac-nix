@@ -10,6 +10,7 @@
 , writeShellApplication
 , makePythonPth
 , python3Packages
+, python-gtirb
 }:
 
 let
@@ -30,7 +31,7 @@ let
 
   pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf ];
   python' = python3Packages.python.withPackages
-    (_: [ python3Packages.protobuf pth ]);
+    (p: [ p.protobuf pth python-gtirb ]);
 
 in
 buildDunePackage {
