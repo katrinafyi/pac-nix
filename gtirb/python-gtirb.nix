@@ -8,7 +8,8 @@ python3Packages.buildPythonPackage {
 
   src = gtirb.python;
 
-  buildInputs = with python3Packages; [ pip networkx typing-extensions sortedcontainers intervaltree protobuf3 ];
+  buildInputs = with python3Packages; [ pip ];
+  propagatedBuildInputs = with python3Packages; [ networkx typing-extensions sortedcontainers intervaltree protobuf3 ];
 
   preConfigure = ''
     ln -s /build/gtirb* /build/source 

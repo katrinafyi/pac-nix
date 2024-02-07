@@ -1,8 +1,10 @@
 { lib
+, buildDunePackage
 , fetchFromGitHub
+, testVersion
 , protobuf
 , asli
-, buildDunePackage
+, libllvm
 , ocaml-protoc-plugin
 , ocaml-hexstring
 , base64
@@ -11,6 +13,7 @@
 , makePythonPth
 , python3Packages
 , python-gtirb
+, gtirb-semantics
 }:
 
 let
@@ -29,9 +32,9 @@ let
     '';
   };
 
-  pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf ];
+  pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf libllvm ];
   python' = python3Packages.python.withPackages
-    (p: [ p.protobuf pth python-gtirb ]);
+    (p: [ pth python-gtirb ]);
 
 in
 buildDunePackage {
@@ -55,6 +58,17 @@ buildDunePackage {
   '';
 
   outputs = [ "out" "dev" ];
+
+  passthru.tests.test-debug-gts = testVersion {
+    package = gtirb-semantics;
+    command = "debug-gts.py --help";
+    version = "debug-gts.py";
+  };
+  passthru.tests.test-proto-json = testVersion {
+    package = gtirb-semantics;
+    command = "proto-json.py --help";
+    version = "proto-json.py";
+  };
 
   meta = {
     homepage = "https://github.com/UQ-PAC/gtirb-semantics";
