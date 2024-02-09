@@ -18,15 +18,15 @@
 
 buildDunePackage {
   pname = "asli";
-  version = "unstable-2024-01-16";
+  version = "unstable-2024-02-09";
 
   minimalOCamlVersion = "4.09";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "fc60f76057a35538b7e43c6e128a1b0983b868b8";
-    sha256 = "sha256-kQYcprdk+t26eMN6xxIFdWlnNfzvJV9CyMVjv00DYGM=";
+    rev = "a2b5cf4002417faef7920bc9b22dda5faccc91d8";
+    sha256 = "sha256-N78HtrF+9C6QJlqw9NDE2LbgbENf3wdArHIq4hsm5bo=";
   };
 
   checkInputs = [ alcotest ];
