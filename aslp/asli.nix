@@ -5,6 +5,7 @@
 , ott
 , z3
   # ocamlPackages
+, dune-site
 , alcotest
 , linenoise
 , menhir
@@ -29,7 +30,7 @@ buildDunePackage {
   };
 
   checkInputs = [ alcotest ];
-  buildInputs = [ linenoise ];
+  buildInputs = [ linenoise dune-site ];
   nativeBuildInputs = [ ott menhir ];
   propagatedBuildInputs = [ z3 pcre pprint zarith ocaml_z3 ocaml_pcre ];
 
