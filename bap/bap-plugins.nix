@@ -5,7 +5,7 @@ in stdenv.mkDerivation {
   version = bap.version;
   unpackPhase = ":";
   propagatedBuildInputs = plugins;
-  buildInputs = [ makeBinaryWrapper bap ];
+  buildInputs = [ makeBinaryWrapper bap ] ++ plugins;
   postBuild = ''
     for x in ${toString plugins}; do
       if ! [[ -d "$x/lib/bap" ]]; then
