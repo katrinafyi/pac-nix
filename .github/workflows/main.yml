@@ -9,6 +9,7 @@ on:
     types: [completed]
   workflow_dispatch:
 
+
 jobs:
   update-check:
     runs-on: ubuntu-latest
@@ -30,16 +31,37 @@ jobs:
           ocamlPackages_pac_4_09.asli,
           retdec5, remill]
     runs-on: ubuntu-latest
+
+    defaults:
+      run: { shell: "bash -ex -o pipefail {0}" }
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v25
     - uses: cachix/cachix-action@v14
       with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}', skipPush: "${{ github.ref != 'refs/heads/main' }}" }
 
-    - run: nix build .#${{matrix.pkg}}
-    - name: Run nix build .#${{matrix.pkg}}.tests
+    - name: Check for meta.broken
       run: |
-        for test in $(nix eval .#${{matrix.pkg}}.tests --json | jq -r keys[]); do
-          nix build .#${{matrix.pkg}}.tests.$test --no-link
+        broken="$(nix eval --json .#${{ matrix.pkg }}.meta.broken)"
+        echo "bool=$broken" > "$GITHUB_OUTPUT"
+        echo NIXPKGS_ALLOW_BROKEN="$("$broken" && echo 1 || echo 0)" > "$GITHUB_ENV"
+      id: broken
+
+    - run: nix build --impure .#${{matrix.pkg}}
+      id: build
+      continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
+      
+    - name: Run nix build .#${{matrix.pkg}}.tests
+      id: test
+      run: |
+        for test in $(nix eval --impure .#${{matrix.pkg}}.tests --json | jq -r keys[]); do
+          nix build --impure .#${{matrix.pkg}}.tests.$test --no-link
         done
+      continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
+      if: steps.build.outcome == 'success'
+      
+    - name: Report status of broken packages
+      run: |
+        echo '::warning title=${{ matrix.pkg }}::broken package has status build=${{steps.build.outcome}}, test=${{steps.test.outcome}}'
+      if: ${{ fromJSON(steps.broken.outputs.bool) }}
     - run: ls -l
