@@ -1,13 +1,13 @@
 { lib
+, buildDunePackage
 , fetchFromGitHub
 , pkgs
 , asli
-, ocamlPackages
 , bisect_ppx
 , ppx_inline_test
 }:
 
-ocamlPackages.buildDunePackage rec {
+buildDunePackage {
   pname = "hexstring";
   version = "0.2.1";
 

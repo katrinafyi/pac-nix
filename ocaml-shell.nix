@@ -1,10 +1,10 @@
 { mkShell
-, ocamlPackages
+, ocamlPackages_pac
 , asli
 , gtirb-semantics
 }:
 mkShell rec {
-  packages = with ocamlPackages; [ ocaml-lsp ocamlformat_0_26_0 ];
+  packages = with ocamlPackages_pac; [ ocaml-lsp ocamlformat_0_26_0 ];
   inputsFrom = [ asli gtirb-semantics ];
   shellHook = ''
     echo

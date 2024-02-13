@@ -1,6 +1,5 @@
-{ stdenv, ocamlPackages, makeBinaryWrapper, suffix ? "", plugins ? [ ] }:
-let bap = ocamlPackages.bap;
-in stdenv.mkDerivation {
+{ stdenv, bap, makeBinaryWrapper, suffix ? "", plugins ? [ ] }:
+stdenv.mkDerivation {
   pname = "bap-plugins";
   version = bap.version;
   unpackPhase = ":";
