@@ -16,6 +16,7 @@
 , cohttp-lwt-unix
 , yojson
 , asli
+, testers
 }:
 
 buildDunePackage {
@@ -52,6 +53,12 @@ buildDunePackage {
     prelude = "${asli}/share/asli/prelude.asl";
     mra_tools = "${asli}/share/asli/mra_tools";
     dir = "${asli}/share/asli";
+
+    tests.asli = testers.testVersion {
+      package = asli;
+      command = "asli --version";
+      version = "ASL";
+    };
   };
 
   meta = {
