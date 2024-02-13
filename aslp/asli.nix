@@ -14,6 +14,7 @@
 , ocaml_z3
 , ocaml_pcre
 , cohttp-lwt-unix
+, yojson
 , asli
 }:
 
@@ -33,7 +34,7 @@ buildDunePackage {
   checkInputs = [ alcotest ];
   buildInputs = [ linenoise ];
   nativeBuildInputs = [ ott menhir ];
-  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre cohttp-lwt-unix ];
+  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix ];
 
   configurePhase = ''
     export ASLI_OTT=${ott.out + "/share/ott"}
