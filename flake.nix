@@ -14,11 +14,28 @@
         "aarch64-linux"
       ];
 
+      patches = fetchpatch: [
+        (fetchpatch {
+          url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/285786.patch";
+          hash = "sha256-SW83Yo6RFG7Cz8+sRC100edUmvJrCetcXs5rWHQKRaQ=";
+        })
+      ];
+
       nixpkgss = lib.genAttrs systems
-        (system: (import nixpkgs {
-          system = system;
-          overlays = [ overlay ];
-        }));
+        (system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+            nixpkgs' = pkgs.applyPatches {
+              name = "nixpkgs-patched";
+              src = nixpkgs;
+              patches = patches pkgs.fetchpatch;
+            };
+          in
+          import nixpkgs' {
+            system = system;
+            overlays = [ overlay ];
+          }
+        );
 
       applySystem = sys: lib.mapAttrs (k: v: v.${sys} or v);
 
