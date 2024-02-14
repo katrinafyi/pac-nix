@@ -37,10 +37,14 @@ buildDunePackage {
   nativeBuildInputs = [ ott menhir ];
   propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix ];
 
-  configurePhase = ''
+  preConfigure = ''
     export ASLI_OTT=${ott.out + "/share/ott"}
     mkdir -p $out/share/asli
     cp -rv prelude.asl mra_tools tests $out/share/asli
+  '';
+
+  postInstall = ''
+    mv -v $out/bin/asli $out/bin/aslp
   '';
 
   shellHook = ''
@@ -56,7 +60,7 @@ buildDunePackage {
 
     tests.asli = testers.testVersion {
       package = asli;
-      command = "asli --version";
+      command = "aslp --version";
       version = "ASL";
     };
   };

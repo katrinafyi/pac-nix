@@ -4,7 +4,7 @@ final: prev:
 
   overlay_ocamlPackages = ofinal: oprev: {
     asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.z3; };
-    aslp = ofinal.callPackage ./aslp.nix { };
+    aslp = ofinal.asli;
     # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
 
     buildDunePackage = final.makeOverridable ({ pname, version, ... }@args:
