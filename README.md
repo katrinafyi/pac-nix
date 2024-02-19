@@ -26,9 +26,17 @@ the usual \<nixpkgs\> extended with those from this repo.
 For users of tools, the main packages are:
 - **[aslp][]**: the ASLp partial evaluator with ARM's MRA (provides `aslp` and `aslp-server`),
 - <s> **[bap-aslp][]** </s>[^1] (broken since 2024-02-09): a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), 
-- **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`),
-- **[ddisasm][]**: GrammaTech's datalog disassembler (provides `ddisasm`), and
-- **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`, `debug-gts.py`, and `proto-json.py`).
+- **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`), and
+- **[alive2-aslp][]**: a fork of [regehr/alive2][alive2-regehr], using Aslp to provide semantics for translation validation of the LLVM Aarch64 backend (provides `backend-tv`, others).
+
+These packages are each defined in a .nix file of the same name,
+then instantiated within overlay.nix and
+built into a package set in pkgs.nix.
+
+We also package some related third-party tools (without endorsement from their authors):
+- **[ddisasm][]**: GrammaTech's datalog disassembler (provides `ddisasm`),
+- **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`, `debug-gts.py`, and `proto-json.py`), and
+- **[alive2-regehr][]**: a fork of [AliveToolkit/alive2][alive2], performs translation validation of LLVM's Aarch64 backend by lifting MCInst back to LLVM IR (provides `backend-tv`, others).
 
 
 [aslp]: https://github.com/UQ-PAC/aslp
@@ -39,10 +47,9 @@ For users of tools, the main packages are:
 [ddisasm]: https://github.com/GrammaTech/ddisasm
 [godbolt]: https://github.com/ailrst/compiler-explorer
 [gtirb-semantics]: https://github.com/UQ-PAC/gtirb-semantics
-
-The packages are each defined in a .nix file of the same name,
-then instantiated within overlay.nix and
-built into a package set in pkgs.nix.
+[alive2-aslp]: https://github.com/katrinafyi/alive2
+[alive2-regehr]: https://github.com/regehr/alive2/tree/arm-tv
+[alive2]: https://github.com/AliveToolkit/alive2
 
 <details>
 <summary>Other packages</summary>
@@ -50,6 +57,7 @@ These are less frequently used and might be untested.
   
 - **[bap-primus][]**: PAC's fork of BAP with the [Primus Lisp PR][] but without ASLp (provides `bap-primus`)
 - **[godbolt][]**: the Godbolt compiler explorer with the Basil toolchain for interactive use (provides `godbolt`)
+- **[alive2][]**: translation validation of LLVM IR, designed to verify LLVM's middle-end optimisations (currently this version is frozen to llvm-translator's version)
 
 Other Nix files also define dependencies needed by the end-user tools.
 </details>
