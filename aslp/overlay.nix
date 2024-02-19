@@ -1,5 +1,8 @@
 final: prev:
 {
+
+  aslp-cpp = prev.callPackage ./aslp-cpp.nix { };
+
   inherit (final.ocamlPackages_pac) aslp asli;
 
   overlay_ocamlPackages = ofinal: oprev: {

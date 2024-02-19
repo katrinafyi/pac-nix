@@ -19,8 +19,17 @@ let
       inherit (final.ocamlPackages_pac) asl-translator;
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
-      llvm-rtti-eh = prev.callPackage ./llvm-translator/llvm-rtti-eh.nix { };
-      alive2 = prev.callPackage ./llvm-translator/alive2.nix { };
+
+      llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
+      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_git; };
+
+      alive2 = prev.callPackage ./llvm-translator/alive2.nix {
+        llvmPackages = final.llvm-custom-15;
+      };
+      alive2-regehr = prev.callPackage ./llvm-translator/alive2-regehr.nix {
+        llvmPackages = final.llvm-custom-git;
+      };
+      alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix { };
       remill = prev.callPackage ./llvm-translator/remill.nix { };
       sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
 
