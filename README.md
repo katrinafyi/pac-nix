@@ -24,11 +24,11 @@ The **pkgs.nix** file defines the package set as
 the usual \<nixpkgs\> extended with those from this repo.
 
 For users of tools, the main packages are:
-- **[aslp][]**: the ASLp partial evaluator with ARM's MRA (provides `aslp`),
+- **[aslp][]**: the ASLp partial evaluator with ARM's MRA (provides `aslp` and `aslp-server`),
 - <s> **[bap-aslp][]** </s>[^1] (broken since 2024-02-09): a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), 
 - **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`),
 - **[ddisasm][]**: GrammaTech's datalog disassembler (provides `ddisasm`), and
-- **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`).
+- **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`, `debug-gts.py`, and `proto-json.py`).
 
 
 [aslp]: https://github.com/UQ-PAC/aslp
