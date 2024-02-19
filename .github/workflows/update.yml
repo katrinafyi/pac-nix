@@ -10,7 +10,8 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics]
+        pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
+              asl-translator, alive2-aslp, alive2-regehr]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

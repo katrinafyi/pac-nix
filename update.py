@@ -79,6 +79,8 @@ PACKAGES: list[Package] = [
   Package('bap-primus', 'UQ-PAC/bap', 'aarch64-pull-request-2'),
   Package('asl-translator', 'UQ-PAC/llvm-translator', 'main'),
   Package('gtirb-semantics', 'UQ-PAC/gtirb-semantics', 'main'),
+  Package('alive2-aslp', 'katrinafyi/alive2', 'aslp'),
+  Package('alive2-regehr', 'regehr/alive2', 'arm-tv'),
 ]
 # NOTE: also change files in ./.github/workflows/*.yml
 

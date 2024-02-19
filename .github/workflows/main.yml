@@ -26,10 +26,10 @@ jobs:
         # end-user packages to ci build for cache
         pkg: 
           [aslp, bap-aslp, bap-primus, basil,
-          alive2, retdec-uq-pac, asl-translator,
+          retdec-uq-pac, asl-translator,
           gtirb-semantics, ddisasm, 
           ocamlPackages_pac_4_09.asli,
-          retdec5, remill]
+          retdec5, remill, alive2-aslp, alive2-regehr]
     runs-on: ubuntu-latest
 
     defaults:
