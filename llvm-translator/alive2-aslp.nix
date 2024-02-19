@@ -16,8 +16,8 @@ alive2-regehr.overrideAttrs (prev: {
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "44e45b7552826891a8e0d7817ed0e4443250c350";
-    hash = "sha256-LTmd7jAK6OTWSvqDoEr2arUwsffwDgp3TX45vcDjJ+c=";
+    rev = "df11ee0fe4cb5647de38da7d623593acc6e722d6";
+    hash = "sha256-srVjqunp2nK81HfLEla2wkL1tdWfRW/qZkml2cdJ5VY=";
   };
 
   cmakeFlags = prev.cmakeFlags
