@@ -74,19 +74,24 @@ buildEnv {
   passthru.tests.planter-det =
     runCommandLocal
       "planter-det"
-      { nativeBuildInputs = [ planter ] ++ planter-deps; }
+      { nativeBuildInputs = planter-deps; }
       ''
         trap 'set +x' EXIT
         set -x
 
+        export NIX_HARDENING_ENABLE=
+        export NIX_LDFLAGS="''${NIX_LDFLAGS/-rpath $out\/lib/}"
+        env
+
         mkdir $out && cd $out
         echo 'int main(void){return 3;}' > a.c
+        planter=${lib.getExe planter}
 
         for cc in gcc clang; do
           mkdir $cc && cd $cc
           cp ../a.c .
-          planter $cc a.c a.out a.gtirb a.gts
-          planter $cc a.c a.out a.gtirb b.gts
+          $planter $cc a.c a.out a.gtirb a.gts
+          $planter $cc a.c a.out a.gtirb b.gts
           proto-json.py a.gts a.json
           proto-json.py b.gts b.json
           diff -q a.json b.json
@@ -95,4 +100,8 @@ buildEnv {
 
         md5sum gcc/* clang/* > $out/md5sum
       '';
+
+  meta = {
+    mainProgram = "planter";
+  };
 }
