@@ -1,6 +1,8 @@
 final: prev:
 {
   ddisasm = prev.callPackage ./ddisasm.nix { };
+  ddisasm-deterministic = prev.ddisasm.deterministic;
+
   gtirb = prev.callPackage ./gtirb.nix { };
   python-gtirb = prev.callPackage ./python-gtirb.nix { };
   python-retypd = prev.callPackage ./python-retypd.nix { };
@@ -19,4 +21,7 @@ final: prev:
   proto-json = prev.callPackage ./proto-json.nix {
     inherit (final.ocamlPackages_pac) gtirb-semantics;
   };
+
+  unrandom = prev.callPackage ./unrandom.nix { };
+
 }
