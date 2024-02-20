@@ -10,6 +10,10 @@ let
       # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
     ;
 
+    planter = prev.callPackage ./planter.nix { };
+    gcc-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc;
+    clang-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.clang;
+
     godbolt = (prev.callPackage ./godbolt.nix { });
     basil-tool = prev.callPackage ./basil-tool.nix { };
 

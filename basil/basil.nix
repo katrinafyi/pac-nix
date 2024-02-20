@@ -8,7 +8,7 @@
 , basil
 }:
 
-mkSbtDerivation rec {
+mkSbtDerivation {
   pname = "basil";
   version = "unstable-2024-01-24";
 

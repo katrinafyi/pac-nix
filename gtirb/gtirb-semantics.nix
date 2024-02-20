@@ -20,15 +20,8 @@ let
   wrapper = writeShellApplication {
     name = "gtirb-semantics-wrapper";
     text = ''
-      # gtirb-semantics-wrapper: wrapper script for executing gtirb_semantics when packaged by Nix.
-      # this inserts the required ASLI arguments, and passes through the user's input/output arguments.
-
-      prog="$(dirname "$0")"/gtirb_semantics
-      input="$1"
-      shift
-      
-      echo '$' "$(basename "$prog")" "$input" ${baseNameOf asli.prelude} ${baseNameOf asli.mra_tools}/ ${baseNameOf asli.dir}/ "$@" >&2
-      "$prog" "$input" ${asli.prelude} ${asli.mra_tools} ${asli.dir} "$@"
+      echo 'gtirb-semantics-nix is no longer needed, please use gtirb-semantics instead.' >&2
+      exit 1
     '';
   };
 
@@ -54,7 +47,8 @@ buildDunePackage {
 
   postInstall = ''
     ln -sv ${wrapper}/bin/* $out/bin/gtirb-semantics-nix
-    cp -v $src/scripts/*.py $out/bin 
+    cp -v $src/scripts/*.py $out/bin
+    mv -v $out/bin/{gtirb_semantics,gtirb-semantics}
   '';
 
   outputs = [ "out" "dev" ];
