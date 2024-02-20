@@ -39,6 +39,12 @@ let
         fi
       done
 
+      if [[ -z "''${NIX_STORE:-}" ]]; then
+        export NIX_BUILD_TOP=$(pwd)
+        export NIX_STORE=/nix/store
+        export NIX_ENFORCE_PURITY=1
+      fi
+
       if [[ ''${#args[@]} != 5 ]]; then
         echo "$usage" >&2
         exit 1
@@ -74,7 +80,7 @@ buildEnv {
   passthru.tests.planter-det =
     runCommandLocal
       "planter-det"
-      { nativeBuildInputs = planter-deps; }
+      { nativeBuildInputs = [ planter ] ++ planter-deps; }
       ''
         trap 'set +x' EXIT
         set -x
@@ -85,13 +91,12 @@ buildEnv {
 
         mkdir $out && cd $out
         echo 'int main(void){return 3;}' > a.c
-        planter=${lib.getExe planter}
 
         for cc in gcc clang; do
           mkdir $cc && cd $cc
           cp ../a.c .
-          $planter $cc a.c a.out a.gtirb a.gts
-          $planter $cc a.c a.out a.gtirb b.gts
+          planter $cc a.c a.out a.gtirb a.gts
+          planter $cc a.c a.out a.gtirb b.gts
           proto-json.py a.gts a.json
           proto-json.py b.gts b.json
           diff -q a.json b.json
