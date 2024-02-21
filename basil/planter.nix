@@ -39,10 +39,15 @@ let
         fi
       done
 
+      export NIX_HARDENING_ENABLE=
+      export NIX_LDFLAGS=
+      export NIX_CFLAGS=
+      export NIX_CFLAGS_COMPILE=
+
       if [[ -z "''${NIX_STORE:-}" ]]; then
-        export NIX_BUILD_TOP=$(pwd)
-        export NIX_STORE=/nix/store
         export NIX_ENFORCE_PURITY=1
+        export NIX_STORE=/nix/store
+        export NIX_BUILD_TOP=$(pwd)
       fi
 
       if [[ ''${#args[@]} != 5 ]]; then
@@ -84,10 +89,6 @@ buildEnv {
       ''
         trap 'set +x' EXIT
         set -x
-
-        export NIX_HARDENING_ENABLE=
-        export NIX_LDFLAGS="''${NIX_LDFLAGS/-rpath $out\/lib/}"
-        env
 
         mkdir $out && cd $out
         echo 'int main(void){return 3;}' > a.c
