@@ -77,6 +77,7 @@ let
 
       ${gcc-aarch64.targetPrefix}"$compiler" ''${CFLAGS:-} "$in" -o "$out"
       ddisasm-deterministic "$out" --ir "$gtirb"
+      proto-json.py "$gtirb" "$gtirb" -s8 --idem
       gtirb-semantics "$gtirb" "$gts"
       proto-json.py "$gts" "$gts" --idem
     '';
@@ -105,7 +106,7 @@ buildEnv {
           mkdir $cc && cd $cc
           cp ../a.c .
           planter $cc a.c a.out a.gtirb a.gts
-          planter $cc a.c a.out a.gtirb b.gts
+          planter $cc a.c a.out b.gtirb b.gts
           proto-json.py a.gts a.json
           proto-json.py b.gts b.json
           diff -q a.json b.json
