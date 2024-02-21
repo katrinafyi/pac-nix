@@ -77,6 +77,7 @@ let
       ${gcc-aarch64.targetPrefix}"$compiler" ''${CFLAGS:-} "$in" -o "$out"
       ddisasm-deterministic "$out" --ir "$gtirb"
       gtirb-semantics "$gtirb" "$gts"
+      proto-json.py "$gts" "$gts" --idem
     '';
   };
 in
