@@ -27,7 +27,8 @@ let
         --unset NIX_CFLAGS \
         --unset NIX_CFLAGS_COMPILE \
         --set NIX_ENFORCE_PURITY 1 \
-        --set NIX_STORE $NIX_STORE
+        --set NIX_STORE $NIX_STORE \
+        --prefix PATH : ${pkg}/bin
     '';
   };
   planter-ccs = builtins.map wrap-nix-cc [ gcc-aarch64 clang-aarch64 ];
