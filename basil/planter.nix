@@ -1,7 +1,9 @@
 { lib
 , buildEnv
+, symlinkJoin
 , runCommandLocal
 , writeShellApplication
+, makeWrapper
 , gcc-aarch64
 , clang-aarch64
 , ddisasm
@@ -10,7 +12,26 @@
 }:
 
 let
-  planter-deps = [ gcc-aarch64 clang-aarch64 ddisasm.deterministic asli gtirb-semantics ];
+  wrap-nix-cc = pkg: symlinkJoin {
+    name = "${pkg.name}-deterministic";
+    paths = [ pkg ];
+
+    nativeBuildInputs = [ makeWrapper ];
+
+    postBuild = ''
+      cc=$out/bin/${pkg.targetPrefix}${pkg.meta.mainProgram}
+      wrapProgram "$cc" \
+        --run 'export NIX_BUILD_TOP="/nowhere/really/absolutely/nothing/is/here"' \
+        --unset NIX_HARDENING_ENABLE \
+        --unset NIX_LDFLAGS \
+        --unset NIX_CFLAGS \
+        --unset NIX_CFLAGS_COMPILE \
+        --set NIX_ENFORCE_PURITY 1 \
+        --set NIX_STORE $NIX_STORE
+    '';
+  };
+  planter-ccs = builtins.map wrap-nix-cc [ gcc-aarch64 clang-aarch64 ];
+  planter-deps = planter-ccs ++ [ ddisasm.deterministic asli gtirb-semantics ];
   planter-versions = lib.escapeShellArgs (builtins.map builtins.toString planter-deps);
   planter = writeShellApplication {
     name = "planter";
@@ -39,17 +60,6 @@ let
         fi
       done
 
-      export NIX_HARDENING_ENABLE=
-      export NIX_LDFLAGS=
-      export NIX_CFLAGS=
-      export NIX_CFLAGS_COMPILE=
-
-      if [[ -z "''${NIX_STORE:-}" ]]; then
-        export NIX_ENFORCE_PURITY=1
-        export NIX_STORE=/nix/store
-        export NIX_BUILD_TOP=$(pwd)
-      fi
-
       if [[ ''${#args[@]} != 5 ]]; then
         echo "$usage" >&2
         exit 1
@@ -74,11 +84,7 @@ buildEnv {
   name = "planter-env";
 
   pathsToLink = "/bin";
-  paths = [
-    gcc-aarch64
-    clang-aarch64
-    planter
-  ];
+  paths = [ planter ] ++ planter-ccs;
 
   ignoreCollisions = true;
 
