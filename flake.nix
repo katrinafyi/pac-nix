@@ -16,8 +16,9 @@
 
       patches = fetchpatch: [
         (fetchpatch {
-          url = "https://patch-diff.githubusercontent.com/raw/NixOS/nixpkgs/pull/285786.patch";
-          hash = "sha256-SW83Yo6RFG7Cz8+sRC100edUmvJrCetcXs5rWHQKRaQ=";
+          # https://nixpk.gs/pr-tracker.html?pr=285786
+          url = "https://github.com/NixOS/nixpkgs/compare/ffacc011dffba16ca360028d1f81cae99ff1280f..9a9cf8661391f21f7a44dc4823f815524351c94f.patch";
+          hash = "sha256-/1qoaHzROV5r1+1XfBPxgUdlMwEEXprp9O75/onUZAU=";
         })
       ];
 
