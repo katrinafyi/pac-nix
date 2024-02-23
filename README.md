@@ -116,7 +116,7 @@ from local sources and setting up development environments.
 
 To list available packages:
 ```bash
-nix flake show github:katrinafyi/pac-nix
+nix flake show github:katrinafyi/pac-nix --allow-import-from-derivation --impure
 ```
 
 To list installed packages:

@@ -25,7 +25,8 @@
       nixpkgss = lib.genAttrs systems
         (system:
           let
-            pkgs = nixpkgs.legacyPackages.${system};
+            # HACK! this is very broken, remove as soon as PR is upstreamed.  
+            pkgs = nixpkgs.legacyPackages.${builtins.currentSystem or system};
             nixpkgs' = pkgs.applyPatches {
               name = "nixpkgs-patched";
               src = nixpkgs;
