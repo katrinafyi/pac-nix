@@ -16,9 +16,38 @@
         "type": "github"
       }
     },
+    "nixpkgs-patch-1": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Y4ya/hJsQ1B4iHYwJxRDW2ZtP/ErGn6zekvT5Q6rw+o=",
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/compare/ffacc011dffba16ca360028d1f81cae99ff1280f..9a9cf8661391f21f7a44dc4823f815524351c94f.patch"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/compare/ffacc011dffba16ca360028d1f81cae99ff1280f..9a9cf8661391f21f7a44dc4823f815524351c94f.patch"
+      }
+    },
+    "nixpkgs-patched": {
+      "locked": {
+        "lastModified": 1708695032,
+        "narHash": "sha256-SsMyQCJ4CRYswFthFvHIPniRT/FBk1luP2eUHXKqjVg=",
+        "owner": "katrinafyi",
+        "repo": "nixpkgs",
+        "rev": "2ea79083c54ea7a665562c1c41b0e18d9a9ff72e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "katrinafyi",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-patch-1": "nixpkgs-patch-1",
+        "nixpkgs-patched": "nixpkgs-patched"
       }
     }
   },

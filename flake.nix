@@ -3,6 +3,9 @@
   nixConfig.extra-trusted-public-keys = [ "pac-nix.cachix.org-1:l29Pc2zYR5yZyfSzk1v17uEZkhEw0gI4cXuOIsxIGpc=" ];
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs.nixpkgs-patched.url = "github:katrinafyi/nixpkgs";
+  inputs.nixpkgs-patch-1.url = "https://github.com/NixOS/nixpkgs/compare/ffacc011dffba16ca360028d1f81cae99ff1280f..9a9cf8661391f21f7a44dc4823f815524351c94f.patch";
+  inputs.nixpkgs-patch-1.flake = false;
 
   outputs = { self, nixpkgs, ... }:
     let
@@ -26,7 +29,7 @@
         (system:
           let
             # HACK! this is very broken, remove as soon as PR is upstreamed.  
-            pkgs = nixpkgs.legacyPackages.${builtins.currentSystem or system};
+            pkgs = nixpkgs.legacyPackages.${system};
             nixpkgs' = pkgs.applyPatches {
               name = "nixpkgs-patched";
               src = nixpkgs;

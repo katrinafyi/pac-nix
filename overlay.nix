@@ -32,7 +32,22 @@ let
       alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix { };
       remill = prev.callPackage ./llvm-translator/remill.nix { };
       sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
-
+ 
+      boop = prev.applyPatches {
+        src = prev.fetchFromGitHub {
+            owner = "nixos";
+            repo = "nixpkgs";
+            rev = "7713853c8624abf65e020ee7f07c081ac7dbf07b";
+            hash = "sha256-ybyDlppu1q9/rE/yqSMb871R7lAk/E3bZv5MmDVQ/6A=";
+          };
+        patches = [
+          (prev.fetchpatch { url = "https://github.com/NixOS/nixpkgs/commit/e6d8ac415959eae813b9c011a0a9571b5b4fd6b2.patch"; hash = "sha256-6faTCs1QgdJpqaogfPQzf00WOmRG/ryS+Jd5HyvAC8U="; })
+        ];
+                  outputHashMode = "recursive";
+              outputHashAlgo = "sha256";
+              outputHash = "";
+      };
+ 
       _overlay = overlay;
     };
 in
