@@ -5,13 +5,13 @@
 
 (alive2.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-regehr";
-  version = "unstable-2024-02-22";
+  version = "unstable-2024-02-25";
 
   src = fetchFromGitHub {
     owner = "regehr";
     repo = "alive2";
-    rev = "f04ffa8d14cb42a6886786b54869633f8674e39d";
-    hash = "sha256-Z9DZnpAYrS75ichO+Xwx3mu7m+Tl3CXlgq2ArVw/BY4=";
+    rev = "79097cc4b346f002a8eca8b4a343858e5fcf4bf8";
+    hash = "sha256-cvta+2NZ2LzlcXwNiL/tKrA759TF+lSiwfzFfOCmvIo=";
   };
 
   patches = [ ];
