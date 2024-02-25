@@ -3,25 +3,24 @@
 , mkSbtDerivation
 , makeBinaryWrapper
 , jdk
-, jre
 , testers
 , basil
 }:
 
 mkSbtDerivation {
   pname = "basil";
-  version = "unstable-2024-01-24";
+  version = "unstable-2024-02-22";
 
   nativeBuildInputs = [ jdk makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "7ad7a203b0c945786a84ce0fe2edac6c25bc792a";
-    sha256 = "sha256-aoIMshwkUneW2Xvtaz/EiE54OMuvk1CTECzxImwhOeA=";
+    rev = "c5d396a583868427e763bbd5e000731f1dadb48a";
+    sha256 = "sha256-mL/tzW3msiq8LqhdX8HPvFsr40M0kFyHA6bU1R8IGG0=";
   };
 
-  depsSha256 = "sha256-AoHPd8UI0Iprin1Sq7rL0fe+42x8+fNCRYA1bW+5ySQ=";
+  depsSha256 = "sha256-++gg+SKskDyaqHowNG2RPS7evuCzPYvvXMC4Rkp7b6U=";
 
   buildPhase = ''
     javac -version
@@ -44,7 +43,7 @@ mkSbtDerivation {
     cp -v "$JAR" $out/share/basil/$(basename $JAR)
 
     # make wrapper to run jar with appropriate arguments
-    makeBinaryWrapper "${jre}/bin/java" $out/bin/basil \
+    makeWrapper "$(command -v java)" $out/bin/basil \
       --add-flags -jar \
       --add-flags "$out/share/basil/$(basename $JAR)"
   '';
