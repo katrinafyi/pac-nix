@@ -3,6 +3,7 @@
 , mkSbtDerivation
 , makeBinaryWrapper
 , jdk
+, jre
 , testers
 , basil
 }:
@@ -43,7 +44,7 @@ mkSbtDerivation {
     cp -v "$JAR" $out/share/basil/$(basename $JAR)
 
     # make wrapper to run jar with appropriate arguments
-    makeWrapper "$(command -v java)" $out/bin/basil \
+    makeWrapper "${lib.getExe jre}" $out/bin/basil \
       --add-flags -jar \
       --add-flags "$out/share/basil/$(basename $JAR)"
   '';
