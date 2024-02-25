@@ -4,9 +4,9 @@
 , testVersion
 , protobuf
 , asli
-, libllvm
+, llvmPackages
 , ocaml-protoc-plugin
-, ocaml-hexstring
+, ctypes
 , base64
 , yojson
 , writeShellApplication
@@ -25,7 +25,7 @@ let
     '';
   };
 
-  pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf libllvm ];
+  pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf ];
   python' = python3Packages.python.withPackages
     (p: [ pth python-gtirb ]);
 
@@ -41,9 +41,15 @@ buildDunePackage {
     sha256 = "sha256-Y0nFoCCFFcHhyb3lsOYkA4qMT03eElmaMdVeuCnMMHs=";
   };
 
-  buildInputs = [ python' asli ocaml-hexstring ocaml-protoc-plugin yojson ];
-  nativeBuildInputs = [ protobuf ocaml-protoc-plugin ];
+  buildInputs = [ python' asli ctypes ocaml-protoc-plugin yojson llvmPackages.libllvm ];
+  nativeBuildInputs = [ protobuf ocaml-protoc-plugin llvmPackages.libllvm ];
   propagatedBuildInputs = [ base64 ];
+
+  preConfigure = ''
+    substituteInPlace llvm-disas/dune \
+      --replace-warn 'opam var' echo \
+      --replace-warn conf-llvm:config $(command -v llvm-config)
+  '';
 
   postInstall = ''
     ln -sv ${wrapper}/bin/* $out/bin/gtirb-semantics-nix
@@ -53,6 +59,11 @@ buildDunePackage {
 
   outputs = [ "out" "dev" ];
 
+  passthru.tests.gtirb-semantics = testVersion {
+    package = gtirb-semantics;
+    command = "gtirb-semantics --help";
+    version = "gtirb-semantics";
+  };
   passthru.tests.test-debug-gts = testVersion {
     package = gtirb-semantics;
     command = "debug-gts.py --help";
