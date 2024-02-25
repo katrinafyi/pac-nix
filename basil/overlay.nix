@@ -6,9 +6,9 @@ let
   sbt-drv-overlay = import "${sbt-drv-repo}/overlay.nix";
 
   overlay = final: prev: {
-    basil = (prev.callPackage ./basil.nix { })
-      # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
-    ;
+    basil = prev.callPackage ./basil.nix {
+      jdk = final.jdk17;
+    };
 
     planter = prev.callPackage ./planter.nix { };
     gcc-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc;
@@ -16,9 +16,6 @@ let
 
     godbolt = (prev.callPackage ./godbolt.nix { });
     basil-tool = prev.callPackage ./basil-tool.nix { };
-
-    jre = final.temurin-jre-bin-17;
-    jdk = final.temurin-bin-17;
   };
 in
 final: prev:
