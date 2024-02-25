@@ -25,10 +25,11 @@ let
     '';
   };
 
-  pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf ];
+  libllvm = llvmPackages.libllvm;
+  # debug-gts needs llvm-mc at runtime
+  pth = makePythonPth python3Packages "gtirb-semantics" [ protobuf libllvm ];
   python' = python3Packages.python.withPackages
     (p: [ pth python-gtirb ]);
-
 in
 buildDunePackage {
   pname = "gtirb_semantics";
@@ -41,8 +42,8 @@ buildDunePackage {
     sha256 = "sha256-Y0nFoCCFFcHhyb3lsOYkA4qMT03eElmaMdVeuCnMMHs=";
   };
 
-  buildInputs = [ python' asli ctypes ocaml-protoc-plugin yojson llvmPackages.libllvm ];
-  nativeBuildInputs = [ protobuf ocaml-protoc-plugin llvmPackages.libllvm ];
+  buildInputs = [ python' asli ctypes ocaml-protoc-plugin yojson libllvm ];
+  nativeBuildInputs = [ protobuf ocaml-protoc-plugin libllvm ];
   propagatedBuildInputs = [ base64 ];
 
   preConfigure = ''
