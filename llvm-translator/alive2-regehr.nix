@@ -10,8 +10,8 @@
   src = fetchFromGitHub {
     owner = "regehr";
     repo = "alive2";
-    rev = "79097cc4b346f002a8eca8b4a343858e5fcf4bf8";
-    hash = "sha256-cvta+2NZ2LzlcXwNiL/tKrA759TF+lSiwfzFfOCmvIo=";
+    rev = "ee52a684b48e4e8650bb91b1504cafaf7616ec64";
+    hash = "sha256-vOIkRC1+1HGPLwOL6QvgvhYRq3CvlAhiAibPT7TYsNI=";
   };
 
   patches = [ ];
