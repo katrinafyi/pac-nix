@@ -35,22 +35,17 @@ buildDunePackage {
   pname = "gtirb_semantics";
   version = "unstable-2024-02-21";
 
+  # https://github.com/UQ-PAC/gtirb-semantics/commits/instruction-addrs
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
-    rev = "23fe5e2ac50aded95f1447d66aaec14e0bde4814";
-    sha256 = "sha256-Y0nFoCCFFcHhyb3lsOYkA4qMT03eElmaMdVeuCnMMHs=";
+    rev = "a174d4b12b6d17a97171ee1583d009ecd8d8df0f";
+    sha256 = "sha256-7xxMLIWYHe/WiDwCajyeGilDEhHVJdHnokM2pGsFSF8=";
   };
 
   buildInputs = [ python' asli ctypes ocaml-protoc-plugin yojson libllvm ];
   nativeBuildInputs = [ protobuf ocaml-protoc-plugin libllvm ];
   propagatedBuildInputs = [ base64 ];
-
-  preConfigure = ''
-    substituteInPlace llvm-disas/dune \
-      --replace-warn 'opam var' echo \
-      --replace-warn conf-llvm:config $(command -v llvm-config)
-  '';
 
   postInstall = ''
     ln -sv ${wrapper}/bin/* $out/bin/gtirb-semantics-nix
