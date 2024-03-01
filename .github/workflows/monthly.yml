@@ -20,5 +20,7 @@ jobs:
     - run: |
         nix flake update --commit-lock-file
     - run: |
+        nix run github:katrinafyi/nix-patcher -- --commit --update
+    - run: |
         nix build .#all -Lv
     - run: git push
