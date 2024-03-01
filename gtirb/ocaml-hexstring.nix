@@ -26,6 +26,6 @@ buildDunePackage {
   meta = {
     homepage = "https://github.com/mimoo/hexstring";
     description = "An ocaml library to encode to and decode from hexadecimal strings";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }

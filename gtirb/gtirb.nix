@@ -50,6 +50,6 @@ stdenv.mkDerivation {
   meta = {
     homepage = "https://github.com/GrammaTech/gtirb";
     description = "Intermediate Representation for Binary analysis and transformation.";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }

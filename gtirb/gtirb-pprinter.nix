@@ -34,7 +34,7 @@ stdenv.mkDerivation {
   meta = {
     homepage = "https://github.com/grammatech/gtirb-pprinter";
     description = "Pretty printer from GTIRB to assembly code.";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }
 

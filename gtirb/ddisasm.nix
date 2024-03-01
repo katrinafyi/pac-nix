@@ -68,7 +68,7 @@ stdenv.mkDerivation {
     mainProgram = "ddisasm";
     homepage = "https://github.com/grammatech/ddisasm";
     description = "A fast and accurate disassembler.";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }
 

@@ -52,7 +52,7 @@ mkSbtDerivation {
   meta = {
     homepage = "https://github.com/UQ-PAC/bil-to-boogie-translator";
     description = "Basil static analysis tool to analyse and translate BIR to Boogie.";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 
   passthru.tests.basil-arg = testers.testVersion {

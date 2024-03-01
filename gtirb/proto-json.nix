@@ -27,7 +27,7 @@ stdenv.mkDerivation {
   meta = {
     homepage = "https://github.com/UQ-PAC/gtirb-semantics/blob/main/scripts/proto-json.py";
     description = "protobuf <-> json converter";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }
 

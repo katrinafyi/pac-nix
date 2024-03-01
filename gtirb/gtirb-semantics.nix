@@ -67,6 +67,6 @@ buildDunePackage {
   meta = {
     homepage = "https://github.com/UQ-PAC/gtirb-semantics";
     description = "Add instruction semantics to the IR of a dissassembled ARM64 binary";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }

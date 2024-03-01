@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# vim: ts=2 sts=2 sw=2 et 
+
 # updates the revision hash for each upstream package.
 # for each updated package, this checks the derivation can be built
 # then commits its results.
@@ -112,9 +114,14 @@ def arg_path_exists(p: str) -> str:
 
 def upgrade(p: Package, args: Args):
   flakeattr = f'{args.dir}#{p.attr}'
+  broken = json.loads(run(
+    ['nix', 'eval', '--json', f'{args.dir}#{p.attr}.meta.broken'],
+    stdout=subprocess.PIPE, text=True).stdout)
 
   if args.mode == 'upgrade':
-
+    if broken:
+      print(f'::warning title={p.attr} broken::will not build or test {p.attr} during upgrade')
+      args.rest = [x for x in args.rest if x not in ('--build', '--test')]
     run(['nix-update', '--flake', '-f', args.dir, p.attr, '--version', f'branch={p.branch}'] +
         args.rest)
     for p2 in p.then:
@@ -174,7 +181,7 @@ if __name__ == "__main__":
 
   if args.mode == 'do-upgrade':
     args.mode = 'upgrade'
-    args.rest = ['--build', '--commit'] + args.rest
+    args.rest = ['--build', '--commit', '--test'] + args.rest
 
   for f in fields(Args):
     assert f.name in args, f.name

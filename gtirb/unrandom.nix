@@ -1,4 +1,5 @@
-{ stdenv
+{ lib
+, stdenv
 , fetchFromGitHub
 }:
 
@@ -25,6 +26,6 @@ stdenv.mkDerivation {
   meta = {
     homepage = "https://github.com/katrinafyi/unrandom";
     description = "determinism!";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }

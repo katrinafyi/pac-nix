@@ -21,7 +21,7 @@ stdenv.mkDerivation {
   meta = {
     homepage = "https://git.zephyr-software.com/opensrc/libehp";
     description = "Exception handling parsing support for Elf files (eh_frame, etc.)";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }
 

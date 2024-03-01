@@ -22,6 +22,6 @@ buildDunePackage rec {
   meta = {
     homepage = "https://github.com/UQ-PAC/llvm-translator";
     description = "llvm-translator for comparison of lifter outputs (asl-translator component).";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }

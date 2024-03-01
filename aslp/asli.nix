@@ -1,4 +1,5 @@
-{ fetchFromGitHub
+{ lib
+, fetchFromGitHub
 , buildDunePackage
   # pkgs
 , pcre
@@ -68,6 +69,6 @@ buildDunePackage {
   meta = {
     homepage = "https://github.com/UQ-PAC/aslp";
     description = "ASL partial evaluator to extract semantics from ARM's MRA.";
-    maintainers = [ "Kait Lam <k@rina.fyi>" ];
+    maintainers = with lib.maintainers; [ katrinafyi ];
   };
 }
