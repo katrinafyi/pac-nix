@@ -2,6 +2,34 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
+        "lastModified": 1709190628,
+        "narHash": "sha256-tGb3dPo2jZEiJP0QQn08NtFNR1/XBa4u5uuYSFv2AOI=",
+        "owner": "katrinafyi",
+        "repo": "nixpkgs",
+        "rev": "3302864e6e6381f134b42a64fb7a283eadfdb187",
+        "type": "github"
+      },
+      "original": {
+        "owner": "katrinafyi",
+        "ref": "pac-nix",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-patch-1": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Y4ya/hJsQ1B4iHYwJxRDW2ZtP/ErGn6zekvT5Q6rw+o=",
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/compare/ffacc011dffba16ca360028d1f81cae99ff1280f..9a9cf8661391f21f7a44dc4823f815524351c94f.patch"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/compare/ffacc011dffba16ca360028d1f81cae99ff1280f..9a9cf8661391f21f7a44dc4823f815524351c94f.patch"
+      }
+    },
+    "nixpkgs-upstream": {
+      "locked": {
         "lastModified": 1707689078,
         "narHash": "sha256-UUGmRa84ZJHpGZ1WZEBEUOzaPOWG8LZ0yPg1pdDF/yM=",
         "owner": "nixos",
@@ -18,7 +46,9 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-patch-1": "nixpkgs-patch-1",
+        "nixpkgs-upstream": "nixpkgs-upstream"
       }
     }
   },
