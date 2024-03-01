@@ -33,14 +33,14 @@ let
 in
 buildDunePackage {
   pname = "gtirb_semantics";
-  version = "unstable-2024-02-21";
+  version = "unstable-2024-03-01";
 
   # https://github.com/UQ-PAC/gtirb-semantics/commits/instruction-addrs
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
-    rev = "a174d4b12b6d17a97171ee1583d009ecd8d8df0f";
-    sha256 = "sha256-7xxMLIWYHe/WiDwCajyeGilDEhHVJdHnokM2pGsFSF8=";
+    rev = "96e938f66e70f2fd1905ca8dfc4fb7929be0bf5a";
+    sha256 = "sha256-1SJm1jiJ6SJwwBwx+ueCyaZPaETw6t3qBzAZ81g53/o=";
   };
 
   buildInputs = [ python' asli ctypes ocaml-protoc-plugin yojson libllvm ];
