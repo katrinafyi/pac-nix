@@ -52,6 +52,8 @@ buildDunePackage {
     export ASLI_OTT=${ott.out + "/share/ott"}
   '';
 
+  doCheck = true;
+
   outputs = [ "out" "dev" ];
 
   passthru = {
