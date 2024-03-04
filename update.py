@@ -111,17 +111,27 @@ def arg_path_exists(p: str) -> str:
       raise argparse.ArgumentTypeError(e)
   return p
 
+def try_remove(x: list, v):
+  if v in x: x.remove(v)
 
 def upgrade(p: Package, args: Args):
   flakeattr = f'{args.dir}#{p.attr}'
   broken = json.loads(run(
     ['nix', 'eval', '--json', f'{args.dir}#{p.attr}.meta.broken'],
     stdout=subprocess.PIPE, text=True).stdout)
+  has_tests = 0 == run(
+    ['nix', 'eval', '--json', f'{args.dir}#{p.attr}.tests'],
+    check=False).returncode
+
+  if not has_tests:
+    try_remove(args.rest, '--test')
 
   if args.mode == 'upgrade':
     if broken:
       print(f'::warning title={p.attr} broken::will not build or test {p.attr} during upgrade')
-      args.rest = [x for x in args.rest if x not in ('--build', '--test')]
+      try_remove(args.rest, '--build')
+      try_remove(args.rest, '--test')
+
     run(['nix-update', '--flake', '-f', args.dir, p.attr, '--version', f'branch={p.branch}'] +
         args.rest)
     for p2 in p.then:
