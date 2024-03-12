@@ -20,13 +20,13 @@
 
 stdenv.mkDerivation {
   pname = "ddisasm";
-  version = "1.8.0";
+  version = "unstable-2024-03-08";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "ddisasm";
-    rev = "v1.8.0";
-    hash = "sha256-jCJLqy1BARO9SjV6hzSaow/KdMLlIc+wNXC16LSLlVE=";
+    rev = "9edfe9fe86910ef946de1db7a7ac41ce86bc31d0";
+    hash = "sha256-xFW6J3jCCMtUqT25/zVfjjy5o3MoX1HXxIlRhjM6s8A=";
   };
 
   buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
