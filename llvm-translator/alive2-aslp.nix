@@ -8,7 +8,7 @@
 
 alive2-regehr.overrideAttrs (prev: {
   pname = "alive2-aslp";
-  version = "unstable-2024-03-04";
+  version = "unstable-2024-03-12";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
   nativeBuildInputs = prev.nativeBuildInputs ++ [ jre ];
@@ -16,8 +16,8 @@ alive2-regehr.overrideAttrs (prev: {
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "4dd9b228c8a199efefd7913227adc82a26decf8d";
-    hash = "sha256-e5b2Gk//KGMmqsKiHEXTUatjXTauZJPnU55eKAyed9Q=";
+    rev = "6e4c57d5b649c56c36f48078da2ce43da3eb7af0";
+    hash = "sha256-5R1htBcfIRGNfVy4rewQEobkro5BXUPWIqQBHqJ+WbY=";
   };
 
   cmakeFlags = prev.cmakeFlags
