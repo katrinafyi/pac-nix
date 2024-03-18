@@ -3,6 +3,8 @@
 , buildDunePackage
   # pkgs
 , pcre
+, antlr4
+, jdk
 , ott
 , z3
   # ocamlPackages
@@ -29,17 +31,17 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "4991bcd611a31298a374735e327297ce923137c7";
-    sha256 = "sha256-Kqx8rJ7gaqIdBOgBVS3Mv+7iXEZNlicnon3s8aEwUus=";
+    rev = "8828e86cf7b45f63f02450699965eac1627a9973";
+    sha256 = "sha256-5fT+/ot9gAAizvq8R0gzDE4fLBNycfdonCrjWqxVi2c=";
   };
 
   checkInputs = [ alcotest ];
+  nativeCheckInputs = [ jdk ];
   buildInputs = [ linenoise ];
   nativeBuildInputs = [ ott menhir ];
   propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix ];
 
   preConfigure = ''
-    export ASLI_OTT=${ott.out + "/share/ott"}
     mkdir -p $out/share/asli
     cp -rv prelude.asl mra_tools tests $out/share/asli
   '';
@@ -48,9 +50,10 @@ buildDunePackage {
     mv -v $out/bin/asli $out/bin/aslp
   '';
 
-  shellHook = ''
-    export ASLI_OTT=${ott.out + "/share/ott"}
-  '';
+  env = {
+    ASLI_OTT = ott.out + "/share/ott";
+    ANTLR4_JAR_LOCATION = antlr4.jarLocation;
+  };
 
   doCheck = true;
 
