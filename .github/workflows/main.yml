@@ -28,7 +28,7 @@ jobs:
           [aslp, bap-aslp, bap-primus, basil,
           retdec-uq-pac, asl-translator,
           gtirb-semantics, ddisasm, 
-          ocamlPackages_pac_4_09.asli,
+          # ocamlPackages_pac_4_09.asli,
           retdec5, remill, alive2-aslp, alive2-regehr,
           planter]
     runs-on: ubuntu-latest
