@@ -1,9 +1,9 @@
 final: prev:
 {
-
+  inherit (final.ocamlPackages_pac) aslp asli;
   aslp-cpp = prev.callPackage ./aslp-cpp.nix { };
 
-  inherit (final.ocamlPackages_pac) aslp asli;
+  aslp-offline-cpp = prev.callPackage ./aslp-offline-cpp.nix { };
 
   overlay_ocamlPackages = ofinal: oprev: {
     asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.z3; };
