@@ -43,7 +43,7 @@ buildDunePackage {
 
   preConfigure = ''
     mkdir -p $out/share/asli
-    cp -rv prelude.asl mra_tools tests $out/share/asli
+    cp -r prelude.asl mra_tools tests $out/share/asli
   '';
 
   postInstall = ''

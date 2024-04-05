@@ -1,15 +1,18 @@
 { lib
 , stdenv
+, clangStdenv
 , runCommand
 , nix-gitignore
 , fetchFromGitHub 
 , aslp
 , cmake
+, meson
+, ninja
 , llvmPackages
 }:
 
 let
-  aslp-cpp-backend = aslp.overrideAttrs {
+  aslp-cpp-backend = aslp.overrideAttrs (prev: {
     # src = fetchFromGitHub {
     #   owner = "UQ-PAC";
     #   repo = "aslp";
@@ -17,7 +20,9 @@ let
     #   hash = "sha256-Di1EFdpNJz7cJgTHO/4dLishmB2Ptlm4WpyYW/0VmNY=";
     # };
     src = nix-gitignore.gitignoreSource [] /home/rina/progs/aslp;
-  };
+    doCheck = false;
+    env = prev.env // { ANTLR4_JAR_LOCATION = "/nowhere"; };
+  });
 
   src = runCommand "aslp-offline-cpp-src" {} ''
     mkdir -p $out
@@ -25,15 +30,13 @@ let
     echo ":gen A64 .+ cpp $out" | ${lib.getExe aslp-cpp-backend}
   '';
 
-in stdenv.mkDerivation {
+in clangStdenv.mkDerivation {
   pname = "aslp-offline-cpp";
   version = aslp-cpp-backend.version;
 
   src = src;
 
-  nativeBuildInputs = [ cmake ];
+  mesonBuildType = "debug";
+  nativeBuildInputs = [ meson ninja ];
   buildInputs = [ llvmPackages.libllvm ];
-
-  env.CXXFLAGS = "-Os";
-  hardeningDisable = [ "all" ]; # simply too slow.
 }
