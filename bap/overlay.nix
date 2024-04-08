@@ -1,17 +1,6 @@
 final: prev:
 {
-  overlay_ocamlPackages = ofinal: oprev: {
-    bap = oprev.bap.overrideAttrs (p: {
-      # configurePhase = ''
-      # runHook preConfigure
-      # echo old "$configureFlags"
-      # configureFlags="--prefix=$prefix $(echo "$configureFlags" | sed -e 's/--\(old\)\?includedir=[^ ]\+//g')"
-      # echo new "$configureFlags"
-      # ./configure $configureFlags
-      # runHook postConfigure
-      # '';
-      # outputs = final.lib.unique (p.outputs or ["out"] ++ []);
-    });
+  overlay_janeStreet_0_15 = ofinal: oprev: {
 
     bap-asli-plugin = (ofinal.callPackage ./bap-asli-plugin.nix { })
       # .overrideAttrs { src = prev.lib.cleanSource ~/progs/bap-asli-plugin; }
@@ -22,5 +11,5 @@ final: prev:
     bap-primus = ofinal.callPackage ./bap-primus.nix { };
   };
 
-  inherit (final.ocamlPackages_pac) bap-aslp bap-asli-plugin bap-primus;
+  inherit (final.janeStreet_pac_0_15) bap-aslp bap-asli-plugin bap-primus;
 }

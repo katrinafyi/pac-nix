@@ -6,10 +6,23 @@ let
 
       update = prev.callPackage ./update.nix { };
 
+
+      # instantiate overlays
       ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
-      # ocamlPackages_pac_4_09 = final.ocaml-ng.ocamlPackages_4_09.overrideScope final.overlay_ocamlPackages
-      #   // { _overlay = final.overlay_ocamlPackages; };
+
+      janeStreet_pac_0_15 =
+        let
+          # use janeStreet_0_15 as main jane street version
+          ocamlPackages' = final.ocaml-ng.ocamlPackages_4_14.overrideScope
+            (f: p: { janeStreet = p.janeStreet_0_15; } // p.janeStreet_0_15);
+          # expose ocaml-z3 in scope for asli
+          overlay = final.lib.composeManyExtensions [
+            (_: _: { inherit (ocamlPackages') z3; })
+            final.overlay_janeStreet_0_15
+          ];
+        in ocamlPackages'.janeStreet_0_15.overrideScope overlay
+          // { _overlay = overlay; };
 
       # llvm-translator packages 
       overlay_ocamlPackages = ofinal: oprev: {
