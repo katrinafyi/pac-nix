@@ -2,11 +2,9 @@
   nixConfig.extra-substituters = [ "https://pac-nix.cachix.org/" ];
   nixConfig.extra-trusted-public-keys = [ "pac-nix.cachix.org-1:l29Pc2zYR5yZyfSzk1v17uEZkhEw0gI4cXuOIsxIGpc=" ];
 
-  inputs.nixpkgs-upstream.url = "github:nixos/nixpkgs/nixos-unstable";
-  inputs.nixpkgs.url = "github:katrinafyi/nixpkgs/pac-nix";
-
-  inputs.nixpkgs-patch-1.url = "https://github.com/NixOS/nixpkgs/compare/ffacc011dffba16ca360028d1f81cae99ff1280f..9a9cf8661391f21f7a44dc4823f815524351c94f.patch";
-  inputs.nixpkgs-patch-1.flake = false; 
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  # inputs.nixpkgs-upstream.url = "github:nixos/nixpkgs/nixos-unstable";
+  # inputs.nixpkgs.url = "github:katrinafyi/nixpkgs/pac-nix";
 
   outputs = { self, nixpkgs, ... }:
     let
