@@ -10,6 +10,8 @@ final: prev:
     aslp = ofinal.asli;
     # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
 
+    mlbdd = ofinal.callPackage ./mlbdd.nix { };
+
     buildDunePackage = final.makeOverridable ({ pname, version, ... }@args:
       let
         args' = builtins.removeAttrs args [ "minimalOCamlVersion" ];
