@@ -31,7 +31,16 @@ let
         llvmPackages = final.llvm-custom-git;
       };
       alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix { };
-      remill = prev.callPackage ./llvm-translator/remill.nix { };
+      xed2022 = prev.xed.overrideAttrs rec {
+        version = "2022.08.11";
+        src = prev.fetchFromGitHub {
+          owner = "intelxed";
+          repo = "xed";
+          rev = "v${version}";
+          sha256 = "sha256-Iil+dfjuWYPbzmSjgwKTKScSE/IsWuHEKQ5HsBJDqWM=";
+        };
+      };
+      remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; };
       sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
 
       _overlay = overlay;
