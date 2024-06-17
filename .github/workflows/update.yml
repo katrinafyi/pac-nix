@@ -1,7 +1,7 @@
 name: "update Nix packages"
 on:
   schedule:
-  - cron: '53 18 * * 1'  # AEST 4:53 am
+  - cron: '53 18 * * 0-4'  # AEST 4:53 am
   workflow_dispatch:
 
 jobs:
