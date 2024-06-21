@@ -19,6 +19,7 @@
 , cohttp-lwt-unix
 , mlbdd
 , yojson
+, ppx_blob
 , asli
 , testers
 }:
@@ -38,7 +39,7 @@ buildDunePackage {
 
   checkInputs = [ alcotest ];
   nativeCheckInputs = [ jdk ];
-  buildInputs = [ mlbdd linenoise ];
+  buildInputs = [ mlbdd linenoise ppx_blob ];
   nativeBuildInputs = [ ott menhir ];
   propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix ];
 
