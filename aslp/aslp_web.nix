@@ -19,8 +19,8 @@ buildDunePackage rec {
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "aslp-web";
-    rev = "179cd92d0e3d20c679cd5e81cbc62c7946f5da11";
-    hash = "sha256-sJB30njmueLOP2JA0CWTpn/ZVXol5rzqPkakDuk0+Io=";
+    rev = "90d1bb472966e915aea252f73b7fe23ed17ae96a";
+    hash = "sha256-mPrn1d0jY3VMYgDsDLtIpemyxMyQIM4GPGMCgYWvBb0=";
   };
 
   postPatch = ''
