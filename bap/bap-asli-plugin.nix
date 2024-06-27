@@ -19,6 +19,7 @@ stdenv.mkDerivation rec {
   };
 
   buildInputs = [ asli bap findlib ];
+  dontDetectOcamlConflicts = true;
 
   buildPhase = ''
     runHook preBuild
