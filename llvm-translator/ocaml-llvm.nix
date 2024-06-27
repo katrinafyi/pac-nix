@@ -1,36 +1,37 @@
 { lib
 , fetchFromGitHub
 , buildDunePackage
-, llvmPackages
+, libllvm
 , ctypes
+, ctypes-foreign
 , zlib
 , libxml2
 , ncurses
 }:
 
-let libllvm = llvmPackages.libllvm;
-in buildDunePackage rec {
+buildDunePackage rec {
   pname = "llvm";
-  version = "14.0.6";
+  version = libllvm.version;
 
-  nativeBuildInputs = [ libllvm ];
+  # nativeBuildInputs = [ libllvm ];
 
   duneSrc = fetchFromGitHub {
     owner = "alan-j-hu";
     repo = "llvm-dune";
     rev = "v${version}";
-    hash = "sha256-GHxncfthpMTeVdlDhe7shKWJvoa8Ctn5tU4AfOyOS2w=";
+    hash =
+      lib.throwIfNot (version == "14.0.6") "ocaml-llvm libllvm mismatch"
+      "sha256-GHxncfthpMTeVdlDhe7shKWJvoa8Ctn5tU4AfOyOS2w=";
     fetchSubmodules = false;
   };
 
-  llvmSrc = lib.throwIfNot (libllvm.version == version)
-    "ocaml-llvm: versions must match (got: ${libllvm.version}, ${version})"
-    libllvm.src;
+  llvmSrc = libllvm.src;
 
   srcs = [ duneSrc llvmSrc ];
   sourceRoot = "source";
 
-  buildInputs = [ zlib libxml2 ctypes ncurses ];
+  buildInputs = [ zlib libxml2 ncurses ];
+  propagatedBuildInputs = [ ctypes ctypes-foreign ];
 
   prePatch = ''
     rm -rf llvm-project
@@ -41,8 +42,8 @@ in buildDunePackage rec {
     runHook preConfigure
 
     substituteInPlace setup.sh \
-      --replace "cp " "cp --no-preserve=mode,ownership " \
-      --replace support_static_mode=true support_static_mode=false
+      --replace "cp " "cp --no-preserve=mode,ownership " 
+      # --replace support_static_mode=true support_static_mode=false
 
     ./setup.sh ${libllvm.dev}/bin/llvm-config
 

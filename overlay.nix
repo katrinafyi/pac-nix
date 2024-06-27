@@ -6,17 +6,18 @@ let
 
       update = prev.callPackage ./update.nix { };
 
+      # ocamlPackages_pac = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
+      #   // { _overlay = final.overlay_ocamlPackages; };
       ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
-      # ocamlPackages_pac_4_09 = final.ocaml-ng.ocamlPackages_4_09.overrideScope final.overlay_ocamlPackages
-      #   // { _overlay = final.overlay_ocamlPackages; };
 
       # llvm-translator packages 
       overlay_ocamlPackages = ofinal: oprev: {
-        llvm = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix { llvmPackages = final.llvmPackages_14; };
-        asl-translator = ofinal.callPackage ./llvm-translator/asl-translator.nix { };
+        ocaml-llvm-14 = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix { libllvm = final.llvmPackages_14.libllvm; };
+        asl-translator = ofinal.callPackage ./llvm-translator/asl-translator.nix { llvm = ofinal.ocaml-llvm-14; };
       };
       inherit (final.ocamlPackages_pac) asl-translator;
+
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
 
@@ -30,7 +31,16 @@ let
         llvmPackages = final.llvm-custom-git;
       };
       alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix { };
-      remill = prev.callPackage ./llvm-translator/remill.nix { };
+      xed2022 = prev.xed.overrideAttrs rec {
+        version = "2022.08.11";
+        src = prev.fetchFromGitHub {
+          owner = "intelxed";
+          repo = "xed";
+          rev = "v${version}";
+          sha256 = "sha256-Iil+dfjuWYPbzmSjgwKTKScSE/IsWuHEKQ5HsBJDqWM=";
+        };
+      };
+      remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; };
       sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
 
       _overlay = overlay;

@@ -40,14 +40,13 @@ in
 stdenv.mkDerivation (self:
 {
   pname = "remill";
-  version = "unstable-2023-09-27";
+  version = "unstable-2024-05-12";
 
   src = fetchFromGitHub {
     owner = "lifting-bits";
     repo = "remill";
-    # sparc working but llvm 17: 391261923a036196ad9dd2c8213c0193ad727cd9
-    rev = "7182636a687e5e005e3336108a653de3aec0362b";
-    hash = "sha256-4oeHmgkXJlBsLyK359XbfI4Xfq/hRcxqaIA2hsK2piI=";
+    rev = "1c9b5a0b26fbfe6c1e78426bbce7003763f27d9e";
+    hash = "sha256-OkagldvILOvKehldBlJkRRo7c1AcT3IeeSfrUHOi78g=";
   };
 
   GIT_RETRIEVED_STATE = true;
@@ -136,7 +135,7 @@ stdenv.mkDerivation (self:
     "-DDVCPKG_TARGET_TRIPLET=x64-linux-rel"
     "-DGIT_EXECUTABLE=${git-am-shim}"
     # "-DFETCHCONTENT_QUIET=OFF"
-    "-DREMILL_BUILD_SPARC32_RUNTIME=False"
+    # "-DREMILL_BUILD_SPARC32_RUNTIME=False"
   ];
 
 })
