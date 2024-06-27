@@ -6,9 +6,9 @@ let
 
       update = prev.callPackage ./update.nix { };
 
-      ocamlPackages_pac = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
-        // { _overlay = final.overlay_ocamlPackages; };
-      ocamlPackages_pac_4_14 = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
+      # ocamlPackages_pac = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
+      #   // { _overlay = final.overlay_ocamlPackages; };
+      ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
 
       # llvm-translator packages 
@@ -16,7 +16,7 @@ let
         ocaml-llvm-14 = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix { libllvm = final.llvmPackages_14.libllvm; };
         asl-translator = ofinal.callPackage ./llvm-translator/asl-translator.nix { llvm = ofinal.ocaml-llvm-14; };
       };
-      inherit (final.ocamlPackages_pac_4_14) asl-translator;
+      inherit (final.ocamlPackages_pac) asl-translator;
 
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
