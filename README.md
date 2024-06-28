@@ -74,7 +74,7 @@ installed binaries will go.
 
 Then, set up your user with Nix and enable some features:
 ```bash
-printf '%s\n' "extra-experimental-features = nix-command flakes" "extra-trusted-users = $USER" | sudo tee -a /etc/nix/nix.conf
+printf '%s\n' "extra-trusted-users = $USER" "extra-experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
 ```
 <!--
 As your usual user, run:
