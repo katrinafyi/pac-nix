@@ -7,20 +7,21 @@
 , js_of_ocaml-ppx
 , js_of_ocaml-compiler
 , nodejs-slim
+, python3
 }:
 
 buildDunePackage rec {
   pname = "aslp_web";
-  version = "unstable-2024-06-25";
+  version = "unstable-2024-06-28";
 
   buildInputs = [ asli js_of_ocaml js_of_ocaml-ppx ];
-  nativeBuildInputs = [ js_of_ocaml-compiler nodejs-slim ];
+  nativeBuildInputs = [ python3 js_of_ocaml-compiler nodejs-slim ];
 
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "aslp-web";
-    rev = "90d1bb472966e915aea252f73b7fe23ed17ae96a";
-    hash = "sha256-mPrn1d0jY3VMYgDsDLtIpemyxMyQIM4GPGMCgYWvBb0=";
+    rev = "46241099742be60f644d05be475c60166f944a55";
+    hash = "sha256-bOiYHpKYmPcvSlZ2kLT/X8xuNDYRJoS+PbkHUKykXKE=";
   };
 
   postPatch = ''
