@@ -34,8 +34,8 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "4d0bac9814b94b916e6b8528e3e85ab1b313b015";
-    hash = "sha256-3ZHbswBERw79XofXLVBI4XwmatoWSuosZQQRn+JZzB8=";
+    rev = "535a65099f69f03739071fc8ccb9f127302f03a1";
+    hash = "sha256-qN8+bMMw1qVeVaaCfJ0amn9WB5hJdUtrCgkUnEUdbdQ=";
   };
 
   checkInputs = [ alcotest ];
