@@ -1,0 +1,24 @@
+From 7bf9b895dfeaeb33b1f18523358f485039850b6a Mon Sep 17 00:00:00 2001
+From: rina <k@rina.fyi>
+Date: Mon, 1 Jul 2024 14:11:10 +1000
+Subject: [PATCH] bap_build: filter empty library files
+
+---
+ lib/bap_build/bap_build.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/lib/bap_build/bap_build.ml b/lib/bap_build/bap_build.ml
+index a6ece6c1..e1b127a3 100644
+--- a/lib/bap_build/bap_build.ml
++++ b/lib/bap_build/bap_build.ml
+@@ -80,6 +80,7 @@ module Plugin_rules = struct
+       then raise Not_found;
+       String.split_on_char ' ' arch |>
+       List.map ~f:(Fl.resolve_path ~base)
++      |> List.filter ~f:(fun x -> x <> "")
+     with Not_found -> []
+ 
+   let externals pkgs =
+-- 
+2.45.2
+

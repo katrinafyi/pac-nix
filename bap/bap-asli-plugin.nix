@@ -2,8 +2,10 @@
 , stdenv
 , fetchFromGitHub
 # ocamlPackages
+, ocaml
 , findlib
 , asli
+, bap-build
 , bap
 }:
 
@@ -18,12 +20,16 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-CsdUjXHHVisfiTP2XGOHfm+Aa23KZep4IdgoYHQsnXg=";
   };
 
-  buildInputs = [ asli bap findlib ];
+  buildInputs = [ bap asli findlib ];
+  nativeBuildInputs = [ ocaml ];
+  dontDetectOcamlConflicts = true;
+
+  patches = [ ./0001-asli_lifter.ml-use-FileSource-type.patch ];
 
   buildPhase = ''
     runHook preBuild
 
-    bapbuild -package asli.libASL asli.plugin
+    OCAMLRUNPARAM=b ${bap-build}/bin/bapbuild -package asli.libASL asli.plugin -dont-catch-errors
     mkdir -p $out/lib/bap
 
     # needed to maintain runtime dependencies.
@@ -40,6 +46,4 @@ stdenv.mkDerivation rec {
     runHook preInstall
     runHook postInstall
   '';
-
-  meta.broken = true;
 }
