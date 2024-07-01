@@ -1,0 +1,27 @@
+From f8a59507a0e8fc0117ca3d11ad1ed7c870cce2e9 Mon Sep 17 00:00:00 2001
+From: rina <k@rina.fyi>
+Date: Mon, 1 Jul 2024 12:14:48 +1000
+Subject: [PATCH] asli_lifter.ml: use FileSource type
+
+---
+ asli_lifter.ml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/asli_lifter.ml b/asli_lifter.ml
+index 2e7680f..9315781 100644
+--- a/asli_lifter.ml
++++ b/asli_lifter.ml
+@@ -470,8 +470,8 @@ let lifter env lenv label =
+   | _ -> i
+ 
+ let load prelude specs =
+-  let prelude = LoadASL.read_file prelude true false in
+-  let mra = List.map (fun tool -> LoadASL.read_file tool false false) specs in
++  let prelude = LoadASL.read_file (LoadASL.FileSource prelude) true false in
++  let mra = List.map (fun tool -> LoadASL.read_file (LoadASL.FileSource tool) false false) specs in
+   let env = Eval.build_evaluation_environment (List.concat (prelude::mra)) in
+   let denv = Dis.build_env env in
+   KB.promise Theory.Semantics.slot (lifter env denv)
+-- 
+2.45.2
+
