@@ -11,7 +11,7 @@
 
 stdenv.mkDerivation rec {
   pname = "bap-asli-plugin";
-  version = "unstable-2023-09-11";
+  version = "0-unstable-2023-09-11";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
