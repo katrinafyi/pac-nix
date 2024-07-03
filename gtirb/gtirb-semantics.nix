@@ -32,7 +32,7 @@ let
 in
 buildDunePackage {
   pname = "gtirb_semantics";
-  version = "unstable-2024-07-01";
+  version = "0-unstable-2024-07-01";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
