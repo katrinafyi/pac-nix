@@ -1,7 +1,7 @@
 { stdenv, testers, fetchFromGitHub, bap, makeBinaryWrapper, bap-primus }:
 let
   _bap = bap.overrideAttrs (final: prev: {
-    version = "unstable-2022-11-22";
+    version = "2.6.0-alpha-unstable-2022-11-22";
     src = fetchFromGitHub {
       owner = "UQ-PAC";
       repo = "bap";
