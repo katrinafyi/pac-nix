@@ -20,7 +20,6 @@
 , mlbdd
 , yojson
 , ppx_blob
-, zarith_stubs_js
 , asli
 , testers
 }:
@@ -42,7 +41,7 @@ buildDunePackage {
   nativeCheckInputs = [ jdk ];
   buildInputs = [ mlbdd linenoise ppx_blob ];
   nativeBuildInputs = [ ott menhir ];
-  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix zarith_stubs_js ];
+  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix ];
 
   preConfigure = ''
     mkdir -p $out/share/asli
