@@ -21,6 +21,6 @@ alive2-regehr.overrideAttrs (prev: {
   };
 
   cmakeFlags = prev.cmakeFlags
-    ++ [ (lib.cmakeFeature "ANTLR4_JAR_LOCATION" antlr.jarLocation) ];
+    ++ [ (lib.cmakeFeature "ANTLR4_JAR_LOCATION" "${antlr.jarLocation}") ];
 
 })

@@ -20,7 +20,7 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-CsdUjXHHVisfiTP2XGOHfm+Aa23KZep4IdgoYHQsnXg=";
   };
 
-  buildInputs = [ bap asli findlib ];
+  buildInputs = [ asli bap findlib ];
   nativeBuildInputs = [ ocaml ];
   dontDetectOcamlConflicts = true;
 
