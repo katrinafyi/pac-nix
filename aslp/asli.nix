@@ -19,28 +19,30 @@
 , cohttp-lwt-unix
 , mlbdd
 , yojson
+, ppx_blob
+, zarith_stubs_js
 , asli
 , testers
 }:
 
 buildDunePackage {
   pname = "asli";
-  version = "unstable-2024-05-08";
+  version = "unstable-2024-07-01";
 
   minimalOCamlVersion = "4.09";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "abd63cb88c81f34822dd3d0779517430d0aa9ba8";
-    sha256 = "sha256-rZoqaXuHVKD/1zi6wZDovS64gdNlA7CYEqsBb5+Lkf4=";
+    rev = "535a65099f69f03739071fc8ccb9f127302f03a1";
+    hash = "sha256-qN8+bMMw1qVeVaaCfJ0amn9WB5hJdUtrCgkUnEUdbdQ=";
   };
 
   checkInputs = [ alcotest ];
   nativeCheckInputs = [ jdk ];
-  buildInputs = [ mlbdd linenoise ];
+  buildInputs = [ mlbdd linenoise ppx_blob ];
   nativeBuildInputs = [ ott menhir ];
-  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix ];
+  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix zarith_stubs_js ];
 
   preConfigure = ''
     mkdir -p $out/share/asli

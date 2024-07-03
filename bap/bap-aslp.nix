@@ -44,9 +44,5 @@ in stdenv.mkDerivation {
     command = "bap --help";
     version = "asli-specs";
   };
-
-  meta = {
-    broken = true;
-  };
 }
 

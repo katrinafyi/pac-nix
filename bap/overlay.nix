@@ -20,6 +20,8 @@ final: prev:
     bap-aslp = ofinal.callPackage ./bap-aslp.nix { };
     bap-plugins = ofinal.callPackage ./bap-plugins.nix { };
     bap-primus = ofinal.callPackage ./bap-primus.nix { };
+
+    bap-build = ofinal.callPackage ./bap-build.nix { };
   };
 
   inherit (final.ocamlPackages_pac) bap-aslp bap-asli-plugin bap-primus;
