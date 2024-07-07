@@ -10,7 +10,7 @@
 
 mkSbtDerivation {
   pname = "basil";
-  version = "0.1.1-alpha-unstable-2024-07-03";
+  version = "0.1.2-alpha-unstable-2024-07-03";
 
   nativeBuildInputs = [ jdk makeBinaryWrapper ];
 
