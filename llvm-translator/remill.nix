@@ -138,4 +138,6 @@ stdenv.mkDerivation (self:
     # "-DREMILL_BUILD_SPARC32_RUNTIME=False"
   ];
 
+  hardeningDisable = [ "zerocallusedregs" ];
+
 })
