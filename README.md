@@ -68,13 +68,15 @@ Other Nix files also define dependencies needed by the end-user tools.
 
 ### first time
 
-First, install the Nix package manager by following the instructions at https://nixos.org/download (if able, a multi-user install is preferred).
-This also should extend your PATH with ~/.nix-profile/bin which is where
-installed binaries will go.
-
-Then, set up your user with Nix and enable some features:
+First, install the Nix package manager with flakes enabled:
 ```bash
-printf '%s\n' "extra-trusted-users = $USER" "extra-experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
+This should extend your PATH with ~/.nix-profile/bin which is where installed programs will go.
+
+Then, allow your user to use binary caches for faster package installation.
+```bash
+printf '%s\n' "extra-trusted-users = $USER" | sudo tee -a /etc/nix/nix.conf
 ```
 <!--
 As your usual user, run:
