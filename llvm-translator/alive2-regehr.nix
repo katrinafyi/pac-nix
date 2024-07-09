@@ -5,7 +5,7 @@
 
 (alive2.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-regehr";
-  version = "unstable-2024-07-08";
+  version = "0-unstable-2024-07-08";
 
   src = fetchFromGitHub {
     owner = "regehr";
