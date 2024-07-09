@@ -1,12 +1,13 @@
 { lib
 , alive2-regehr
+, llvmPackages
 , fetchFromGitHub
 , aslp-cpp
 , antlr
 , jre
 }:
 
-alive2-regehr.overrideAttrs (prev: {
+(alive2-regehr.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
   version = "unstable-2024-03-12";
 
