@@ -9,7 +9,8 @@ let
       cmakeFlags = prev.cmakeFlags ++ [
         "-DLLVM_ENABLE_RTTI=ON"
         "-DLLVM_ENABLE_EH=ON"
-        "-DLLVM_TARGETS_TO_BUILD=X86;AArch64;ARM"
+        "-DLLVM_ENABLE_ASSERTIONS=ON"  # alive2 needs NDEBUG unset
+        "-DLLVM_TARGETS_TO_BUILD=AArch64;ARM"
       ];
       doCheck = false;
 

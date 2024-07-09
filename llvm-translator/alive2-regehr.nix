@@ -1,6 +1,6 @@
 { alive2
-, fetchFromGitHub
 , llvmPackages
+, fetchFromGitHub
 }:
 
 (alive2.override { inherit llvmPackages; }).overrideAttrs (prev: {

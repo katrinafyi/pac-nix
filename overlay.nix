@@ -22,7 +22,8 @@ let
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
 
       llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
-      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
+      llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
+      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_git; };
 
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {
         llvmPackages = final.llvm-custom-15;
@@ -30,7 +31,9 @@ let
       alive2-regehr = prev.callPackage ./llvm-translator/alive2-regehr.nix {
         llvmPackages = final.llvm-custom-git;
       };
-      alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix { };
+      alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix {
+        llvmPackages = final.llvm-custom-18;
+      };
       xed2022 = prev.xed.overrideAttrs rec {
         version = "2022.08.11";
         src = prev.fetchFromGitHub {
