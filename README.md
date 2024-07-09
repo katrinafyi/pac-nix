@@ -25,8 +25,9 @@ the usual \<nixpkgs\> extended with those from this repo.
 
 For users of tools, the main packages are:
 - **[aslp][]**: the ASLp partial evaluator with ARM's MRA (provides `aslp` and `aslp-server`),
-- <s> **[bap-aslp][]** </s>[^1] (broken since 2024-02-09): a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), 
-- **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`), and
+- **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`),
+- **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`, `debug-gts.py`, and `proto-json.py`), and
+- **[bap-aslp][]**[^1]: a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), and
 - **[alive2-aslp][]**: a fork of [regehr/alive2][alive2-regehr], using Aslp to provide semantics for translation validation of the LLVM Aarch64 backend (provides `backend-tv`, others).
 
 These packages are each defined in a .nix file of the same name,
@@ -35,7 +36,6 @@ built into a package set in pkgs.nix.
 
 We also package some related third-party tools (without endorsement from their authors):
 - **[ddisasm][]**: GrammaTech's datalog disassembler (provides `ddisasm`),
-- **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`, `debug-gts.py`, and `proto-json.py`), and
 - **[alive2-regehr][]**: a fork of [AliveToolkit/alive2][alive2], performs translation validation of LLVM's Aarch64 backend by lifting MCInst back to LLVM IR (provides `backend-tv`, others).
 
 
@@ -78,12 +78,21 @@ Then, allow your user to use binary caches for faster package installation.
 ```bash
 printf '%s\n' "extra-trusted-users = $USER" | sudo tee -a /etc/nix/nix.conf
 ```
+
+(Optional) Add an alias for this package repository.
+This lets you write `pac` in place of `github:katrinafyi/pac-nix` in the commands below.
+```bash
+nix registry add pac github:katrinafyi/pac-nix
+```
+
+
 <!--
 As your usual user, run:
 ```bash
 nix-channel --add https://github.com/katrinafyi/pac-nix/archive/refs/heads/main.tar.gz pac
 nix-channel --update
 ```
+
 
 <blockquote>
 <details>
