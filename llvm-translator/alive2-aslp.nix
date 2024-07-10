@@ -9,7 +9,7 @@
 
 (alive2-regehr.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
-  version = "unstable-2024-07-10";
+  version = "0-unstable-2024-07-10";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
   nativeBuildInputs = prev.nativeBuildInputs ++ [ jre ];
