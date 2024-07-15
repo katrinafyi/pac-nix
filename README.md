@@ -68,11 +68,14 @@ Other Nix files also define dependencies needed by the end-user tools.
 
 ### first time
 
-First, install the Nix package manager with flakes enabled:
+First, install a Nix-compatible package manager with flakes enabled.
+This command will install [Lix], a fork of the original Nix implementation:
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
 This should extend your PATH with ~/.nix-profile/bin which is where installed programs will go.
+
+[Lix]: https://lix.systems/
 
 Then, allow your user to use binary caches for faster package installation.
 ```bash
@@ -115,7 +118,7 @@ nix-channel --update
 
 Installing a package is straightforward.
 ```bash
-nix profile install github:katrinafyi/pac-nix#aslp  # add -Lv for more progress output
+nix profile install github:katrinafyi/pac-nix#aslp  # add -L for more progress output
 # say 'y' to config settings
 ```
 For other packages, change the term after `#` to bap-aslp, basil, etc. 
@@ -127,7 +130,7 @@ from local sources and setting up development environments.
 
 To list available packages:
 ```bash
-nix flake show github:katrinafyi/pac-nix --allow-import-from-derivation --impure
+nix flake show github:katrinafyi/pac-nix
 ```
 
 To list installed packages:
@@ -135,9 +138,9 @@ To list installed packages:
 nix profile list
 ```
 
-To uninstall, use the *index* from `nix profile list` in this command:
+To uninstall, use the bolded **name** or **index** (depending on your Nix version) from `nix profile list` in this command:
 ```bash
-nix profile remove 1234
+nix profile remove aslp  # or numeric index, if printed
 ```
 
 To upgrade all packages:
@@ -184,6 +187,9 @@ cachix use pac-nix
 copying path '/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-ocaml4.14.1-bap-2.5.0' from 'https://cache.nixos.org'...
 copying path '/nix/store/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-bap-aslp-2.5.0' from 'https://pac-nix.cachix.org'...
 ```
+If your computer begins compiling a large package, you may be on a platform other than x86_64-linux, or
+the cache may not be configured correctly.
+Double-check that you have done the _first time_ steps.
 
 ## local sources / customisation
 
@@ -265,9 +271,9 @@ nix-shell ./asli-shell.nix
 
 See also: [nix-shell manual page](https://nixos.org/manual/nix/stable/command-ref/nix-shell).
 
-## updating packages
+## updating package definitions
 
-Periodically, these Nix files will need to be updated with new changes from upstream.
+Periodically, the Nix files in this repository will need to be updated with new changes from upstream.
 A daily GitHub action will attempt to update all packages.
 Its most recent status is shown at the top of this README.
 
