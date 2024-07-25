@@ -32,7 +32,7 @@ let
         llvmPackages = final.llvm-custom-git;
       };
       alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix {
-        llvmPackages = final.llvm-custom-18;
+        llvmPackages = final.llvm-custom-git;
       };
       xed2022 = prev.xed.overrideAttrs rec {
         version = "2022.08.11";
