@@ -9,6 +9,7 @@
 , bash
 , basil-tool
 , nodejs
+, basil
 , godbolt
 , bap-aslp
 , gcc-aarch64
@@ -19,7 +20,7 @@
 let
   ce-ailrst = buildNpmPackage rec {
     pname = "compiler-explorer-ailrst";
-    version = "unstable-2023-09-29";
+    version = "unstable-2024-09-29";
 
     # https://github.com/ailrst/compiler-explorer/tree/f92815a06c3e1e442981efd8f5a05e1e5128e859
     # https://github.com/ailrst/compiler-explorer/compare/f92815a06c3e1e442981efd8f5a05e1e5128e859...main
@@ -95,7 +96,7 @@ stdenv.mkDerivation rec {
       lib=${ce-ailrst}/lib/node_modules/compiler-explorer
       cd $lib
 
-      export PATH="$PATH:${boogie}/bin/:${bap-aslp}/bin:${clang-aarch64}/bin:${gcc-aarch64}/bin"
+      export PATH="$PATH:${boogie}/bin/:${bap-aslp}/bin:${clang-aarch64}/bin:${gcc-aarch64}/bin:${basil}/bin"
       export NODE_ENV=production
       export COMPILER_CACHE="''${COMPILER_CACHE:-/tmp/compiler-cache}"
       export LOCAL_STORAGE="''${LOCAL_STORAGE:-$HOME/.local/state/compiler-explorer}"

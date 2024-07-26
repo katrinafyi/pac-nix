@@ -13,7 +13,7 @@
 
 stdenv.mkDerivation rec {
   pname = "basil-tool";
-  version = "unstable-2023-09-29";
+  version = "unstable-2024-09-29";
 
   # https://github.com/ailrst/compiler-explorer/tree/f92815a06c3e1e442981efd8f5a05e1e5128e859
   # https://github.com/ailrst/compiler-explorer/compare/f92815a06c3e1e442981efd8f5a05e1e5128e859...main
@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
     owner = "ailrst";
     repo = "compiler-explorer";
     rev = "01f520cbe8b6cf2cc572f5ca85b716439066e9d1";
-    sha256 = "sha256-eKEm87FOlsSH3tgCfnRYC5nKieD8aVPbcTez93XN3wk=";
+    sha256 = "sha256-+gxXfWYrG84Ekp2kVQltPKP1Q0E9gjvWKoP7QQAkfUM=";
   };
 
   nativeBuildInputs = [ makeBinaryWrapper ];
@@ -40,7 +40,8 @@ stdenv.mkDerivation rec {
 
         head -n1 $src/basil-tool.py > $basiltool
 
-        export PATH="$PATH:${boogie}/bin/:${bap-aslp}/bin:${jre}/bin"
+        # doesn't seem to do anything
+        export PATH="$PATH:${boogie}/bin/:${bap-aslp}/bin:${jre}/bin:${basil}/bin"
 
         cat <<EOF >> $basiltool
     def __raise(e): raise e  # nix
