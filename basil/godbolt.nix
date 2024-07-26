@@ -10,6 +10,10 @@
 , basil-tool
 , nodejs
 , godbolt
+, bap-aslp
+, gcc-aarch64
+, clang-aarch64
+, boogie
 }:
 
 let
@@ -22,8 +26,8 @@ let
     src = fetchFromGitHub {
       owner = "ailrst";
       repo = "compiler-explorer";
-      rev = "f92815a06c3e1e442981efd8f5a05e1e5128e859";
-      sha256 = "sha256-eKEm87FOlsSH3tgCfnRYC5nKieD8aVPbcTez93XN3wk=";
+      rev = "01f520cbe8b6cf2cc572f5ca85b716439066e9d1";
+      sha256 = "sha256-+gxXfWYrG84Ekp2kVQltPKP1Q0E9gjvWKoP7QQAkfUM=";
     };
 
     npmDepsHash = "sha256-i2agFqHb1Sr82ZZKgL+97oRYRLgrmbGM5+jU/CtGF2M=";
@@ -45,15 +49,21 @@ let
       runHook preBuild
 
       substituteInPlace etc/config/compiler-explorer.defaults.properties \
-        --replace out/compiler-cache \''${COMPILER_CACHE} \
-        --replace /storage/data \''${LOCAL_STORAGE}
+        --replace-fail out/compiler-cache \''${COMPILER_CACHE} \
+        --replace-fail /storage/data \''${LOCAL_STORAGE}
 
-      substituteInPlace etc/config/{c,boogie}.defaults.properties \
-        --replace /compiler-explorer/basil-tool.py \''${BASIL_TOOL}
+      substituteInPlace etc/config/boogie.defaults.properties \
+        --replace-fail /compiler-explorer/basil-tool.py \''${BASIL_TOOL} \
+
+      substituteInPlace etc/config/c.defaults.properties \
+        --replace-fail /compiler-explorer/basil-tool.py \''${BASIL_TOOL} \
+        --replace-fail /usr/bin/aarch64-linux-gnu-gcc ${gcc-aarch64}/bin/aarch64-unknown-linux-gnu-gcc \
+        --replace-fail /usr/bin/clang-15 ${clang-aarch64}/bin/aarch64-unknown-linux-gnu-clang\
+        --replace-fail /usr/bin/aarch64-linux-gnu-objdump ${gcc-aarch64}/bin/aarch64-unknown-linux-gnu-objdump \
 
       # https://github.com/compiler-explorer/compiler-explorer/commit/5d776aaae3be2cf07a2442f839812ca6b076df4d
       substituteInPlace package.json \
-        --replace 'ts-node-esm ' 'node --no-warnings=ExperimentalWarning --loader ts-node/esm '
+        --replace-fail 'ts-node-esm ' 'node --no-warnings=ExperimentalWarning --loader ts-node/esm '
 
       npm run webpack
       npm run ts-compile
@@ -85,6 +95,7 @@ stdenv.mkDerivation rec {
       lib=${ce-ailrst}/lib/node_modules/compiler-explorer
       cd $lib
 
+      export PATH="$PATH:${boogie}/bin/:${bap-aslp}/bin:${clang-aarch64}/bin:${gcc-aarch64}/bin"
       export NODE_ENV=production
       export COMPILER_CACHE="''${COMPILER_CACHE:-/tmp/compiler-cache}"
       export LOCAL_STORAGE="''${LOCAL_STORAGE:-$HOME/.local/state/compiler-explorer}"

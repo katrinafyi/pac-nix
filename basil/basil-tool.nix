@@ -6,7 +6,9 @@
 , python3
 , basil-tool
 , basil
-,
+, jre
+, boogie
+, bap-aslp
 }:
 
 stdenv.mkDerivation rec {
@@ -18,7 +20,7 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ailrst";
     repo = "compiler-explorer";
-    rev = "f92815a06c3e1e442981efd8f5a05e1e5128e859";
+    rev = "01f520cbe8b6cf2cc572f5ca85b716439066e9d1";
     sha256 = "sha256-eKEm87FOlsSH3tgCfnRYC5nKieD8aVPbcTez93XN3wk=";
   };
 
@@ -37,6 +39,8 @@ stdenv.mkDerivation rec {
         chmod u+rw $basiltool
 
         head -n1 $src/basil-tool.py > $basiltool
+
+        export PATH="$PATH:${boogie}/bin/:${bap-aslp}/bin:${jre}/bin"
 
         cat <<EOF >> $basiltool
     def __raise(e): raise e  # nix

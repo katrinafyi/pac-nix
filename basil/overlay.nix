@@ -14,11 +14,11 @@ let
     gcc-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc;
     clang-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.clang;
 
+    jre = final.temurin-jre-bin-17;
+    jdk = final.temurin-bin-17;
     godbolt = (prev.callPackage ./godbolt.nix { });
     basil-tool = prev.callPackage ./basil-tool.nix { };
 
-    jre = final.temurin-jre-bin-17;
-    jdk = final.temurin-bin-17;
   };
 in
 final: prev:
