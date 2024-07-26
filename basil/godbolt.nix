@@ -59,7 +59,8 @@ let
       substituteInPlace etc/config/c.defaults.properties \
         --replace-fail /compiler-explorer/basil-tool.py \''${BASIL_TOOL} \
         --replace-fail /usr/bin/aarch64-linux-gnu-gcc ${gcc-aarch64}/bin/aarch64-unknown-linux-gnu-gcc \
-        --replace-fail /usr/bin/clang-15 ${clang-aarch64}/bin/aarch64-unknown-linux-gnu-clang\
+        --replace-fail /usr/bin/clang-15 ${clang-aarch64}/bin/aarch64-unknown-linux-gnu-clang \
+        --replace-fail compiler.clang14aarch.options=--target=aarch64-linux-gnu '# bye' \
         --replace-fail /usr/bin/aarch64-linux-gnu-objdump ${gcc-aarch64}/bin/aarch64-unknown-linux-gnu-objdump \
 
       # https://github.com/compiler-explorer/compiler-explorer/commit/5d776aaae3be2cf07a2442f839812ca6b076df4d
