@@ -17,8 +17,8 @@
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "f0936ef0dd5fcf116a2fd6ff42806825a6afea2b";
-    hash = "sha256-9vjnk383qt6oI8j61gAWGarrLqUFTYr6820X5vpBeIA=";
+    rev = "85c382b8b8a481353da8f58f6a15d64a4aff7247";
+    hash = "sha256-k3MYbNAX5U0Os21F0j7G8hUiugNdPCc3NJ9kA87oTBw=";
   };
 
   cmakeFlags = prev.cmakeFlags
