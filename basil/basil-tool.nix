@@ -20,8 +20,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ailrst";
     repo = "compiler-explorer";
-    rev = "d822c8756835a853021e93c02c1c30a9e9c36bf8";
-    sha256 = "sha256-8ffzyjGNHr6LBtdL33+cnY4B5vM/izxz3Ga4dRMA5b8=";
+    rev = "fe7ed875f644a7fc0841382439ebe1f619bff05d";
+    sha256 = "sha256-sZcD8CwO55fQYdxRZmZEgMjao91EOAo7zRzLn6zDRIo=";
   };
 
   nativeBuildInputs = [ makeBinaryWrapper ];
