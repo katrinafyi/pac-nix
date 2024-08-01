@@ -84,7 +84,7 @@ PACKAGES: list[Package] = [
   Package('alive2-aslp', 'katrinafyi/alive2', 'aslp'),
   Package('alive2-regehr', 'regehr/alive2', 'arm-tv'),
   Package('aslp_web', 'katrinafyi/aslp-web', 'main'),
-  Package('godbolt', 'ailrst/compiler-explorer', 'main'),
+  Package('compiler-explorer', 'ailrst/compiler-explorer', 'main'),
 ]
 # NOTE: also change files in ./.github/workflows/*.yml
 
