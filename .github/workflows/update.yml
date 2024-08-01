@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
-              asl-translator, alive2-aslp, alive2-regehr]
+              asl-translator, alive2-aslp, alive2-regehr, aslp_web, godbolt]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
