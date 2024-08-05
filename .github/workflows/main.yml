@@ -2,6 +2,7 @@ name: "build Nix packages"
 on:
   pull_request:
   push:
+    branches: [main]
   # schedule:
   # - cron: '53 19 * * *'  # AEST 5:53 am
   workflow_run:
