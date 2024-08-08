@@ -6,15 +6,15 @@
 
 buildNpmPackage {
   pname = "compiler-explorer-ailrst";
-  version = "unstable-2023-09-29";
+  version = "0-unstable-2024-07-30";
 
-  # https://github.com/ailrst/compiler-explorer/tree/f92815a06c3e1e442981efd8f5a05e1e5128e859
-  # https://github.com/ailrst/compiler-explorer/compare/f92815a06c3e1e442981efd8f5a05e1e5128e859...main
+  # https://github.com/ailrst/compiler-explorer/tree/fe7ed875f644a7fc0841382439ebe1f619bff05d
+  # https://github.com/ailrst/compiler-explorer/compare/fe7ed875f644a7fc0841382439ebe1f619bff05d...main
   src = fetchFromGitHub {
     owner = "ailrst";
     repo = "compiler-explorer";
-    rev = "f92815a06c3e1e442981efd8f5a05e1e5128e859";
-    sha256 = "sha256-eKEm87FOlsSH3tgCfnRYC5nKieD8aVPbcTez93XN3wk=";
+    rev = "fe7ed875f644a7fc0841382439ebe1f619bff05d";
+    sha256 = "sha256-sZcD8CwO55fQYdxRZmZEgMjao91EOAo7zRzLn6zDRIo=";
   };
 
   npmDepsHash = "sha256-i2agFqHb1Sr82ZZKgL+97oRYRLgrmbGM5+jU/CtGF2M=";
