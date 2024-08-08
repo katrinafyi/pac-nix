@@ -14,6 +14,7 @@ let
     gcc-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc;
     clang-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.clang;
 
+    compiler-explorer = (prev.callPackage ./compiler-explorer.nix { });
     godbolt = (prev.callPackage ./godbolt.nix { });
     basil-tool = prev.callPackage ./basil-tool.nix { };
 
