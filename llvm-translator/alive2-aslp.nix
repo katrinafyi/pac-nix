@@ -9,7 +9,7 @@
 
 (alive2-regehr.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
-  version = "0-unstable-2024-08-01";
+  version = "0-unstable-2024-08-08";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
   nativeBuildInputs = prev.nativeBuildInputs ++ [ jre ];
@@ -17,8 +17,8 @@
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "a6667270dec525bc8df954b348f72164b6497c58";
-    hash = "sha256-0LhCDi6/f2tSiXs0CYkKYaKjeBHkfL5q6cw25HJSPbE=";
+    rev = "2e6cf4d3777b23b9cbe57d44990d153bcef24d05";
+    hash = "sha256-JZkDLqhgRhknsWvC8T9mKi4aZ50dixbAMin1KveX0FM=";
   };
 
   cmakeFlags = prev.cmakeFlags
