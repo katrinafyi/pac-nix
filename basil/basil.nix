@@ -10,15 +10,15 @@
 
 mkSbtDerivation {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2024-08-13";
+  version = "0.1.2-alpha-unstable-2024-08-20";
 
   nativeBuildInputs = [ jdk makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "6003389ff4788ec4c7d6fb7081f23c9e0530a4db";
-    sha256 = "sha256-/vJ071izXTpvz9qvYE6wXI3q7WSyEKHPch0LyHv1D0Y=";
+    rev = "07581b60f5700b6407959e05eef250e19d10c5f7";
+    sha256 = "sha256-5zmcLZ/EA6ErwmzzoUhSXHY2gzmdhoPaXArUTbTy/0c=";
   };
 
   depsSha256 = "sha256-++gg+SKskDyaqHowNG2RPS7evuCzPYvvXMC4Rkp7b6U=";
