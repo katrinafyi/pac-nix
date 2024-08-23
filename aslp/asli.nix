@@ -77,5 +77,6 @@ buildDunePackage {
     homepage = "https://github.com/UQ-PAC/aslp";
     description = "ASL partial evaluator to extract semantics from ARM's MRA.";
     maintainers = with lib.maintainers; [ katrinafyi ];
+    mainProgram = "aslp";
   };
 }
