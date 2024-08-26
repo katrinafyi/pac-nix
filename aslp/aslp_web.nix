@@ -29,7 +29,7 @@ buildDunePackage rec {
     export aslp=${asli.name}
     export aslp_commit=${asli.src.rev or "unknown"}
     export aslp_web=$name
-    export aslp_web_commit=${src.rev or "unknown"}
+    export aslp_web_commit=$(cat COMMIT || echo ${src.rev or "unknown"})
 
     substituteAllInPlace web/index.html
   '';
