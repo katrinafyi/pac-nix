@@ -27,8 +27,9 @@ For users of tools, the main packages are:
 - **[aslp][]**: the ASLp partial evaluator with ARM's MRA (provides `aslp` and `aslp-server`),
 - **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`),
 - **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`, `debug-gts.py`, and `proto-json.py`), and
-- **[bap-aslp][]**[^1]: a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), and
-- **[alive2-aslp][]**: a fork of [regehr/alive2][alive2-regehr], using Aslp to provide semantics for translation validation of the LLVM Aarch64 backend (provides `backend-tv`, others).
+- **[bap-aslp][]**[^1]: a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable),
+- **[alive2-aslp][]**: a fork of [regehr/alive2][alive2-regehr], using Aslp to provide semantics for translation validation of the LLVM Aarch64 backend (provides `backend-tv`, others), and
+- **[aslp-web][]**: a website for using the ASLp partial evaluator within the browser.
 
 These packages are each defined in a .nix file of the same name,
 then instantiated within overlay.nix and
@@ -50,6 +51,7 @@ We also package some related third-party tools (without endorsement from their a
 [alive2-aslp]: https://github.com/katrinafyi/alive2
 [alive2-regehr]: https://github.com/regehr/alive2/tree/arm-tv
 [alive2]: https://github.com/AliveToolkit/alive2
+[aslp-web]: https://github.com/katrinafyi/aslp-web
 
 <details>
 <summary>Other packages</summary>
