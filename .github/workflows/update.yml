@@ -42,9 +42,13 @@ jobs:
     - run: |
         git config user.name 'github-actions[bot]'
         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-        mkdir -p prev-patches
 
-    - run: git am prev-patches
+    - name: git am prev-patches/*
+      run: |
+        shopt -s nullglob
+        set -x
+        for f in prev-patches/*; do git am "$f"; done
+      shell: 'bash --noprofile --norc -eo pipefail {0}'
 
     - run: |
         nix run .#update -- check -A ${{matrix.pkg}}
