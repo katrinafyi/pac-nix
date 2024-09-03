@@ -8,7 +8,6 @@ on:
 
 env:
   COMMIT: ${{ github.sha }}
-  DO_COMMIT: ${{ inputs.push || github.event_name == 'schedule' }}
 
 jobs:
   update:
@@ -63,6 +62,8 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     needs: [ update ]
+    outputs:
+      url: ${{ steps.upload.outputs.artifact-url }}
     steps:
     - uses: actions/download-artifact@v4
       with:
@@ -81,8 +82,13 @@ jobs:
         path: prev-patches
         if-no-files-found: ignore
 
-    - uses: ./.github/workflows/main.yml
-      with:
-        patches-url: ${{ steps.upload.outputs.artifact-url }}
-        push: ${{ fromJSON(env.DO_COMMIT) }}
+  build:
+    permissions:
+      actions: read
+    needs: [ collate ] 
+    uses: ./.github/workflows/main.yml
+    with:
+      patches-url: ${{ needs.collate.outputs.url }}
+      push: ${{ inputs.push || github.event_name == 'schedule' }}
+    secrets: inherit
 

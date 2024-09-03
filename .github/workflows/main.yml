@@ -51,7 +51,8 @@ jobs:
         shopt -s nullglob
         set -x
 
-        wget '${{ inputs.patches-url }}' -O patches.zip
+        wget --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -O patches.zip \
+          '${{ inputs.patches-url }}'
 
         unzip patches.zip -d prev-patches
 
@@ -104,7 +105,8 @@ jobs:
         shopt -s nullglob
         set -x
 
-        wget '${{ inputs.patches-url }}' -O patches.zip
+        wget --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -O patches.zip \
+          '${{ inputs.patches-url }}'
 
         unzip patches.zip -d prev-patches
 
