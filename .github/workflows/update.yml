@@ -86,8 +86,8 @@ jobs:
       id: public
       run: |
         set -x
+        (cd prev-patches && zip -r ../patches.zip .)
         # accessing github actions artifacts too hard...
-        wget '${{ steps.upload.outputs.artifact-url }}' -O patches.zip
         url="$(curl -F'file=@patches.zip' https://0x0.st)"
         echo "$url"
         [[ -n "$url" ]]
