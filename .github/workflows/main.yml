@@ -69,3 +69,14 @@ jobs:
         echo '::warning title=${{ matrix.pkg }}::broken package has status build=${{steps.build.outcome}}, test=${{steps.test.outcome}}'
       if: ${{ fromJSON(steps.broken.outputs.bool) }}
     - run: ls -l
+
+  result:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+    - name: aggregate matrix results
+      run: |
+        set -x
+        result="${{ needs.build.result }}"
+        [[ $result == success || $result == skipped ]]
