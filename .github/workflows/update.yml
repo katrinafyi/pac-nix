@@ -16,8 +16,7 @@ jobs:
       max-parallel: 1
       fail-fast: false
       matrix:
-        pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
-              asl-translator, alive2-aslp, alive2-regehr, aslp_web, compiler-explorer]
+        pkg: [asli,aslp_web]
 
     runs-on: ubuntu-latest
 
