@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ update ]
     outputs:
-      url: ${{ steps.upload.outputs.artifact-url }}
+      url: ${{ steps.public.outputs.url }}
     steps:
     - uses: actions/download-artifact@v4
       with:
@@ -82,9 +82,18 @@ jobs:
         path: prev-patches
         if-no-files-found: ignore
 
+    - name: Re-upload to public site
+      id: public
+      run: |
+        set -x
+        # accessing github actions artifacts too hard...
+        wget '${{ steps.upload.outputs.artifact-url }}' -O patches.zip
+        url="$(curl -F'file=@patches.zip' https://0x0.st)"
+        echo "$url"
+        [[ -n "$url" ]]
+        echo "url=$url" >> "$GITHUB_OUTPUT"
+
   build:
-    permissions:
-      actions: read
     needs: [ collate ] 
     uses: ./.github/workflows/main.yml
     with:

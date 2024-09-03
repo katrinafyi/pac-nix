@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       push: { type: boolean, default: false }
-      patches-url: { type: string }
+      run-id: 
   workflow_call:
     inputs:
       push: { type: boolean, default: false, required: false }
@@ -51,9 +51,7 @@ jobs:
         shopt -s nullglob
         set -x
 
-        wget --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -O patches.zip \
-          '${{ inputs.patches-url }}'
-
+        wget -O patches.zip '${{ inputs.patches-url }}'
         unzip patches.zip -d prev-patches
 
         git config user.name 'github-actions[bot]'
@@ -105,9 +103,7 @@ jobs:
         shopt -s nullglob
         set -x
 
-        wget --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -O patches.zip \
-          '${{ inputs.patches-url }}'
-
+        wget -O patches.zip '${{ inputs.patches-url }}'
         unzip patches.zip -d prev-patches
 
         git config user.name 'github-actions[bot]'
