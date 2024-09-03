@@ -48,7 +48,6 @@ jobs:
         shopt -s nullglob
         set -x
         for f in prev-patches/*; do git am "$f"; done
-      shell: 'bash --noprofile --norc -eo pipefail {0}'
 
     - run: |
         nix run .#update -- check -A ${{matrix.pkg}}
@@ -57,6 +56,9 @@ jobs:
         nix run .#update -- do-upgrade -A ${{matrix.pkg}}
     - run: |
         git format-patch $COMMIT -o new-patches
+        if ! diff -ru prev-patches new-patches; then
+          rm -rf new-patches
+        fi
 
     - uses: actions/upload-artifact@v4
       with:
