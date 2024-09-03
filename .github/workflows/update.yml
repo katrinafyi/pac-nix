@@ -14,7 +14,7 @@ on:
 
 env:
   COMMIT: ${{ github.sha }}
-  DO_COMMIT: ${{ inputs.do-commit == "commit" || github.event_name == "schedule" }}
+  DO_COMMIT: ${{ inputs.do-commit == 'commit' || github.event_name == 'schedule' }}
 
 jobs:
   update:
