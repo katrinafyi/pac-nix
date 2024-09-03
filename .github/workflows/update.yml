@@ -56,9 +56,9 @@ jobs:
         nix run .#update -- do-upgrade -A ${{matrix.pkg}}
     - run: |
         git format-patch $COMMIT -o new-patches
-        if ! diff -ru prev-patches new-patches; then
-          rm -rf new-patches
-        fi
+
+        shopt -s nullglob
+        for f in prev-patches/*; do rm -v new-patches/$(basename $f); done
 
     - uses: actions/upload-artifact@v4
       with:
