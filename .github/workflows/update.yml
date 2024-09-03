@@ -4,17 +4,11 @@ on:
   - cron: '53 18 * * 0-4'  # AEST 4:53 am
   workflow_dispatch:
     inputs:
-      do-commit:
-        description: 'whether to commit updated changes'
-        type: choice
-        default: 'no-commit'
-        options:
-          - 'commit'
-          - 'no-commit'
+      push: { type: boolean, default: false, required: false }
 
 env:
   COMMIT: ${{ github.sha }}
-  DO_COMMIT: ${{ inputs.do-commit == 'commit' || github.event_name == 'schedule' }}
+  DO_COMMIT: ${{ inputs.push || github.event_name == 'schedule' }}
 
 jobs:
   update:
@@ -82,8 +76,14 @@ jobs:
         name: 'partial-patches-*'
 
     - uses: actions/upload-artifact@v4
+      id: upload
       with:
-        name: all-patches-${{ env.DO_COMMIT && 'commit' || 'no-commit' }}
+        name: all-patches
         path: prev-patches
         if-no-files-found: ignore
+
+    - uses: ./.github/workflows/main.yml
+      with:
+        patches-url: ${{ steps.upload.outputs.artifact-url }}
+        push: ${{ fromJSON(env.DO_COMMIT) }}
 
