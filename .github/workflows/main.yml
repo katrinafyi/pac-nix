@@ -95,13 +95,18 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build ]
     steps:
-    - uses: actions/checkout@v4
     - name: Aggregate matrix results
       run: |
         set -x
         result="${{ needs.build.result }}"
         [[ $result == success || $result == skipped ]]
 
+  push:
+    if: ${{ inputs.push }}
+    runs-on: ubuntu-latest
+    needs: [ result ]
+    steps:
+    - uses: actions/checkout@v4
     - name: Apply staged patch commits
       if: ${{ inputs.patches-b64 }}
       run: |
@@ -121,4 +126,3 @@ jobs:
         for f in prev-patches/*; do git am "$f"; done
 
     - run: git push
-      if: ${{ inputs.push }}
