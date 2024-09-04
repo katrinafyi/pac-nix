@@ -3,16 +3,18 @@ on:
   pull_request:
   push:
     branches: [main]
-  # schedule:
-  # - cron: '53 19 * * *'  # AEST 5:53 am
-  workflow_run:
-    workflows: [update Nix packages]
-    types: [completed]
   workflow_dispatch:
-
+    inputs:
+      push: { type: boolean, default: false }
+      patches-b64: { type: string, required: false }
+  workflow_call:
+    inputs:
+      push: { type: boolean, default: false, required: false }
+      patches-b64: { type: string, required: false }
 
 jobs:
   update-check:
+    if: ${{ ! inputs.patches-b64 }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -42,6 +44,24 @@ jobs:
     - uses: cachix/install-nix-action@v25
     - uses: cachix/cachix-action@v14
       with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}', skipPush: "${{ github.ref != 'refs/heads/main' }}" }
+
+    - name: Apply staged patch commits
+      if: ${{ inputs.patches-b64 }}
+      run: |
+        shopt -s nullglob
+        set -x
+
+        cat <<EOF | base64 -d > patches.tar.zst
+        ${{ inputs.patches-b64 }}
+        EOF
+
+        mkdir prev-patches
+        tar xaf patches.tar.zst -C prev-patches
+
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+        for f in prev-patches/*; do git am "$f"; done
 
     - name: Check for meta.broken
       run: |
@@ -75,8 +95,30 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ build ]
     steps:
-    - name: aggregate matrix results
+    - uses: actions/checkout@v4
+    - name: Aggregate matrix results
       run: |
         set -x
         result="${{ needs.build.result }}"
         [[ $result == success || $result == skipped ]]
+
+    - name: Apply staged patch commits
+      if: ${{ inputs.patches-b64 }}
+      run: |
+        shopt -s nullglob
+        set -x
+
+        cat <<EOF | base64 -d > patches.tar.zst
+        ${{ inputs.patches-b64 }}
+        EOF
+
+        mkdir prev-patches
+        tar xaf patches.tar.zst -C prev-patches
+
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+        for f in prev-patches/*; do git am "$f"; done
+
+    - run: git push
+      if: ${{ inputs.push }}

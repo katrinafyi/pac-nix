@@ -3,16 +3,23 @@ on:
   schedule:
   - cron: '53 18 * * 0-4'  # AEST 4:53 am
   workflow_dispatch:
+    inputs:
+      push: { type: boolean, default: false, required: false }
+
+env:
+  COMMIT: ${{ github.sha }}
 
 jobs:
   update:
     strategy:
-      max-parallel: 1
+      # max-parallel: 1
       fail-fast: false
       matrix:
         pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
               asl-translator, alive2-aslp, alive2-regehr, aslp_web, compiler-explorer]
+
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v25
@@ -20,13 +27,59 @@ jobs:
       with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}' }
 
     - run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+    - run: |
         nix run .#update -- check -A ${{matrix.pkg}}
 
     - run: |
-        git pull
-        git config user.name 'github-actions[bot]'
-        git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-    - run: |
         nix run .#update -- do-upgrade -A ${{matrix.pkg}}
-    - run: git push
+    - run: |
+        git format-patch $COMMIT -o new-patches
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: partial-patches-${{matrix.pkg}}
+        path: new-patches
+        if-no-files-found: ignore
+
+  collate:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: [ update ]
+    outputs:
+      patches: ${{ steps.data.outputs.b64 }}
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        pattern: 'partial-patches-*'
+        merge-multiple: true
+        path: prev-patches
+
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+        name: 'partial-patches-*'
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: all-patches
+        path: prev-patches
+        if-no-files-found: ignore
+
+    - name: Encode patches
+      id: data
+      run: |
+        set -x
+        (cd prev-patches && tar caf ../patches.tar.zst .)
+        (printf 'b64=' && base64 -w0 patches.tar.zst && echo) >> "$GITHUB_OUTPUT"
+        ls -lh *.tar*
+
+  build:
+    needs: [ collate ] 
+    uses: ./.github/workflows/main.yml
+    with:
+      patches-b64: ${{ needs.collate.outputs.patches }}
+      push: ${{ inputs.push || github.event_name == 'schedule' }}
+    secrets: inherit
 
