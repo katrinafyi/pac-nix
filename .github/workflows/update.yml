@@ -12,7 +12,7 @@ env:
 jobs:
   update:
     strategy:
-      max-parallel: 1
+      # max-parallel: 1
       fail-fast: false
       matrix:
         pkg: [asli,aslp_web]
