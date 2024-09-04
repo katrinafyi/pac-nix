@@ -25,21 +25,9 @@ jobs:
     - uses: cachix/cachix-action@v14
       with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}' }
 
-    - uses: actions/download-artifact@v4
-      with:
-        pattern: 'partial-patches-*'
-        merge-multiple: true
-        path: prev-patches
-
     - run: |
         git config user.name 'github-actions[bot]'
         git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-
-    - name: git am prev-patches/*
-      run: |
-        shopt -s nullglob
-        set -x
-        for f in prev-patches/*; do git am "$f"; done
 
     - run: |
         nix run .#update -- check -A ${{matrix.pkg}}
@@ -48,9 +36,6 @@ jobs:
         nix run .#update -- do-upgrade -A ${{matrix.pkg}}
     - run: |
         git format-patch $COMMIT -o new-patches
-
-        shopt -s nullglob
-        for f in prev-patches/*; do rm -v new-patches/$(basename $f); done
 
     - uses: actions/upload-artifact@v4
       with:
@@ -81,7 +66,7 @@ jobs:
         path: prev-patches
         if-no-files-found: ignore
 
-    - name: Re-upload to public site
+    - name: Encode patches
       id: data
       run: |
         set -x
