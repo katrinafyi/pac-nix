@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ update ]
     outputs:
-      url: ${{ steps.public.outputs.url }}
+      patches: ${{ steps.data.outputs.b64 }}
     steps:
     - uses: actions/download-artifact@v4
       with:
@@ -76,28 +76,24 @@ jobs:
         name: 'partial-patches-*'
 
     - uses: actions/upload-artifact@v4
-      id: upload
       with:
         name: all-patches
         path: prev-patches
         if-no-files-found: ignore
 
     - name: Re-upload to public site
-      id: public
+      id: data
       run: |
         set -x
-        (cd prev-patches && zip -r ../patches.zip .)
-        # accessing github actions artifacts too hard...
-        url="$(curl -F'file=@patches.zip' https://0x0.st)"
-        echo "$url"
-        [[ -n "$url" ]]
-        echo "url=$url" >> "$GITHUB_OUTPUT"
+        (cd prev-patches && tar caf ../patches.tar.zst .)
+        (printf 'b64=' && base64 -w0 patches.tar.zst && echo) >> "$GITHUB_OUTPUT"
+        ls -lh *.tar*
 
   build:
     needs: [ collate ] 
     uses: ./.github/workflows/main.yml
     with:
-      patches-url: ${{ needs.collate.outputs.url }}
+      patches-b64: ${{ needs.collate.outputs.patches }}
       push: ${{ inputs.push || github.event_name == 'schedule' }}
     secrets: inherit
 

@@ -6,15 +6,15 @@ on:
   workflow_dispatch:
     inputs:
       push: { type: boolean, default: false }
-      run-id: 
+      patches-b64: { type: string, required: false }
   workflow_call:
     inputs:
       push: { type: boolean, default: false, required: false }
-      patches-url: { type: string, required: false }
+      patches-b64: { type: string, required: false }
 
 jobs:
   update-check:
-    if: ${{ ! inputs.patches-url }}
+    if: ${{ ! inputs.patches-b64 }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -46,13 +46,17 @@ jobs:
       with: { name: pac-nix, authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}', skipPush: "${{ github.ref != 'refs/heads/main' }}" }
 
     - name: Apply staged patch commits
-      if: ${{ inputs.patches-url }}
+      if: ${{ inputs.patches-b64 }}
       run: |
         shopt -s nullglob
         set -x
 
-        wget -O patches.zip '${{ inputs.patches-url }}'
-        unzip patches.zip -d prev-patches
+        cat <<EOF | base64 -d > patches.tar.zst
+        ${{ inputs.patches-b64 }}
+        EOF
+
+        mkdir prev-patches
+        tar xaf patches.tar.zst -C prev-patches
 
         git config user.name 'github-actions[bot]'
         git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -99,13 +103,17 @@ jobs:
         [[ $result == success || $result == skipped ]]
 
     - name: Apply staged patch commits
-      if: ${{ inputs.patches-url }}
+      if: ${{ inputs.patches-b64 }}
       run: |
         shopt -s nullglob
         set -x
 
-        wget -O patches.zip '${{ inputs.patches-url }}'
-        unzip patches.zip -d prev-patches
+        cat <<EOF | base64 -d > patches.tar.zst
+        ${{ inputs.patches-b64 }}
+        EOF
+
+        mkdir prev-patches
+        tar xaf patches.tar.zst -C prev-patches
 
         git config user.name 'github-actions[bot]'
         git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
