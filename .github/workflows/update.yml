@@ -35,12 +35,20 @@ jobs:
 
     - run: |
         nix run .#update -- do-upgrade -A ${{matrix.pkg}}
+      id: do-upgrade
+
+    - run: |
+        [[ -z "$(git log '@{push}..')" ]] && nix run .#update -- upgrade -A ${{matrix.pkg}} -- --commit
+      if: failure()
+
     - run: |
         git format-patch $COMMIT -o new-patches
+      if: always()
 
     - uses: actions/upload-artifact@v4
+      if: always()
       with:
-        name: partial-patches-${{matrix.pkg}}
+        name: ${{ steps.do-upgrade.outcome != 'success' && 'failed-' || '' }}partial-patches-${{matrix.pkg}}
         path: new-patches
         if-no-files-found: ignore
 
@@ -76,6 +84,7 @@ jobs:
         ls -lh *.tar*
 
   build:
+    if: needs.collate.result == 'success'
     needs: [ collate ] 
     uses: ./.github/workflows/main.yml
     with:
