@@ -3,13 +3,14 @@ final: prev:
 
   aslp-cpp = prev.callPackage ./aslp-cpp.nix { };
 
-  inherit (final.ocamlPackages_pac) aslp asli;
+  inherit (final.ocamlPackages_pac) aslp asli aslp_server;
   inherit (final.ocamlPackages_pac_5) aslp_web;
 
   overlay_ocamlPackages = ofinal: oprev: {
 
     asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.z3; };
     aslp = ofinal.asli;
+    aslp_server = ofinal.callPackage ./aslp_server.nix {};
     # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
 
     zarith_stubs_js_0_17 = ofinal.callPackage ./zarith_stubs_js.nix { };

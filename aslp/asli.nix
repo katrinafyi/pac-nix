@@ -16,9 +16,7 @@
 , zarith
 , ocaml_z3
 , ocaml_pcre
-, cohttp-lwt-unix
 , mlbdd
-, yojson
 , ppx_blob
 , asli
 , testers
@@ -33,15 +31,15 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "23b8dca3e9822cee6311ec5f81c652f871a2bdf5";
-    hash = "sha256-Ex0ScENLPYBK+30q25zZQFYJXRVg0+z0F0H9HeA7ypA=";
+    rev = "cf0cc900e8278d16d7886154ea9751a3dd97b7b0";
+    hash = "sha256-EA2zHzvRZKAiZTysZQQ2+GI9L6zUNvEqucf5EEqxfy4=";
   };
 
   checkInputs = [ alcotest ];
   nativeCheckInputs = [ jdk ];
-  buildInputs = [ mlbdd linenoise ppx_blob ];
+  buildInputs = [ linenoise ppx_blob ];
   nativeBuildInputs = [ ott menhir ];
-  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix ];
+  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre mlbdd ];
 
   preConfigure = ''
     mkdir -p $out/share/asli
