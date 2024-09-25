@@ -10,6 +10,7 @@
 # nix run .#update -- ARGS
 
 import os
+import string
 import json
 import logging
 import argparse
@@ -64,9 +65,17 @@ class Package:
 
   def fetch_latest_commit(self) -> str:
     out = curl_raw(self.commits_atom())
-    marker = f'https://github.com/{self.repo}/commit/'
-    left = out.find(marker, out.find('<entry>'))
-    return out[left + len(marker):][:40]
+    # <entry>
+    #   <id>tag:github.com,2008:Grit::Commit/4fb69f108427b6b78ad9ee98744364eabf4b2178</id>
+    #   <link type="text/html" rel="alternate" href="https://github.com/UQ-PAC/BASIL/commit/4fb69f108427b6b78ad9ee98744364eabf4b2178"/>
+    left = 0
+    left = out.find('<entry>', left)
+    left = out.find('<link type="text/html"', left)
+    left = out.find('github.com', left)
+    right = out.find('"/>', left)
+    commit = out[right-40:right]
+    assert all(c in string.hexdigits for c in commit)
+    return commit
 
 @dataclass 
 class Args:
