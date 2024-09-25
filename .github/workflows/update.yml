@@ -84,7 +84,7 @@ jobs:
         ls -lh *.tar*
 
   build:
-    if: needs.collate.result == 'success'
+    if: always()
     needs: [ collate ] 
     uses: ./.github/workflows/main.yml
     with:
