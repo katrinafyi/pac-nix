@@ -23,6 +23,7 @@ jobs:
     - run: nix run .#update -- check
 
   build:
+    if: always()
     strategy:
       fail-fast: false
       matrix:
