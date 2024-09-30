@@ -36,7 +36,8 @@ jobs:
           planter,
           aslp_web, godbolt
         ]
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     defaults:
       run: { shell: "bash -ex -o pipefail {0}" }
