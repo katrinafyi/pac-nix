@@ -27,6 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest]
         # end-user packages to ci build for cache
         pkg: 
           [aslp, bap-aslp, bap-primus, basil,
@@ -36,7 +37,6 @@ jobs:
           planter,
           aslp_web, godbolt
         ]
-        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
 
     defaults:
