@@ -6,6 +6,13 @@ let
 
       update = prev.callPackage ./update.nix { };
 
+      basil-tools-shell = prev.callPackage ./basil-shell.nix { };
+      basil-tools-docker = prev.dockerTools.streamNixShellImage {
+        name = "basil-tools-docker";
+        tag = "latest";
+        drv = final.basil-tools-shell;
+      };
+
       ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
       ocamlPackages_pac_5 = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
