@@ -1,0 +1,44 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1db64e22..b1fd4848 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -178,7 +178,7 @@ function(GENERATE_ARCH_CPP_SINGLE)
+     OUTPUT "${PARAM_PATH}.cpp"
+     WORKING_DIRECTORY "${SOUFFLE_DATALOG_DIR}"
+     COMMAND
+-      ${SOUFFLE} main.dl -g "${CMAKE_BINARY_DIR}/src/${PARAM_PATH}.cpp" -jauto
++      ${SOUFFLE} main.dl -g "${CMAKE_BINARY_DIR}/src/${PARAM_PATH}.cpp" 
+       -MARCH_${PARAM_MARCH} ${SOUFFLE_PREPROCESSOR_ARG} ${SOUFFLE_PROFILING_ARG}
+       -N ddisasm_${ARCH}
+     DEPENDS ${DATALOG_BASE_SOURCES} ${PARAM_DATALOG_SOURCES})
+@@ -203,7 +203,7 @@ function(GENERATE_ARCH_CPP_MANY)
+   # Generate CPP code
+   execute_process(
+     COMMAND
+-      ${SOUFFLE} main.dl -G ${STAGING_PATH} -jauto -MARCH_${PARAM_MARCH}
++      ${SOUFFLE} main.dl -G ${STAGING_PATH} -MARCH_${PARAM_MARCH}
+       ${SOUFFLE_PREPROCESSOR_ARG} ${SOUFFLE_PROFILING_ARG} -N ddisasm_${ARCH}
+     WORKING_DIRECTORY "${SOUFFLE_DATALOG_DIR}")
+ 
+diff --git a/src/passes/CMakeLists.txt b/src/passes/CMakeLists.txt
+index aa20b7d0..ad89a198 100644
+--- a/src/passes/CMakeLists.txt
++++ b/src/passes/CMakeLists.txt
+@@ -70,7 +70,7 @@ add_custom_command(
+   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/passes"
+   COMMAND
+     ${SOUFFLE} ${NO_RETURN_DATALOG_MAIN} -g souffle_no_return.cpp -N
+-    souffle_no_return -jauto ${SOUFFLE_PREPROCESSOR_ARG}
++    souffle_no_return ${SOUFFLE_PREPROCESSOR_ARG}
+   DEPENDS ${NO_RETURN_DATALOG_SOURCES})
+ 
+ add_library(no_return_pass STATIC NoReturnPass.cpp ${NO_RETURN_CPP})
+@@ -114,7 +114,7 @@ add_custom_command(
+   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/passes"
+   COMMAND
+     ${SOUFFLE} ${FUNCTION_INFERENCE_DATALOG_MAIN} -g
+-    souffle_function_inference.cpp -N souffle_function_inference -jauto
++    souffle_function_inference.cpp -N souffle_function_inference 
+     ${SOUFFLE_PREPROCESSOR_ARG}
+   DEPENDS ${FUNCTION_INFERENCE_DATALOG_SOURCES})
+ 

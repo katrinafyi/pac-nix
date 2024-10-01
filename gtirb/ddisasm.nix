@@ -28,6 +28,7 @@ stdenv.mkDerivation {
     rev = "9edfe9fe86910ef946de1db7a7ac41ce86bc31d0";
     hash = "sha256-xFW6J3jCCMtUqT25/zVfjjy5o3MoX1HXxIlRhjM6s8A=";
   };
+  patches = if stdenv.isDarwin then [ ./0001-ddisasm-disable-concurrent-souffle.patch ] else [];
 
   buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
   nativeBuildInputs = [ capstone-grammatech souffle ];

@@ -6,6 +6,7 @@
 , jre
 , testers
 , basil
+, protobuf
 }:
 
 mkSbtDerivation {
@@ -21,7 +22,14 @@ mkSbtDerivation {
     sha256 = "sha256-juCX3X8KRGLIUqhNcGHUb/nRv09xhWs5cv/wbAs8wmM=";
   };
 
-  depsSha256 = "sha256-++gg+SKskDyaqHowNG2RPS7evuCzPYvvXMC4Rkp7b6U=";
+  patches = [ ./0001-basil-protoc-version.patch ] ;
+
+  preConfigure = ''
+    substituteInPlace build.sbt \
+      --replace 'PROTOC_PLACEHOLDER' '${protobuf}/bin/protoc'
+  '';
+
+  depsSha256 = "sha256-Cyz4kpyZ3KlUo0JmQzvgptSQMErC5G4e8Mp0dWJMaMY";
 
   buildPhase = ''
     javac -version

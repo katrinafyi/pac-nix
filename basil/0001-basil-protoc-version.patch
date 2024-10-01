@@ -1,0 +1,20 @@
+diff --git a/build.sbt b/build.sbt
+index f1e6339f..2d9ede97 100644
+--- a/build.sbt
++++ b/build.sbt
+@@ -31,6 +31,8 @@ lazy val root = project
+ 
+ scalacOptions ++= Seq("-deprecation", "-feature")
+ 
++PB.protocExecutable := file("PROTOC_PLACEHOLDER")
++
+ Compile / PB.targets := Seq(
+   scalapb.gen() -> (Compile / sourceManaged).value / "scalapb"
+ )
+@@ -132,4 +134,4 @@ def filesContentEqual(path1: File, path2: File): Boolean = {
+   source1.close
+   source2.close
+   true
+-}
+\ No newline at end of file
++}

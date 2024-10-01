@@ -7,8 +7,9 @@ final: prev:
   inherit (final.ocamlPackages_pac_5) aslp_web;
 
   overlay_ocamlPackages = ofinal: oprev: {
+    ocaml_z3 = final.callPackage ./ocaml_z3.nix { findlib = ofinal.findlib ; zarith = ofinal.zarith ; ocaml = ofinal.ocaml ; };
 
-    asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.z3; };
+    asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.ocaml_z3; };
     aslp = ofinal.asli;
     # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
 

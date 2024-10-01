@@ -18,6 +18,7 @@ stdenv.mkDerivation {
     rev = "v2.0.0";
     hash = "sha256-ueoqxm6iXv4JgzR/xkImT+O8xx+7bA2upx1TJ828LLA=";
   };
+  patches = if stdenv.isDarwin then [ ./0001-gtirb-link-absl.patch ] else [];
 
   nativeBuildInputs = [ ];
   buildInputs = [ cmake python3 boost doxygen ];
