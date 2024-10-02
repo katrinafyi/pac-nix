@@ -23,7 +23,12 @@ stdenv.mkDerivation {
   buildInputs = [ cmake python3 boost doxygen ];
   propagatedBuildInputs = [ protobuf ];
 
-  cmakeFlags = [ "-DGTIRB_ENABLE_TESTS=OFF" "-DGTIRB_PY_API=ON" ];
+  cmakeFlags = [
+    "-DGTIRB_ENABLE_TESTS=OFF"
+    "-DGTIRB_PY_API=ON"
+    "-DGTIRB_RUN_CLANG_TIDY=OFF"
+    # "-DCLANG_TIDY_EXE=${lib.getExe' clang-tools "clang-tidy"}"
+  ];
 
   CXXFLAGS = "-includeset -Wno-error=unused-result -Wno-error=array-bounds";
   preConfigure = ''
