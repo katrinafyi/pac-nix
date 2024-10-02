@@ -39,6 +39,9 @@ stdenv.mkDerivation {
     substituteInPlace src/CMakeLists.txt src/gtirb/proto/CMakeLists.txt \
       --replace 'DESTINATION lib' 'DESTINATION ''${CMAKE_INSTALL_LIBDIR}' \
       --replace 'DESTINATION include' 'DESTINATION ''${CMAKE_INSTALL_INCLUDEDIR}'
+
+    substituteInPlace python/setup.py.in \
+      --replace '@CMAKE_SOURCE_DIR@' $python
   '';
 
   postInstall = ''
