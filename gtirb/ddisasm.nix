@@ -12,7 +12,7 @@
 , ddisasm
 , makeWrapper
 , runCommand
-, gcc-aarch64
+, clang-aarch64
 , unrandom
 , testers
 , jq
@@ -55,11 +55,11 @@ stdenv.mkDerivation {
 
   passthru.tests.ddisasm-deterministic = runCommand
     "ddisasm-deterministic-test"
-    { nativeBuildInputs = [ ddisasm.deterministic jq gcc-aarch64 ]; }
+    { nativeBuildInputs = [ ddisasm.deterministic jq clang-aarch64 ]; }
     ''
       mkdir -p $out && cd $out
       echo 'int main(void) { return 0; }' > a.c
-      aarch64-unknown-linux-gnu-gcc a.c
+      aarch64-unknown-linux-gnu-cc a.c
       ddisasm-deterministic a.out --json | jq -S > a1
       ddisasm-deterministic a.out --json | jq -S > a2
       diff -q a1 a2
