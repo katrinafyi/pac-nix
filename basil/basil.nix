@@ -9,6 +9,12 @@
 , protobuf
 }:
 
+let
+  replaceProtocPlaceholder = ''
+    substituteInPlace build.sbt \
+      --replace-fail 'PROTOC_PLACEHOLDER' '${lib.getExe protobuf}'
+  '';
+in
 mkSbtDerivation {
   pname = "basil";
   version = "0.1.2-alpha-unstable-2024-09-24";
@@ -24,19 +30,27 @@ mkSbtDerivation {
 
   patches = [ ./0001-basil-protoc-version.patch ] ;
 
-  preConfigure = ''
-    substituteInPlace build.sbt \
-      --replace 'PROTOC_PLACEHOLDER' '${protobuf}/bin/protoc'
-  '';
+  # we must run the command in both the main derivation
+  # and the dependency-generating derivation.
+  overrideDepsAttrs = depsfinal: depsprev: {
+    postPatch = replaceProtocPlaceholder;
+  };
+  postPatch = replaceProtocPlaceholder;
 
-  depsSha256 = "sha256-Cyz4kpyZ3KlUo0JmQzvgptSQMErC5G4e8Mp0dWJMaMY";
+  depsSha256 = "sha256-tDJuleKVLMPCZNJGNxokuScDOU4siLQEmM1FZff+5oM=";
 
   buildPhase = ''
+    runHook preBuild
+
     javac -version
     sbt assembly
+
+    runHook postBuild
   '';
 
   installPhase = ''
+    runHook preInstall
+
     mkdir -p $out/bin
     mkdir -p $out/share/basil
 
@@ -55,6 +69,8 @@ mkSbtDerivation {
     makeWrapper "${lib.getExe jre}" $out/bin/basil \
       --add-flags -jar \
       --add-flags "$out/share/basil/$(basename $JAR)"
+
+    runHook postInstall
   '';
 
   meta = {
