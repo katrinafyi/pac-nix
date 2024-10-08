@@ -1,26 +1,31 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e176b6a7..929cd452 100644
+index e176b6a7..1c03fe8f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -432,6 +432,7 @@ if(CL_API)
- else()
-   find_package(Protobuf 3.0.0 REQUIRED)
- endif()
-+find_package( absl REQUIRED )
-
+@@ -427,11 +427,8 @@ endif()
+ # ---------------------------------------------------------------------------
+ # protobuf
+ # ---------------------------------------------------------------------------
+-if(CL_API)
+-  find_package(Protobuf 3.7.0 REQUIRED)
+-else()
+-  find_package(Protobuf 3.0.0 REQUIRED)
+-endif()
++set(protobuf_MODULE_COMPATIBLE TRUE CACHE BOOL "")
++find_package(Protobuf REQUIRED CONFIG)
+ 
  if(Protobuf_VERSION VERSION_LESS 3.2)
    add_definitions(-DPROTOBUF_SET_BYTES_LIMIT)
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 85558737..542065cd 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -140,6 +140,9 @@ target_link_libraries(
-          # Link in this static lib, but don't make it a transitive dependency of
-          # TestGTIRB, etc
-   PRIVATE gtirb_proto
-+         absl::log_internal_message
-+         absl::log_internal_check_op
-+         absl::status
- )
- target_compile_definitions(
-   ${PROJECT_NAME} PRIVATE GTIRB_${PROJECT_NAME}_EXPORTS
+diff --git a/src/gtirb/proto/CMakeLists.txt b/src/gtirb/proto/CMakeLists.txt
+index 74cf20a9..d53a8bd0 100644
+--- a/src/gtirb/proto/CMakeLists.txt
++++ b/src/gtirb/proto/CMakeLists.txt
+@@ -45,7 +45,7 @@ endforeach(PROTO_H)
+ # Add proto library target
+ add_library(gtirb_proto STATIC ${PROTO_CPP_SOURCES} ${PROTO_COPIED_HEADERS})
+ 
+-target_link_libraries(gtirb_proto ${Boost_LIBRARIES} ${Protobuf_LIBRARIES})
++target_link_libraries(gtirb_proto ${Boost_LIBRARIES} protobuf::libprotobuf)
+ 
+ target_compile_definitions(gtirb_proto PRIVATE GTIRB_${PROJECT_NAME}_EXPORTS)
+ 

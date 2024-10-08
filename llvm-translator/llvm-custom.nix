@@ -16,7 +16,7 @@ let
 
       # install Target .inc files from build directory for lifter project.
       postFixup = ''
-        cd /build/$sourceRoot/build/lib && file Target
+        cd $NIX_BUILD_TOP/$sourceRoot/build/lib && file Target
         find Target -name '*.inc' -print0 \
           | xargs -0 -I{} cp -v --no-clobber --parents {} $dev/include
       '';
