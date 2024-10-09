@@ -65,8 +65,9 @@
           let drvs = onlyDerivations legacyPackages;
           in drvs // { all = makeAll pkgs drvs; });
 
-      devShells = forAllSystems (pkgs: {
+      devShells = forAllSystems' ({ legacyPackages, pkgs, ... }: {
         ocaml = pkgs.callPackage ./ocaml-shell.nix { };
+        basil-tools = legacyPackages.basil-tools-shell;
         update = pkgs.callPackage ./update-shell.nix { };
       });
 
