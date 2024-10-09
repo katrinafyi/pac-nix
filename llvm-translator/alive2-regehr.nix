@@ -18,5 +18,5 @@
 
   patches = [ ];
   CXXFLAGS = (prev.CXXFLAGS or "")
-    + lib.optionalString (!stdenv.isDarwin) " -Wno-error=maybe-uninitialized");
+    + lib.optionalString (!stdenv.isDarwin) " -Wno-error=maybe-uninitialized";
 })
