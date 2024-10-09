@@ -1,7 +1,8 @@
 final: prev:
 {
   overlay_ocamlPackages = ofinal: oprev: {
-    bap = oprev.bap.overrideAttrs (p: {
+    bapWrapper = ofinal.callPackage ./bap.nix { orig-bap = oprev.bap ; z3 = prev.z3 ; };
+    bap = ofinal.bapWrapper.overrideAttrs (p: {
       # configurePhase = ''
       # runHook preConfigure
       # echo old "$configureFlags"

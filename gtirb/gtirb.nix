@@ -18,12 +18,18 @@ stdenv.mkDerivation {
     rev = "v2.0.0";
     hash = "sha256-ueoqxm6iXv4JgzR/xkImT+O8xx+7bA2upx1TJ828LLA=";
   };
+  patches = if stdenv.isDarwin then [ ./0001-gtirb-link-absl.patch ] else [];
 
   nativeBuildInputs = [ ];
   buildInputs = [ cmake python3 boost doxygen ];
   propagatedBuildInputs = [ protobuf ];
 
-  cmakeFlags = [ "-DGTIRB_ENABLE_TESTS=OFF" "-DGTIRB_PY_API=ON" ];
+  cmakeFlags = [
+    "-DGTIRB_ENABLE_TESTS=OFF"
+    "-DGTIRB_PY_API=ON"
+    "-DGTIRB_RUN_CLANG_TIDY=OFF"
+    # "-DCLANG_TIDY_EXE=${lib.getExe' clang-tools "clang-tidy"}"
+  ];
 
   CXXFLAGS = "-includeset -Wno-error=unused-result -Wno-error=array-bounds";
   preConfigure = ''
@@ -33,6 +39,9 @@ stdenv.mkDerivation {
     substituteInPlace src/CMakeLists.txt src/gtirb/proto/CMakeLists.txt \
       --replace 'DESTINATION lib' 'DESTINATION ''${CMAKE_INSTALL_LIBDIR}' \
       --replace 'DESTINATION include' 'DESTINATION ''${CMAKE_INSTALL_INCLUDEDIR}'
+
+    substituteInPlace python/setup.py.in \
+      --replace '@CMAKE_SOURCE_DIR@' $python
   '';
 
   postInstall = ''

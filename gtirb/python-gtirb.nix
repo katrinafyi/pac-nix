@@ -12,9 +12,7 @@ python3Packages.buildPythonPackage {
   propagatedBuildInputs = with python3Packages; [ networkx typing-extensions sortedcontainers intervaltree protobuf3 ];
 
   preConfigure = ''
-    ln -s /build/gtirb* /build/source 
     cd python
-
     substituteInPlace setup.py \
       --replace 'protobuf<=3.20.1' 'protobuf'
   '';
