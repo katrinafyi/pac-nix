@@ -26,15 +26,15 @@
 
 buildDunePackage {
   pname = "asli";
-  version = "cpp-backend-test-unstable-2024-09-30";
+  version = "cpp-backend-test-unstable-2024-10-10";
 
   minimalOCamlVersion = "4.09";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "9796e56c46b0cb985e2eb9e241ca0aef484d6b27";
-    hash = "sha256-Vul5K3F6ZG3jQ9VUXVEBuiXAxHZRWZWthbd4AWpwE+s=";
+    rev = "3cfbc23c17b847339cb553c7f127a957e148c6f1";
+    hash = "sha256-DTqmfYfu+XXKl0G+YC+VQgnORdcZM5HHiP6hzHNeP/Y=";
   };
 
   checkInputs = [ alcotest ];
