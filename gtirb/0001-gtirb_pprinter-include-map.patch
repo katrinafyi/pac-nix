@@ -1,0 +1,12 @@
+diff --git a/src/gtirb_pprinter/driver/parser.hpp b/src/gtirb_pprinter/driver/parser.hpp
+index 2eca4fb..0741103 100644
+--- a/src/gtirb_pprinter/driver/parser.hpp
++++ b/src/gtirb_pprinter/driver/parser.hpp
+@@ -4,6 +4,7 @@
+ #include <optional>
+ #include <regex>
+ #include <string_view>
++#include <map>
+ 
+ namespace fs = boost::filesystem;
+
