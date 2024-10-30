@@ -28,4 +28,4 @@ let
 in
 with llvmPackages;
 { inherit tools libraries release_version; } // (noExtend libraries) // (noExtend tools)
-# https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/development/compilers/llvm/git/default.nix
+# https://github.com/NixOS/nixpkgs/blob/52a9f2036eb3a139453459b16904b972a0984f9a/pkgs/development/compilers/llvm/common/default.nix
