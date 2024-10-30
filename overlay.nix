@@ -23,7 +23,15 @@ let
 
       llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
       llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
-      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_git; };
+      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix {
+        llvmPackages = final.llvmPackages_git.override {
+          gitRelease = {
+            rev = "62ff85f0799560b42754ef77b5f64ca2c7feeff7";
+            rev-version = "20.0.0-unstable-2024-10-30";
+            sha256 = "sha256-vE1N81PtykTIwVF26pE6ewbi18RI+KEAvDg+ZEI8tfo=";
+          };
+        };
+      };
 
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {
         llvmPackages = final.llvm-custom-15;
@@ -31,8 +39,10 @@ let
       alive2-regehr = prev.callPackage ./llvm-translator/alive2-regehr.nix {
         llvmPackages = final.llvm-custom-git;
       };
-      alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix {
+      alive2-aslp = (prev.callPackage ./llvm-translator/alive2-aslp.nix {
         llvmPackages = final.llvm-custom-git;
+      }).overrideAttrs {
+        # src = ~/progs/alive2-regehr;
       };
       xed2022 = prev.xed.overrideAttrs rec {
         version = "2022.08.11";
