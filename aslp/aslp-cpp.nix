@@ -1,13 +1,12 @@
 { stdenv
+, clang17Stdenv
 , cmake
 , asli
-, overrideCC
-, llvmPackages_17
 }:
 
-let buildStdenv = if stdenv.isDarwin then overrideCC stdenv llvmPackages_17.clang else stdenv; in
+let stdenv' = if stdenv.isDarwin then clang17Stdenv else stdenv;
 
-buildStdenv.mkDerivation {
+in stdenv'.mkDerivation {
   pname = "aslp-cpp";
   version = asli.version;
 
