@@ -1,5 +1,6 @@
 { lib
 , stdenv
+, fetchurl
 , fetchFromGitHub
 , cmake
 , python3
@@ -18,6 +19,13 @@ stdenv.mkDerivation {
     rev = "v2.2.0";
     hash = "sha256-dzkVwQ7MvVm4KUX/Lo03yd1P9OHj+q1/kp4ZpdO8NDk=";
   };
+
+  patches = [
+    (fetchurl {
+      url = "https://github.com/rina-forks/gtirb/compare/master..det.patch";
+      hash = "sha256-86cRmnV5CL5DjOzFj+cJYUYKQpHQ6DsqnZDaMGa/kog=";
+    })
+  ];
 
   nativeBuildInputs = [ ];
   buildInputs = [ cmake python3 boost doxygen ];
