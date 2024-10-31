@@ -55,7 +55,7 @@ let
           sha256 = "sha256-Iil+dfjuWYPbzmSjgwKTKScSE/IsWuHEKQ5HsBJDqWM=";
         };
       };
-      remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; };
+      remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; llvmPackages = final.llvmPackages_17; };
       sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
 
       _overlay = overlay;
