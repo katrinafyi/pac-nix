@@ -1,8 +1,10 @@
-{ stdenv, makeBinaryWrapper, symlinkJoin, orig-bap, z3 }:
+{ makeBinaryWrapper, symlinkJoin, orig-bap, z3 }:
+
+# XXX: fix in ocamlPackages.bap of upstream nixpkgs
 
 symlinkJoin {
-  inherit (orig-bap) version;
   name = "bap-wrapped";
+  inherit (orig-bap) version;
   paths = [ orig-bap ];
   nativeBuildInputs = [ makeBinaryWrapper ];
   postBuild = ''
