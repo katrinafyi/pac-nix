@@ -1,6 +1,7 @@
 { lib
 , stdenv
 , fetchFromGitHub
+, fetchzip
 , cmake
 , boost
 , lief
@@ -54,18 +55,25 @@ stdenv.mkDerivation {
   };
 
   # Deterministic fix does not work on Darwin, just test to see if ddisasm even runs
-  passthru.tests.ddisasm-deterministic = runCommand
-    "ddisasm-deterministic-test"
-    { nativeBuildInputs = [ ddisasm.deterministic jq clang-aarch64 ]; }
-    ''
-      mkdir -p $out && cd $out
-      echo 'int main(void) { return 0; }' > a.c
-      aarch64-unknown-linux-gnu-cc a.c
-      ddisasm-deterministic a.out --json | jq -S > a1
-      ddisasm-deterministic a.out --json | jq -S > a2
-    '' + ( if stdenv.isDarwin then "" else ''
-      diff -q a1 a2
-    '' );
+  passthru.tests.ddisasm-deterministic =
+    let
+      test-files = fetchzip {
+        url = "https://gist.github.com/katrinafyi/8bcc7a6756b6f467a658e292181cdf8b/archive/453c9b2c5ebdca4d30816e26805b121a919dd150.tar.gz";
+        hash = "sha256-xewqpzAR+rfAMM9Hn97gwzTrhpHONjltbIjhd15PaPw=";
+      };
+    in runCommand
+      "ddisasm-deterministic-test"
+      { nativeBuildInputs = [ ddisasm.deterministic jq ]; }
+      (
+      ''
+        cp -v ${test-files}/a.out .
+        ddisasm-deterministic a.out --json | jq -S > a1
+        ddisasm-deterministic a.out --json | jq -S > a2
+        (diff -u a1 a2 || true) | tee $out
+      '' + lib.optionalString (!stdenv.isDarwin) ''
+        diff -q a1 a2
+      ''
+      );
 
   meta = {
     mainProgram = "ddisasm";
