@@ -10,13 +10,13 @@
 
 stdenv.mkDerivation {
   pname = "gtirb";
-  version = "2.0.0";
+  version = "2.2.0";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "gtirb";
-    rev = "v2.0.0";
-    hash = "sha256-ueoqxm6iXv4JgzR/xkImT+O8xx+7bA2upx1TJ828LLA=";
+    rev = "v2.2.0";
+    hash = "sha256-dzkVwQ7MvVm4KUX/Lo03yd1P9OHj+q1/kp4ZpdO8NDk=";
   };
 
   nativeBuildInputs = [ ];
