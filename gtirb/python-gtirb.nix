@@ -9,7 +9,7 @@ python3Packages.buildPythonPackage {
   src = gtirb.python;
 
   buildInputs = with python3Packages; [ pip ];
-  propagatedBuildInputs = with python3Packages; [ networkx typing-extensions sortedcontainers intervaltree protobuf3 ];
+  propagatedBuildInputs = with python3Packages; [ networkx typing-extensions sortedcontainers intervaltree protobuf ];
 
   preConfigure = ''
     cd python

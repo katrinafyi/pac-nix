@@ -13,7 +13,7 @@
 
 (alive2-regehr.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
-  version = "0-unstable-2024-08-22";
+  version = "0-unstable-2024-10-30";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
   nativeBuildInputs = prev.nativeBuildInputs ++ [ jre makeWrapper ];
@@ -21,8 +21,8 @@
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "056a138aaabcb9932357a57ce4414ba0ff14b0c1";
-    hash = "sha256-4SEiKBl20Ly8RAfyLFt0oCjhYwvTI1fHNHisacy9e8I=";
+    rev = "ade1c3bd01c8b37fdfeeac7fbab168f020f20a8f";
+    hash = "sha256-q+v4jKfDDL0kblrZQHp5wyRDX/P/DS4PWx6QiK0c8Ao=";
   };
 
   cmakeFlags = prev.cmakeFlags
@@ -64,7 +64,8 @@
 
   passthru.tests.run-arm-tv = runCommand "test-run-arm-tv" {} ''
     rm -rfv logs logs-aslp
-    (set +o pipefail; ${alive2-aslp.run-arm-tv}/bin/*.pl 2>&1 | tee /dev/stderr | grep 'please specify')
+    set +o pipefail
+    ${alive2-aslp.arm-tv-scripts}/bin/run-arm-tv.pl 2>&1 | tee /dev/stderr | grep 'please specify'
     touch $out
   '';
 

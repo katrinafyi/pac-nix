@@ -1,5 +1,6 @@
 { lib
 , stdenv
+, fetchurl
 , fetchFromGitHub
 , cmake
 , python3
@@ -10,15 +11,21 @@
 
 stdenv.mkDerivation {
   pname = "gtirb";
-  version = "2.0.0";
+  version = "2.2.0";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "gtirb";
-    rev = "v2.0.0";
-    hash = "sha256-ueoqxm6iXv4JgzR/xkImT+O8xx+7bA2upx1TJ828LLA=";
+    rev = "v2.2.0";
+    hash = "sha256-dzkVwQ7MvVm4KUX/Lo03yd1P9OHj+q1/kp4ZpdO8NDk=";
   };
-  patches = if stdenv.isDarwin then [ ./0001-gtirb-link-absl.patch ] else null;
+
+  patches = [
+    (fetchurl {
+      url = "https://github.com/rina-forks/gtirb/compare/master..det.patch";
+      hash = "sha256-86cRmnV5CL5DjOzFj+cJYUYKQpHQ6DsqnZDaMGa/kog=";
+    })
+  ] ++ lib.optional stdenv.isDarwin ./0001-gtirb-link-absl.patch;
 
   nativeBuildInputs = [ ];
   buildInputs = [ cmake python3 boost doxygen ];
@@ -34,14 +41,11 @@ stdenv.mkDerivation {
   CXXFLAGS = "-includeset -Wno-error=unused-result -Wno-error=array-bounds";
   preConfigure = ''
     substituteInPlace CMakeLists.txt \
-      --replace '$'{PYTHON_VERSION} ${python3.version}
+      --replace-warn '$'{PYTHON_VERSION} ${python3.version}
     
     substituteInPlace src/CMakeLists.txt src/gtirb/proto/CMakeLists.txt \
-      --replace 'DESTINATION lib' 'DESTINATION ''${CMAKE_INSTALL_LIBDIR}' \
-      --replace 'DESTINATION include' 'DESTINATION ''${CMAKE_INSTALL_INCLUDEDIR}'
-
-    substituteInPlace python/setup.py.in \
-      --replace '@CMAKE_SOURCE_DIR@' $python
+      --replace-fail 'DESTINATION lib' 'DESTINATION ''${CMAKE_INSTALL_LIBDIR}' \
+      --replace-warn 'DESTINATION include' 'DESTINATION ''${CMAKE_INSTALL_INCLUDEDIR}'
   '';
 
   postInstall = ''

@@ -13,13 +13,13 @@
 
 stdenv.mkDerivation {
   pname = "gtirb-pprinter";
-  version = "2.1.0";
+  version = "2.2.0-unstable-2024-10-09";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "gtirb-pprinter";
-    rev = "v2.1.0";
-    hash = "sha256-zgYq6FKxaJ6vLzvOTCfOU4ZUyXvMuFc3abNrqg8NADc=";
+    rev = "762a287f3d12c6aac3d3d000cdc8bf20f5ee34f2";
+    hash = "sha256-9CZ+ndHX5f4rKbGXvCrqEg55Ep9JEkS/u//grdqTpTc=";
   };
   patches = [ ./0001-gtirb_pprinter-include-map.patch ];
 
@@ -27,10 +27,13 @@ stdenv.mkDerivation {
   nativeBuildInputs = [ capstone-grammatech ];
 
   cmakeFlags = [ "-DGTIRB_PPRINTER_ENABLE_TESTS=OFF" ];
-
-  preConfigure = ''
-    export CXXFLAGS='-includecstdint -includeset -Wno-error=unused-result -Wno-error=deprecated-declarations -Wno-error=array-bounds'
-  '';
+  CXXFLAGS= [
+    "-includecstdint" 
+    "-includeset"
+    "-Wno-error=unused-result"
+    "-Wno-error=deprecated-declarations"
+    "-Wno-error=array-bounds"
+  ];
 
   meta = {
     homepage = "https://github.com/grammatech/gtirb-pprinter";

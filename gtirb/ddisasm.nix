@@ -1,5 +1,6 @@
 { lib
 , stdenv
+, fetchurl
 , fetchFromGitHub
 , fetchzip
 , cmake
@@ -11,42 +12,37 @@
 , capstone-grammatech
 , souffle
 , ddisasm
-, makeWrapper
-, runCommand
-, clang-aarch64
-, unrandom
+, runCommandCC
 , testers
 , jq
 }:
 
 stdenv.mkDerivation {
   pname = "ddisasm";
-  version = "unstable-2024-03-08";
+  version = "0-unstable-2024-10-31";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "ddisasm";
-    rev = "9edfe9fe86910ef946de1db7a7ac41ce86bc31d0";
-    hash = "sha256-xFW6J3jCCMtUqT25/zVfjjy5o3MoX1HXxIlRhjM6s8A=";
+    rev = "17396b59537aaff73e2c7657ccd3b3eb2c3b6a04";
+    hash = "sha256-yFZ0QR1upmTzEyATsTM5bGPr0EPWxkyXKbGa5nYSEIE=";
   };
-  patches = if stdenv.isDarwin then [ ./0001-ddisasm-disable-concurrent-souffle.patch ] else null;
+
+  patches = [
+    (fetchurl {
+      url = "https://github.com/rina-forks/ddisasm/compare/main..determinism.patch";
+      hash = "sha256-xISyR7ptR2LfHZJAGUyXqANLIab9yZrQFh8wLbJLsx8=";
+    })
+  ] ++ lib.optional stdenv.isDarwin ./0001-ddisasm-disable-concurrent-souffle.patch;
 
   buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
   nativeBuildInputs = [ capstone-grammatech souffle ];
 
   cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" ];
 
-  CXXFLAGS = "-includeset";
+  CXXFLAGS = [ "-includeset" ];
 
-  passthru.deterministic =
-    runCommand
-      (ddisasm.name + "-deterministic")
-      { nativeBuildInputs = [ makeWrapper ]; }
-      ''
-        makeWrapper ${lib.getExe ddisasm} $out/bin/ddisasm-deterministic \
-          --inherit-argv0 \
-          --suffix LD_PRELOAD : ${lib.getLib unrandom}/lib/*.so
-      '';
+  passthru.deterministic = ddisasm;
 
   passthru.tests.ddisasm = testers.testVersion {
     package = ddisasm;
@@ -54,26 +50,21 @@ stdenv.mkDerivation {
     version = "Disassemble";
   };
 
-  # Deterministic fix does not work on Darwin, just test to see if ddisasm even runs
-  passthru.tests.ddisasm-deterministic =
-    let
-      test-files = fetchzip {
-        url = "https://gist.github.com/katrinafyi/8bcc7a6756b6f467a658e292181cdf8b/archive/453c9b2c5ebdca4d30816e26805b121a919dd150.tar.gz";
-        hash = "sha256-xewqpzAR+rfAMM9Hn97gwzTrhpHONjltbIjhd15PaPw=";
-      };
-    in runCommand
-      "ddisasm-deterministic-test"
-      { nativeBuildInputs = [ ddisasm.deterministic jq ]; }
-      (
-      ''
-        cp -v ${test-files}/a.out .
-        ddisasm-deterministic a.out --json | jq -S > a1
-        ddisasm-deterministic a.out --json | jq -S > a2
-        (diff -u a1 a2 || true) | tee $out
-      '' + lib.optionalString (!stdenv.isDarwin) ''
-        diff -q a1 a2
-      ''
-      );
+  # test-files = fetchzip {
+  #   url = "https://gist.github.com/katrinafyi/8bcc7a6756b6f467a658e292181cdf8b/archive/453c9b2c5ebdca4d30816e26805b121a919dd150.tar.gz";
+  #   hash = "sha256-xewqpzAR+rfAMM9Hn97gwzTrhpHONjltbIjhd15PaPw=";
+  # };
+  passthru.tests.ddisasm-deterministic = runCommandCC
+    "ddisasm-deterministic-test"
+    { nativeBuildInputs = [ ddisasm.deterministic jq ]; }
+    ''
+      mkdir -p $out && cd $out
+      echo 'int main(void) { return 0; }' > a.c
+      $CC a.c
+      ddisasm a.out --json | jq -S > a1
+      ddisasm a.out --json | jq -S > a2
+      diff -u a1 a2
+    '';
 
   meta = {
     mainProgram = "ddisasm";

@@ -6,6 +6,13 @@ let
 
       update = prev.callPackage ./update.nix { };
 
+      basil-tools-shell = prev.callPackage ./basil-shell.nix { };
+      basil-tools-docker = prev.dockerTools.streamNixShellImage {
+        name = "basil-tools-docker";
+        tag = "latest";
+        drv = final.basil-tools-shell;
+      };
+
       ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
       ocamlPackages_pac_5 = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
@@ -43,7 +50,19 @@ let
 
       llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
       llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
-      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_git; };
+      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix {
+        llvmPackages = final.llvmPackages_git.override (p: {
+          gitRelease =
+            prev.lib.throwIfNot
+            (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2024-10-30")
+            "llvmPackages_git seems to have updated, is this override no longer needed?"
+            {
+              rev = "62ff85f0799560b42754ef77b5f64ca2c7feeff7";
+              rev-version = "20.0.0-unstable-2024-10-30";
+              sha256 = "sha256-vE1N81PtykTIwVF26pE6ewbi18RI+KEAvDg+ZEI8tfo=";
+            };
+        });
+      };
 
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {
         llvmPackages = final.llvm-custom-15;
@@ -63,7 +82,7 @@ let
           sha256 = "sha256-Iil+dfjuWYPbzmSjgwKTKScSE/IsWuHEKQ5HsBJDqWM=";
         };
       };
-      remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; };
+      remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; llvmPackages = final.llvmPackages_17; };
       sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
 
       _overlay = overlay;

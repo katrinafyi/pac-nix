@@ -76,7 +76,7 @@ let
       gts="''${args[4]}"
 
       ${gcc-aarch64.targetPrefix}"$compiler" ''${CFLAGS:-} "$in" -o "$out"
-      ddisasm-deterministic "$out" --ir "$gtirb"
+      ddisasm "$out" --ir "$gtirb"
       proto-json.py "$gtirb" "$gtirb" -s8 --idem
       gtirb-semantics "$gtirb" "$gts"
       proto-json.py "$gts" "$gts" --idem
@@ -118,5 +118,6 @@ buildEnv {
 
   meta = {
     mainProgram = "planter";
+    broken = true; # XXX: currently not building. was always fragile
   };
 }
