@@ -118,5 +118,6 @@ buildEnv {
 
   meta = {
     mainProgram = "planter";
+    broken = true; # XXX: currently not building. was always fragile
   };
 }
