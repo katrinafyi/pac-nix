@@ -1,5 +1,6 @@
 { lib
 , stdenv
+, fetchurl
 , fetchFromGitHub
 , cmake
 , boost
@@ -10,41 +11,37 @@
 , capstone-grammatech
 , souffle
 , ddisasm
-, makeWrapper
-, runCommand
 , runCommandCC
-, unrandom
 , testers
 , jq
 }:
 
 stdenv.mkDerivation {
   pname = "ddisasm";
-  version = "unstable-2024-03-08";
+  version = "0-unstable-2024-10-31";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "ddisasm";
-    rev = "9edfe9fe86910ef946de1db7a7ac41ce86bc31d0";
-    hash = "sha256-xFW6J3jCCMtUqT25/zVfjjy5o3MoX1HXxIlRhjM6s8A=";
+    rev = "17396b59537aaff73e2c7657ccd3b3eb2c3b6a04";
+    hash = "sha256-yFZ0QR1upmTzEyATsTM5bGPr0EPWxkyXKbGa5nYSEIE=";
   };
+
+  patches = [
+    (fetchurl {
+      url = "https://github.com/rina-forks/ddisasm/compare/main..determinism.patch";
+      hash = "sha256-xISyR7ptR2LfHZJAGUyXqANLIab9yZrQFh8wLbJLsx8=";
+    })
+  ];
 
   buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
   nativeBuildInputs = [ capstone-grammatech souffle ];
 
   cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" ];
 
-  CXXFLAGS = "-includeset";
+  CXXFLAGS = [ "-includeset" ];
 
-  passthru.deterministic =
-    runCommand
-      (ddisasm.name + "-deterministic")
-      { nativeBuildInputs = [ makeWrapper ]; }
-      ''
-        makeWrapper ${lib.getExe ddisasm} $out/bin/ddisasm-deterministic \
-          --inherit-argv0 \
-          --suffix LD_PRELOAD : ${lib.getLib unrandom}/lib/*.so
-      '';
+  passthru.deterministic = ddisasm;
 
   passthru.tests.ddisasm = testers.testVersion {
     package = ddisasm;
@@ -59,8 +56,8 @@ stdenv.mkDerivation {
       mkdir -p $out && cd $out
       echo 'int main(void) { return 0; }' > a.c
       $CC a.c
-      ddisasm-deterministic a.out --json | jq -S > a1
-      ddisasm-deterministic a.out --json | jq -S > a2
+      ddisasm a.out --json | jq -S > a1
+      ddisasm a.out --json | jq -S > a2
       diff -q a1 a2
     '';
 
