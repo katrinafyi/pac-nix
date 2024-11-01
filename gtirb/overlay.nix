@@ -1,6 +1,7 @@
 final: prev:
 {
-  ddisasm = prev.callPackage ./ddisasm.nix { };
+  lief-0-13-2 = prev.callPackage ./lief-0-13-2.nix { python = final.python3; };
+  ddisasm = prev.callPackage ./ddisasm.nix { lief = final.lief-0-13-2; };
   ddisasm-deterministic = prev.ddisasm.deterministic;
 
   gtirb = prev.callPackage ./gtirb.nix { };
