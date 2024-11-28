@@ -12,12 +12,17 @@
 , capstone-grammatech
 , souffle
 , ddisasm
-, runCommandCC
+, runCommand
 , testers
 , jq
 }:
 
-stdenv.mkDerivation {
+let
+  elf-test-files = fetchzip {
+    url = "https://gist.github.com/katrinafyi/8bcc7a6756b6f467a658e292181cdf8b/archive/453c9b2c5ebdca4d30816e26805b121a919dd150.tar.gz";
+    hash = "sha256-xewqpzAR+rfAMM9Hn97gwzTrhpHONjltbIjhd15PaPw=";
+  };
+in stdenv.mkDerivation {
   pname = "ddisasm";
   version = "0-unstable-2024-10-31";
 
@@ -50,17 +55,12 @@ stdenv.mkDerivation {
     version = "Disassemble";
   };
 
-  # test-files = fetchzip {
-  #   url = "https://gist.github.com/katrinafyi/8bcc7a6756b6f467a658e292181cdf8b/archive/453c9b2c5ebdca4d30816e26805b121a919dd150.tar.gz";
-  #   hash = "sha256-xewqpzAR+rfAMM9Hn97gwzTrhpHONjltbIjhd15PaPw=";
-  # };
-  passthru.tests.ddisasm-deterministic = runCommandCC
+  passthru.tests.ddisasm-deterministic = runCommand
     "ddisasm-deterministic-test"
     { nativeBuildInputs = [ ddisasm.deterministic jq ]; }
     ''
       mkdir -p $out && cd $out
-      echo 'int main(void) { return 0; }' > a.c
-      $CC a.c
+      cp -v ${elf-test-files}/a.out .
       ddisasm a.out --json | jq -S > a1
       ddisasm a.out --json | jq -S > a2
       diff -u a1 a2
