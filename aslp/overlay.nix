@@ -46,6 +46,8 @@ final: prev:
       }
       oprev.ocaml_pcre;
 
+
+    mirage-crypto-rng = oprev.mirage-crypto-rng.overrideAttrs { doCheck = false; };
   };
 }
 
