@@ -1,9 +1,12 @@
 { stdenv
 , fetchFromGitHub
+, fetchpatch
 , fetchzip
+, writeText
 , lib
 , openssl
 , cmake
+, ninja
 , autoconf
 , automake
 , libtool
@@ -14,11 +17,16 @@
 , perl
 , python3
 , ncurses
+, time
+, upx
 , gtest
 , libffi
 , libxml2
 , zlib
+, buildEnv
 , enableTests ? true
+, buildDevTools ? true
+, compileYaraPatterns ? false
 }:
 
 let
@@ -28,25 +36,36 @@ let
     owner = "capstone-engine";
     repo = "capstone";
     rev = "5.0-rc2";
-    sha256 = "sha256-nB7FcgisBa8rRDS3k31BbkYB+tdqA6Qyj9hqCnFW+ME=";
+    hash = "sha256-nB7FcgisBa8rRDS3k31BbkYB+tdqA6Qyj9hqCnFW+ME=";
   };
   llvm = fetchFromGitHub {
     owner = "avast-tl";
     repo = "llvm";
     rev = "2a1f3d8a97241c6e91710be8f84cf3cf80c03390";
-    sha256 = "sha256-+v1T0VI9R92ed9ViqsfYZMJtPCjPHCr4FenoYdLuFOU=";
+    hash = "sha256-+v1T0VI9R92ed9ViqsfYZMJtPCjPHCr4FenoYdLuFOU=";
   };
   yaracpp = fetchFromGitHub {
     owner = "VirusTotal";
     repo = "yara";
     rev = "v4.2.0-rc1";
-    sha256 = "sha256-WcN6ClYO2d+/MdG06RHx3kN0o0WVAY876dJiG7CwJ8w=";
+    hash = "sha256-WcN6ClYO2d+/MdG06RHx3kN0o0WVAY876dJiG7CwJ8w=";
   };
   yaramod = fetchFromGitHub {
     owner = "avast";
     repo = "yaramod";
-    rev = "a367d910ae79698e64e99d8414695281723cd34b";
-    sha256 = "sha256-mnjYQOn/Z37XAtW8YsfPewM9t1WYsyjivTnmRwYWSQ0=";
+    rev = "aa06dd408c492a8f4488774caf2ee105ccc23ab5";
+    hash = "sha256-wiD4A+6Jsd7bzGo8mmWnkb7l2XcjEgLCK/A4iW9Zt/A=";
+
+    # yaramod builds yet more dependencies. these need to be installed to "lib"
+    postFetch = ''
+      (
+      cd $out
+      shopt -s globstar
+      substituteInPlace src/CMakeLists.txt deps/**/CMakeLists.txt \
+        --replace-quiet CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib' \
+        --replace-quiet '$'{CMAKE_INSTALL_LIBDIR} lib
+      )
+    '';
   };
   keystone = fetchFromGitHub {
     # only for tests
@@ -55,14 +74,14 @@ let
     rev = "d7ba8e378e5284e6384fc9ecd660ed5f6532e922";
     sha256 = "1yzw3v8xvxh1rysh97y0i8y9svzbglx2zbsqjhrfx18vngh0x58f";
   };
-  # googletest imported from nixpkgs
 
   retdec-support-version = "2019-03-08";
   retdec-support =
     { rev = retdec-support-version; } // # for checking the version against the expected version
     fetchzip {
       url = "https://github.com/avast-tl/retdec-support/releases/download/${retdec-support-version}/retdec-support_${retdec-support-version}.tar.xz";
-      hash = "sha256-paeNrxXTE7swuKjP+sN42xnCYS7x5Y5CcUe7tyzsLxs=";
+      hash = "sha256-t1tx4MfLW/lwtbO5JQ1nrFBIOeMclq+0dENuXW+ahIM=";
+      stripRoot = false;
     };
 
   check-dep = name: dep:
@@ -82,20 +101,41 @@ let
     CAPSTONE = capstone;
     LLVM = llvm;
     YARA = yaracpp;
-    YARAMOD = yaramod;
+    YARAMOD = yaramod // { rev = ""; };
     SUPPORT_PKG = retdec-support;
   } // lib.optionalAttrs enableTests {
     KEYSTONE = keystone;
+    GOOGLETEST = gtest.src // { rev = ""; };  # empty rev bypasses dep version checking
   };
+
+  # overwrite install-share.py to copy instead of download.
+  # we use this so the copy happens at the right time in the build,
+  # otherwise, the build process cleans the directory.
+  install-share =
+    writeText
+      "install-share.py"
+      ''
+        import os, sys, shutil, subprocess
+
+        install_path, arch_url, sha256hash_ref, version = sys.argv[1:]
+        support_dir = os.path.join(install_path, 'share', 'retdec', 'support')
+
+        assert os.path.isdir(arch_url), "nix install-share.py expects a path for support url"
+
+        os.makedirs(support_dir, exist_ok=True)
+        shutil.copytree(arch_url, support_dir, dirs_exist_ok=True)
+        subprocess.check_call(['chmod', '-R', 'u+w', support_dir])
+      '';
 in
 stdenv.mkDerivation (self: {
   pname = "retdec";
 
-  # If you update this you will also need to adjust the versions of the updated dependencies. You can do this by first just updating retdec
-  # itself and trying to build it. The build should fail and tell you which dependencies you have to upgrade to which versions.
+  # If you update this you will also need to adjust the versions of the updated dependencies.
   # I've notified upstream about this problem here:
   # https://github.com/avast-tl/retdec/issues/412
-  # gcc is pinned to gcc8 in all-packages.nix. That should probably be re-evaluated on update.
+  #
+  # The dependencies and their sources are listed in this file:
+  # https://github.com/avast/retdec/blob/master/cmake/deps.cmake
   version = "5.0";
 
   src = fetchFromGitHub {
@@ -105,8 +145,22 @@ stdenv.mkDerivation (self: {
     sha256 = "sha256-H4e+aSgdBBbG6X6DzHGiDEIASPwBVNVsfHyeBTQLAKI=";
   };
 
+  patches = [
+    # gcc 13 compatibility: https://github.com/avast/retdec/pull/1153
+    (fetchpatch {
+      url = "https://github.com/avast/retdec/commit/dbaab2c3d17b1eae22c581e8ab6bfefadf4ef6ae.patch";
+      hash = "sha256-YqHYPGAGWT4x6C+CpsOSsOIZ+NPM2FBQtGQFs74OUIQ=";
+    })
+    # aarch64 compatibility: https://github.com/avast/retdec/pull/1195
+    (fetchpatch {
+      url = "https://github.com/avast/retdec/commit/93233e79a0b14e6aeeee6b117a1c93feba88577b.patch";
+      hash = "sha256-0VT7J9mcrneUo80BSi+unqCGdNNp4HaRx615M6hm0n8=";
+    })
+  ];
+
   nativeBuildInputs = [
     cmake
+    ninja
     autoconf
     automake
     libtool
@@ -127,70 +181,111 @@ stdenv.mkDerivation (self: {
   ] ++ lib.optional self.doInstallCheck gtest;
 
   cmakeFlags = [
-    "-DRETDEC_TESTS=${if self.doInstallCheck then "ON" else "OFF"}" # build tests
-  ] ++ lib.mapAttrsToList (k: v: "-D${k}_URL=${v}") deps;
-
-  patches = [ ];
-
-  # fix for a gcc13 change.
-  env.CXXFLAGS = "-include cstdint";
+    (lib.cmakeBool "RETDEC_TESTS" self.doInstallCheck) # build tests
+    (lib.cmakeBool "RETDEC_DEV_TOOLS" buildDevTools) # build tools e.g. capstone2llvmir, retdectool
+    (lib.cmakeBool "RETDEC_COMPILE_YARA" compileYaraPatterns) # build and install compiled patterns
+  ] ++ lib.mapAttrsToList (k: v: lib.cmakeFeature "${k}_URL" "${v}") deps;
 
   preConfigure =
-    lib.concatStringsSep "\n" (lib.mapAttrsToList check-dep deps)
+    lib.concatLines (lib.mapAttrsToList check-dep deps)
     +
     ''
-            mkdir -p "$out/share/retdec"
-            cp --no-preserve=mode -r ${retdec-support} "$out/share/retdec/support" # write permission needed during install
+      cp -v ${install-share} ./support/install-share.py
 
-            # the CMakeLists assume CMAKE_INSTALL_BINDIR, etc are path components but in Nix, they are absolute.
-            # therefore, we need to remove the unnecessary CMAKE_INSTALL_PREFIX prepend.
-            substituteInPlace ./CMakeLists.txt \
-              --replace "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_BIN_DIR} "''$"{CMAKE_INSTALL_FULL_BINDIR} \
-              --replace "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_LIB_DIR} "''$"{CMAKE_INSTALL_FULL_LIBDIR} \
-              --replace "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_SUPPORT_DIR} "''$"{RETDEC_INSTALL_SUPPORT_DIR} \
+      # the CMakeLists assume CMAKE_INSTALL_BINDIR, etc are path components but in Nix, they are absolute.
+      # therefore, we need to remove the unnecessary CMAKE_INSTALL_PREFIX prepend.
+      substituteInPlace ./CMakeLists.txt \
+        --replace-fail "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_BIN_DIR} "''$"{CMAKE_INSTALL_FULL_BINDIR} \
+        --replace-fail "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_LIB_DIR} "''$"{CMAKE_INSTALL_FULL_LIBDIR} \
 
-            # similarly for yaramod. here, we fix the LIBDIR to lib64. for whatever reason, only "lib64" works.
-            substituteInPlace deps/yaramod/CMakeLists.txt \
-              --replace "''$"{YARAMOD_INSTALL_DIR}/"''$"{CMAKE_INSTALL_LIBDIR} "''$"{YARAMOD_INSTALL_DIR}/lib64 \
-              --replace CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib64'
+      # --replace "''$"{CMAKE_INSTALL_PREFIX}/"''$"{RETDEC_INSTALL_SUPPORT_DIR} "''$"{RETDEC_INSTALL_SUPPORT_DIR}
+      # note! Nix does not set CMAKE_INSTALL_DATADIR to an absolute path, so this replacement would be incorrect
 
-            # yara needs write permissions in the generated source directory.
-            echo ${lib.escapeShellArg ''
-              ExternalProject_Add_Step(
-                yara chmod WORKING_DIRECTORY ''${YARA_DIR}
-      	        DEPENDEES download COMMAND chmod -R u+rw .
-              )
-            ''} >> deps/yara/CMakeLists.txt
+      # similarly for yaramod.
+      substituteInPlace deps/yaramod/CMakeLists.txt \
+        --replace-fail "''$"{YARAMOD_INSTALL_DIR}/"''$"{CMAKE_INSTALL_LIBDIR} "''$"{YARAMOD_INSTALL_DIR}/lib
 
-            # patch gtest to use the system package
-            gtest=deps/googletest/CMakeLists.txt
-            old="$(cat $gtest)"
-            (echo 'find_package(GTest REQUIRED)'; echo "$old") > $gtest
-            sed -i 's/ExternalProject_[^(]\+[(]/ set(IGNORED /g' $gtest
+      # yara needs write permissions in the generated source directory.
+      echo '
+        ExternalProject_Add_Step(
+          yara chmod WORKING_DIRECTORY ''${YARA_DIR}
+          DEPENDEES download COMMAND chmod -R u+w .
+        )
+      ' >> deps/yara/CMakeLists.txt
 
-            substituteInPlace $gtest \
-              --replace '$'{GTEST_LIB} "GTest::gtest"\
-              --replace '$'{GMOCK_LIB} "GTest::gmock"\
-              --replace '$'{GTEST_MAIN_LIB} "GTest::gtest_main"\
-              --replace '$'{GMOCK_MAIN_LIB} "GTest::gmock_main"
+      # yara: to support building retdec with ninja
+      substituteInPlace deps/yara/CMakeLists.txt \
+        --replace-fail '$'{YARA_CONFIGURE_ARGS} ' ''${YARA_CONFIGURE_ARGS} --disable-dependency-tracking' \
+        --replace-fail '$'{YARA_MAKE_PROGRAM} $(command -v make)
 
-            # without git history, there's no chance of these tests passing.
-            substituteInPlace tests/utils/version_tests.cpp \
-              --replace VersionTests DISABLED_VersionTests
+      # all vendored dependencies must build their libs into the "lib" subdirectory.
+      # retdec's install phase will copy these into the correct Nix output.
+      substituteInPlace deps/*/CMakeLists.txt \
+        --replace-quiet CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib'
+
+      substituteInPlace src/utils/CMakeLists.txt \
+        --replace-warn '$'{RETDEC_GIT_VERSION_TAG} ${self.version} \
+        --replace-warn '$'{RETDEC_GIT_COMMIT_HASH} ${self.src.rev}
+
+
+      # tests: without git history, there is no chance these tests will pass.
+      substituteInPlace tests/utils/version_tests.cpp \
+        --replace-warn VersionTests DISABLED_VersionTests
+
+
+      # scripts: patch paths
+      substituteInPlace scripts/retdec-utils.py \
+        --replace-fail /usr/bin/time ${time} \
+        --replace-fail /usr/local/bin/gtime ${time}
+      substituteInPlace scripts/retdec-unpacker.py \
+        --replace-fail "'upx'" "'${upx}'"
     '';
 
   doInstallCheck = enableTests;
   installCheckPhase = ''
-    ${python3.interpreter} "$out/bin/retdec-tests-runner.py"
+    ${python3.interpreter} "''${!outputBin}/bin/retdec-tests-runner.py"
 
     rm -rf $out/bin/__pycache__
   '';
 
+
+  # static-code patterns are split out since they are rarely needed by end users.
+  # from retdec's wiki:
+  #   However, these are mainly for older compilers used for testing purposes.
+  #   If you want to remove code from newer compilers or some custom libraries,
+  #   you have to create your own signature files.
+  # see: https://github.com/avast/retdec/wiki/Removing-Statically-Linked-Code
+  postFixup = ''
+    mkdir -p $dev/lib/retdec
+    mv -v $out/share/retdec/cmake $dev/lib/retdec
+
+    yara_dir=share/retdec/support/generic/yara_patterns
+    mkdir -p $patterns/$yara_dir
+    mv -v $out/$yara_dir/static-code $patterns/$yara_dir
+  '';
+
+  outputs = [ "out" "lib" "dev" "patterns" ];
+
+  passthru.full = buildEnv {
+    name = "${self.pname}-full-${self.version}";
+    inherit (self.finalPackage) meta;
+    paths = [ self.finalPackage.out self.finalPackage.patterns ];
+    postBuild = ''
+      config=$out/share/retdec/decompiler-config.json
+      cp -v --remove-destination $(readlink -f $config) $config
+
+      static_code=support/generic/yara_patterns/static-code/
+      substituteInPlace $config \
+        --replace-fail ./$static_code $out/share/retdec/$static_code
+    '';
+  };
+
+  passthru.deps = deps;
+
   meta = with lib; {
-    description = "A retargetable machine-code decompiler based on LLVM";
+    description = "Retargetable machine-code decompiler based on LLVM";
     homepage = "https://retdec.com";
     license = licenses.mit;
-    maintainers = with maintainers; [ dtzWill timokau ];
-    platforms = [ "x86_64-linux" "i686-linux" ];
+    maintainers = with maintainers; [ katrinafyi ];
   };
 })
