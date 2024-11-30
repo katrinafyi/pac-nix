@@ -45,7 +45,12 @@ in stdenv.mkDerivation {
 
   cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" ];
 
-  CXXFLAGS = [ "-includeset" ];
+  postPatch = ''
+    (
+    shopt -u globstar
+    substituteInPlace **/*.h --replace-warn unordered_map map --replace-warn unordered_set set
+    )
+  '';
 
   passthru.deterministic = ddisasm;
 

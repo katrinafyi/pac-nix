@@ -27,6 +27,13 @@ stdenv.mkDerivation {
     })
   ] ++ lib.optional stdenv.isDarwin ./0001-gtirb-link-absl.patch;
 
+  postPatch = ''
+    (
+    shopt -u globstar
+    substituteInPlace include/gtirb/{CFG,Module}.hpp --replace-warn unordered_map map --replace-warn unordered_set set
+    )
+  '';
+
   nativeBuildInputs = [ ];
   buildInputs = [ cmake python3 boost doxygen ];
   propagatedBuildInputs = [ protobuf ];
