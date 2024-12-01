@@ -47,8 +47,12 @@ in stdenv.mkDerivation {
 
   postPatch = ''
     (
-    shopt -u globstar
-    substituteInPlace **/*.h --replace-warn unordered_map map --replace-warn unordered_set set
+    shopt -s globstar
+    substituteInPlace **/*.cpp **/*.h --replace-warn unordered_map map --replace-warn unordered_set set
+    substituteInPlace src/passes/Disassembler.cpp \
+      --replace-fail \
+      'gtirb::UUID Uuid;' \
+      'gtirb::UUID Uuid{gtirb::Node::UUIDGenerator()};'
     )
   '';
 

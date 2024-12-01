@@ -21,7 +21,15 @@ stdenv.mkDerivation {
     rev = "762a287f3d12c6aac3d3d000cdc8bf20f5ee34f2";
     hash = "sha256-9CZ+ndHX5f4rKbGXvCrqEg55Ep9JEkS/u//grdqTpTc=";
   };
+
   patches = [ ./0001-gtirb_pprinter-include-map.patch ];
+
+  postPatch = ''
+    (
+    shopt -s globstar
+    substituteInPlace **/*.cpp **/*.hpp --replace-warn unordered_map map --replace-warn unordered_set set
+    )
+  '';
 
   buildInputs = [ cmake python3 gtirb boost abseil-cpp gtest ];
   nativeBuildInputs = [ capstone-grammatech ];
