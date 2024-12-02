@@ -51,8 +51,8 @@ jobs:
       with:
         name: pac-nix
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-        skipPush: "${{ github.ref != 'refs/heads/main' }}" }
-        useDaemon: "${{ github.ref == 'refs/heads/main' }}" }
+        skipPush: "${{ github.ref != 'refs/heads/main' }}"
+        useDaemon: "${{ github.ref == 'refs/heads/main' }}"
 
     - name: Apply staged patch commits
       if: ${{ inputs.patches-b64 }}
