@@ -241,6 +241,11 @@ stdenv.mkDerivation (self: {
         --replace-fail "'upx'" "'${upx}'"
     '';
 
+  # build first to make sure YARA_DIR has u+w permissions?
+  preBuild = ''
+    ninja yara
+  '';
+
   doInstallCheck = enableTests;
   installCheckPhase = ''
     ${python3.interpreter} "''${!outputBin}/bin/retdec-tests-runner.py"
