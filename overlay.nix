@@ -7,7 +7,7 @@ let
       update = prev.callPackage ./update.nix { };
 
       basil-tools-shell = prev.callPackage ./basil-shell.nix { };
-      basil-tools-docker = prev.dockerTools.streamNixShellImage {
+      basil-tools-docker = (prev.callPackage ./docker-tools.nix { }).streamNixShellImage {
         name = "basil-tools-docker";
         tag = "latest";
         drv = final.basil-tools-shell;

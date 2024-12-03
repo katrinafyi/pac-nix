@@ -3,13 +3,19 @@
 , clang-aarch64
 , asli
 , ddisasm
+, bap-aslp
+, coreutils
 , gtirb-pprinter
 , gtirb-semantics
+, pkgsCross
 }:
 let
   packages = [
-    gcc-aarch64
-    clang-aarch64
+    pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc
+
+    pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.gcc
+
+    bap-aslp
     asli
     ddisasm
     gtirb-pprinter
