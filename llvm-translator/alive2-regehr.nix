@@ -1,4 +1,6 @@
-{ alive2
+{ lib
+, alive2
+, stdenv
 , llvmPackages
 , fetchFromGitHub
 }:
@@ -15,5 +17,6 @@
   };
 
   patches = [ ];
-  CXXFLAGS = prev.CXXFLAGS or "" + " -Wno-error=maybe-uninitialized";
+  CXXFLAGS = (prev.CXXFLAGS or "")
+    + lib.optionalString (!stdenv.isDarwin) " -Wno-error=maybe-uninitialized";
 })

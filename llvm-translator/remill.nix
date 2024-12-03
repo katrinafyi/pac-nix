@@ -64,7 +64,7 @@ stdenv.mkDerivation (self:
   sleigh = sleigh' self;
 
   nativeBuildInputs = [ cmake ];
-  buildInputs = [ self.sleigh llvm xed glog gtest abseil-cpp glibc_multi ];
+  buildInputs = [ self.sleigh llvm glog gtest abseil-cpp xed glibc_multi ];
 
   outputs = [ "out" "dev" "lib" ];
 
@@ -139,5 +139,13 @@ stdenv.mkDerivation (self:
   ];
 
   hardeningDisable = [ "zerocallusedregs" ];
+
+  meta = with lib; {
+    description = "Library for lifting machine code to LLVM bitcode";
+    homepage = "https://github.com/lifting-bits/remill";
+    license = licenses.asl20;
+    maintainers = with maintainers; [ katrinafyi ];
+    broken = stdenv.isAarch64; # XXX: problems with xed (fixable) and libcxx (unsolved) 
+  };
 
 })

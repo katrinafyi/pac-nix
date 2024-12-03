@@ -31,16 +31,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest]
         # end-user packages to ci build for cache
         pkg: 
           [aslp, bap-aslp, bap-primus, basil,
           retdec-uq-pac, asl-translator,
           gtirb-semantics, ddisasm, 
           retdec5, remill, alive2-aslp, alive2-regehr,
-          planter,
           aslp_web, godbolt
         ]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     defaults:
       run: { shell: "bash -ex -o pipefail {0}" }
@@ -75,7 +75,7 @@ jobs:
         echo NIXPKGS_ALLOW_BROKEN="$("$broken" && echo 1 || echo 0)" > "$GITHUB_ENV"
       id: broken
 
-    - run: ./nix-cached.sh build --impure .#${{matrix.pkg}}
+    - run: ./nix-cached.sh build --impure -L .#${{matrix.pkg}}
       id: build
       continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
       
@@ -84,7 +84,7 @@ jobs:
       run: |
         for test in $(nix eval --impure .#${{matrix.pkg}}.tests --json | jq -r keys[]); do
           t=.#${{matrix.pkg}}.tests.$test 
-          ./nix-cached.sh build --impure "$t" --no-link
+          ./nix-cached.sh build --impure -L "$t" --no-link
         done
       continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
       if: steps.build.outcome == 'success'

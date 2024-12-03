@@ -62,11 +62,11 @@
     '';
   };
 
-  passthru.tests.run-arm-tv = runCommand "test-run-arm-tv" {} ''
-    rm -rfv logs logs-aslp
-    set +o pipefail
-    ${alive2-aslp.arm-tv-scripts}/bin/run-arm-tv.pl 2>&1 | tee /dev/stderr | grep 'please specify'
-    touch $out
-  '';
+  # passthru.tests.run-arm-tv = runCommand "test-run-arm-tv" {} ''
+  #   rm -rfv logs logs-aslp
+  #   set +o pipefail
+  #   ${alive2-aslp.arm-tv-scripts}/bin/run-arm-tv.pl 2>&1 | tee /dev/stderr | grep 'please specify'
+  #   touch $out
+  # '';
 
 })

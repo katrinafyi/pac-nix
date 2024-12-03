@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e176b6a7..1c03fe8f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -427,11 +427,8 @@ endif()
+ # ---------------------------------------------------------------------------
+ # protobuf
+ # ---------------------------------------------------------------------------
+-if(CL_API)
+-  find_package(Protobuf 3.7.0 REQUIRED)
+-else()
+-  find_package(Protobuf 3.0.0 REQUIRED)
+-endif()
++set(protobuf_MODULE_COMPATIBLE TRUE CACHE BOOL "")
++find_package(Protobuf REQUIRED CONFIG)
+ 
+ if(Protobuf_VERSION VERSION_LESS 3.2)
+   add_definitions(-DPROTOBUF_SET_BYTES_LIMIT)
+diff --git a/src/gtirb/proto/CMakeLists.txt b/src/gtirb/proto/CMakeLists.txt
+index 74cf20a9..d53a8bd0 100644
+--- a/src/gtirb/proto/CMakeLists.txt
++++ b/src/gtirb/proto/CMakeLists.txt
+@@ -45,7 +45,7 @@ endforeach(PROTO_H)
+ # Add proto library target
+ add_library(gtirb_proto STATIC ${PROTO_CPP_SOURCES} ${PROTO_COPIED_HEADERS})
+ 
+-target_link_libraries(gtirb_proto ${Boost_LIBRARIES} ${Protobuf_LIBRARIES})
++target_link_libraries(gtirb_proto ${Boost_LIBRARIES} protobuf::libprotobuf)
+ 
+ target_compile_definitions(gtirb_proto PRIVATE GTIRB_${PROJECT_NAME}_EXPORTS)
+ 

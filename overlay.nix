@@ -20,8 +20,28 @@ let
 
       # llvm-translator packages 
       overlay_ocamlPackages = ofinal: oprev: {
-        ocaml-llvm-14 = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix { libllvm = final.llvmPackages_14.libllvm; };
-        asl-translator = ofinal.callPackage ./llvm-translator/asl-translator.nix { llvm = ofinal.ocaml-llvm-14; };
+        # ctypes and ctypes-foreign v0.22.0 do not build on macOS
+        ctypes = oprev.ctypes.overrideAttrs (old: {
+          version = "0.23.0";
+          src = prev.fetchFromGitHub {
+            owner = "ocamllabs";
+            repo = "ocaml-ctypes";
+            rev = "0.23.0";
+            hash = "sha256-fZfTsOMppHiI7BVvgICVt/9ofGFAfYjXzHSDA7L4vZk=";
+          };
+        });
+        ctypes-foreign = oprev.ctypes-foreign.override (old: {
+          ctypes = ofinal.ctypes;
+        });
+
+        ocaml-llvm-14 = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix { 
+          libllvm = final.llvmPackages_14.libllvm; 
+          ctypes = ofinal.ctypes; 
+          ctypes-foreign = ofinal.ctypes-foreign ; 
+        };
+        asl-translator = ofinal.callPackage ./llvm-translator/asl-translator.nix { 
+          llvm = ofinal.ocaml-llvm-14; 
+        };
       };
       inherit (final.ocamlPackages_pac) asl-translator;
 

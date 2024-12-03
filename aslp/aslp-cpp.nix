@@ -1,9 +1,12 @@
 { stdenv
+, clang17Stdenv
 , cmake
 , asli
 }:
 
-stdenv.mkDerivation {
+let stdenv' = if stdenv.isDarwin then clang17Stdenv else stdenv;
+
+in stdenv'.mkDerivation {
   pname = "aslp-cpp";
   version = asli.version;
 

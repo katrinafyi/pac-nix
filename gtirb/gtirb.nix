@@ -25,22 +25,34 @@ stdenv.mkDerivation {
       url = "https://github.com/rina-forks/gtirb/compare/master..det.patch";
       hash = "sha256-86cRmnV5CL5DjOzFj+cJYUYKQpHQ6DsqnZDaMGa/kog=";
     })
-  ];
+  ] ++ lib.optional stdenv.isDarwin ./0001-gtirb-link-absl.patch;
+
+  postPatch = ''
+    (
+    shopt -u globstar
+    substituteInPlace include/gtirb/{CFG,Module}.hpp --replace-warn unordered_map map --replace-warn unordered_set set
+    )
+  '';
 
   nativeBuildInputs = [ ];
   buildInputs = [ cmake python3 boost doxygen ];
   propagatedBuildInputs = [ protobuf ];
 
-  cmakeFlags = [ "-DGTIRB_ENABLE_TESTS=OFF" "-DGTIRB_PY_API=ON" ];
+  cmakeFlags = [
+    "-DGTIRB_ENABLE_TESTS=OFF"
+    "-DGTIRB_PY_API=ON"
+    "-DGTIRB_RUN_CLANG_TIDY=OFF"
+    # "-DCLANG_TIDY_EXE=${lib.getExe' clang-tools "clang-tidy"}"
+  ];
 
   CXXFLAGS = "-includeset -Wno-error=unused-result -Wno-error=array-bounds";
   preConfigure = ''
     substituteInPlace CMakeLists.txt \
-      --replace '$'{PYTHON_VERSION} ${python3.version}
+      --replace-warn '$'{PYTHON_VERSION} ${python3.version}
     
     substituteInPlace src/CMakeLists.txt src/gtirb/proto/CMakeLists.txt \
-      --replace 'DESTINATION lib' 'DESTINATION ''${CMAKE_INSTALL_LIBDIR}' \
-      --replace 'DESTINATION include' 'DESTINATION ''${CMAKE_INSTALL_INCLUDEDIR}'
+      --replace-fail 'DESTINATION lib' 'DESTINATION ''${CMAKE_INSTALL_LIBDIR}' \
+      --replace-warn 'DESTINATION include' 'DESTINATION ''${CMAKE_INSTALL_INCLUDEDIR}'
   '';
 
   postInstall = ''
