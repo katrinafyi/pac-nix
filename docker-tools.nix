@@ -160,8 +160,8 @@ in
           #!${shell}
           unset shellHook
           source ${rcfile}
-          exec "$@"
           EOF
+          echo 'exec "$@"' >> ./usr/bin/_exec
           chmod +x ./usr/bin/_exec
         '';
 
