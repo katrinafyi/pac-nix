@@ -11,12 +11,12 @@
 
 stdenv.mkDerivation rec {
   pname = "bap-asli-plugin";
-  version = "0-unstable-2023-09-11";
+  version = "0-unstable-2024-12-04";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bap-asli-plugin";
-    rev = "cfe67145faaf43b29e9e12d533cce34b95c28ed1";
+    rev = "ad9c51b12f721317568f94181197d8ff4a01b1d3";
     sha256 = "sha256-CsdUjXHHVisfiTP2XGOHfm+Aa23KZep4IdgoYHQsnXg=";
   };
 
