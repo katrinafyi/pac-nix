@@ -4,7 +4,7 @@
 , asli
 , ddisasm
 , bap-aslp
-, coreutils
+, bap-asli-plugin
 , gtirb-pprinter
 , gtirb-semantics
 , pkgsCross
@@ -12,11 +12,16 @@
 let
   packages = [
     pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc
+    pkgsCross.aarch64-multiplatform.pkgsBuildHost.clang
 
     pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.gcc
+    pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.clang
+
+    asli
 
     bap-aslp
-    asli
+    bap-asli-plugin
+
     ddisasm
     gtirb-pprinter
     gtirb-semantics
