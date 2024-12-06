@@ -65,7 +65,7 @@ jobs:
         EOF
 
         mkdir prev-patches
-        tar xaf patches.tar.zst -C prev-patches
+        tar xvf patches.tar.zst -C prev-patches
 
         git config user.name 'github-actions[bot]'
         git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -127,7 +127,7 @@ jobs:
         EOF
 
         mkdir prev-patches
-        tar xaf patches.tar.zst -C prev-patches
+        tar xvf patches.tar.zst -C prev-patches
 
         git config user.name 'github-actions[bot]'
         git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
