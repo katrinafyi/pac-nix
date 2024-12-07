@@ -42,7 +42,7 @@ jobs:
         (printf 'b64=' && base64 -w0 patches.tar.zst && echo) >> "$GITHUB_OUTPUT"
         ls -lh *.tar*
 
-  build:
+  monthly-build:
     if: always()
     needs: [ flake-update ]
     uses: ./.github/workflows/main.yml
