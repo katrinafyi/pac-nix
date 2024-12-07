@@ -17,9 +17,6 @@ let
     compiler-explorer = (prev.callPackage ./compiler-explorer.nix { });
     godbolt = (prev.callPackage ./godbolt.nix { });
     basil-tool = prev.callPackage ./basil-tool.nix { };
-
-    jre = final.temurin-jre-bin-17;
-    jdk = final.temurin-bin-17;
   };
 in
 final: prev:

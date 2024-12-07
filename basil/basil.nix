@@ -2,8 +2,8 @@
 , fetchFromGitHub
 , mkSbtDerivation
 , makeBinaryWrapper
-, jdk
-, jre
+, sbt
+, jdk17
 , testers
 , basil
 , protobuf
@@ -14,12 +14,13 @@ let
     substituteInPlace build.sbt \
       --replace-fail 'PROTOC_PLACEHOLDER' '${lib.getExe protobuf}'
   '';
+  mkSbtDerivation' = mkSbtDerivation.withOverrides { sbt = sbt.override { jre = jdk17; }; };
 in
-mkSbtDerivation {
+mkSbtDerivation' {
   pname = "basil";
   version = "0.1.2-alpha-unstable-2024-11-13";
 
-  nativeBuildInputs = [ jdk makeBinaryWrapper ];
+  nativeBuildInputs = [ makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
@@ -42,7 +43,6 @@ mkSbtDerivation {
   buildPhase = ''
     runHook preBuild
 
-    javac -version
     sbt assembly
 
     runHook postBuild
@@ -66,7 +66,7 @@ mkSbtDerivation {
     cp -v "$JAR" $out/share/basil/$(basename $JAR)
 
     # make wrapper to run jar with appropriate arguments
-    makeWrapper "${lib.getExe jre}" $out/bin/basil \
+    makeWrapper "${lib.getExe jdk17}" $out/bin/basil \
       --add-flags -jar \
       --add-flags "$out/share/basil/$(basename $JAR)"
 
