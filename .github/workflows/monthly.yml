@@ -3,10 +3,19 @@ on:
   schedule:
   - cron: "53 15 18 * *"  # AEST 1:53 am on 18th day each month
   workflow_dispatch:
+    inputs:
+      push: { type: boolean, default: false, required: false }
+
+env:
+  COMMIT: ${{ github.sha }}
 
 jobs:
   flake-update:
     runs-on: ubuntu-latest
+
+    outputs:
+      patches: ${{ steps.data.outputs.b64 }}
+
     steps:
     - uses: actions/checkout@v4
     - uses: cachix/install-nix-action@v25
@@ -21,6 +30,23 @@ jobs:
         nix flake update --commit-lock-file
     - run: |
         nix run github:katrinafyi/nix-patcher -- --commit --update
+
     - run: |
-        nix build .#all -Lv
-    - run: git push
+        git format-patch $COMMIT -o new-patches
+
+    - name: Encode patches
+      id: data
+      run: |
+        touch patches.tar.zst
+        [[ -d new-patches ]] && (cd new-patches && tar caf ../patches.tar.zst .)
+        (printf 'b64=' && base64 -w0 patches.tar.zst && echo) >> "$GITHUB_OUTPUT"
+        ls -lh *.tar*
+
+  monthly-build:
+    if: always()
+    needs: [ flake-update ]
+    uses: ./.github/workflows/main.yml
+    with:
+      patches-b64: ${{ needs.flake-update.outputs.patches }}
+      push: ${{ inputs.push || github.event_name == 'schedule' }}
+    secrets: inherit
