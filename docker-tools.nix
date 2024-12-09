@@ -156,12 +156,19 @@ in
           mkdir -p .${sandboxBuildDir}
           chown -R ${toString uid}:${toString gid} .${sandboxBuildDir}
 
-          cat <<EOF > ./usr/bin/_exec
+          mkdir -p ./tmp
+          chmod a+rwx ./tmp
+
+          cat <<'EOF' > ./usr/bin/_exec
           #!${shell}
-          unset shellHook
+          if [[ "$shell" != 1 ]]; then
+            oldShellHook="$shellHook"
+            unset shellHook
+            export noDumpEnvVars=1
+          fi
           source ${rcfile}
+          exec "$@"
           EOF
-          echo 'exec "$@"' >> ./usr/bin/_exec
           chmod +x ./usr/bin/_exec
         '';
 
