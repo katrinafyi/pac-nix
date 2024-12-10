@@ -18,7 +18,7 @@ jobs:
         pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
               asl-translator, alive2-aslp, alive2-regehr, aslp_web, compiler-explorer]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v4
@@ -54,7 +54,7 @@ jobs:
 
   collate:
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [ update ]
     outputs:
       patches: ${{ steps.data.outputs.b64 }}
