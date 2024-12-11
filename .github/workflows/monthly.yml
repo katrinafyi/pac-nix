@@ -11,7 +11,7 @@ env:
 
 jobs:
   flake-update:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     outputs:
       patches: ${{ steps.data.outputs.b64 }}
