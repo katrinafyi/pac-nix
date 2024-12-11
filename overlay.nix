@@ -8,8 +8,7 @@ let
 
       basil-tools-shell = prev.callPackage ./basil-shell.nix { };
       basil-tools-docker = (prev.callPackage ./docker-tools.nix { }).streamNixShellImage {
-        name = "basil-tools-docker";
-        tag = "latest";
+        name = "ghcr.io/uq-pac/basil-tools-docker";
         drv = final.basil-tools-shell;
       };
 
