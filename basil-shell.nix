@@ -40,4 +40,6 @@ in mkShell {
   meta = {
     description = "shell containing tools used in the BASIL pipeline"; 
   };
+
+  hardeningDisable = [ "all" ];
 }
