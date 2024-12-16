@@ -71,6 +71,12 @@ buildDunePackage {
       command = "aslp --version";
       version = "ASL";
     };
+
+    tests.aslp-server = testers.testVersion {
+      package = asli;
+      command = "command -v aslp-server";
+      version = "aslp-server";
+    };
   };
 
   meta = {
