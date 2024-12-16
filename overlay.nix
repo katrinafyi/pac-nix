@@ -54,12 +54,12 @@ let
         llvmPackages = final.llvmPackages_git.override (p: {
           gitRelease =
             prev.lib.throwIfNot
-            (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2024-10-30")
+            (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2024-11-15")
             "llvmPackages_git seems to have updated, is this override no longer needed?"
             {
-              rev = "62ff85f0799560b42754ef77b5f64ca2c7feeff7";
-              rev-version = "20.0.0-unstable-2024-10-30";
-              sha256 = "sha256-vE1N81PtykTIwVF26pE6ewbi18RI+KEAvDg+ZEI8tfo=";
+              rev = "35710ab392b50c815765f03c12409147502dfb86";
+              rev-version = "20.0.0-unstable-2024-11-15";
+              sha256 = "sha256-n3YpwHT/ptCKgrDLqsZJb60/MZhUJk+g889APhAz9a8=";
             };
         });
       };
