@@ -40,7 +40,7 @@ buildStdenv.mkDerivation {
   buildInputs = [ z3 zlib ncurses llvmPackages.libllvm ];
 
   cmakeFlags = [ "-DBUILD_TV=1" "-DGIT_EXECUTABLE=${git-am-shim}" ];
-  CXXFLAGS = "-Wno-error=cpp";
+  CXXFLAGS = "-Wno-error=cpp -Wno-error=deprecated";
 
   postPatch = ''
     substituteInPlace scripts/alivecc.in \
