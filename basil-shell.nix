@@ -3,14 +3,25 @@
 , clang-aarch64
 , asli
 , ddisasm
+, bap-aslp
+, bap-asli-plugin
 , gtirb-pprinter
 , gtirb-semantics
+, pkgsCross
 }:
 let
   packages = [
-    gcc-aarch64
-    clang-aarch64
+    pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc
+    pkgsCross.aarch64-multiplatform.pkgsBuildHost.clang
+
+    pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.gcc
+    pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.clang
+
     asli
+
+    bap-aslp
+    bap-asli-plugin
+
     ddisasm
     gtirb-pprinter
     gtirb-semantics
@@ -29,4 +40,6 @@ in mkShell {
   meta = {
     description = "shell containing tools used in the BASIL pipeline"; 
   };
+
+  hardeningDisable = [ "all" ];
 }
