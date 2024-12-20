@@ -25,6 +25,8 @@
     hash = "sha256-fvcvC/SJOtLq0tR0h/GT983ScHZnXbjui9PwutJtnsA=";
   };
 
+  CXXFLAGS = (prev.CXXFLAGS or "") + " -Wno-error=deprecated-declarations";
+
   cmakeFlags = prev.cmakeFlags
     ++ [ (lib.cmakeFeature "ANTLR4_JAR_LOCATION" "${antlr.jarLocation}") ];
 
