@@ -14,13 +14,19 @@
 , python3Packages
 , python-gtirb
 , gtirb-semantics
+, ppx_jane
+, lwt
+, lru_cache
+, mtime
 }:
 
 let
   wrapper = writeShellApplication {
-    name = "gtirb-semantics-wrapper";
+    name = "basil-svcomp";
     text = ''
-      echo 'gtirb-semantics-nix is no longer needed, please use gtirb-semantics instead.' >&2
+
+      tar -ztvf ${out}/svcomp20.tar.gz | grep '.gts$' | sed 's/  / /' | cut -d' ' -f 6 | sed 's/\.gts//'
+
       exit 1
     '';
   };
@@ -37,11 +43,11 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
-    rev = "3044b50fadf54d441e80d68d8fb1f15b28906fb3";
-    sha256 = "sha256-zCP9oQ1T9SUiHLoDDPyyzjGGVTOGpJMoosOunc5EK+g=";
+    rev = "caching";
+    hash = "sha256-c4WZn8+X6/AkMBQ2v9eRfmVwoc1PDVfuobw2BJ8cqPQ=";
   };
 
-  buildInputs = [ python' asli ocaml-hexstring ocaml-protoc-plugin yojson ];
+  buildInputs = [ python' asli ocaml-hexstring ocaml-protoc-plugin yojson  ppx_jane lwt lru_cache mtime ];
   nativeBuildInputs = [ protobuf ocaml-protoc-plugin ];
   propagatedBuildInputs = [ base64 ];
 

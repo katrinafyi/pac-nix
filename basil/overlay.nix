@@ -17,6 +17,8 @@ let
     compiler-explorer = (prev.callPackage ./compiler-explorer.nix { });
     godbolt = (prev.callPackage ./godbolt.nix { });
     basil-tool = prev.callPackage ./basil-tool.nix { };
+
+    svcomp = prev.callPackage ./svcomp/svcomp-lifted.nix { };
   };
 in
 final: prev:

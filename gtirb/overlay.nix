@@ -20,6 +20,7 @@ final: prev:
       python3Packages = final.python311Packages;
       ocaml-protoc-plugin = ofinal.ocaml-protoc-plugin-6-1-0;
     };
+    gtirb-semantics-cs = ofinal.callPackage ./gtirb-semantics-cs.nix {};
 
     omd-2-0-0 = oprev.omd.overrideAttrs (p: {
       version = "2.0.0.alpha4";

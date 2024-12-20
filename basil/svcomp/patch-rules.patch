@@ -1,0 +1,45 @@
+diff --git a/c/Makefile.rules b/c/Makefile.rules
+index 1a870a6ba3..703bd71ba5 100644
+--- a/c/Makefile.rules
++++ b/c/Makefile.rules
+@@ -132,9 +132,11 @@ else
+ endif
+ 
+ CC.Flags += -std=$(CC.Standard) \
+-            -m$(CC.Arch) \
+-            $(CC.Warnings)
++  $(CC.Warnings)
+ 
++# ifeq ($(CC.Arch),32) 
++# 	CC.Flags += -mabi=ilp32
++# endif
+ 
+ # Handle emission of LLVM Bitcode rather than native code
+ ifneq ($(EMIT_LLVM),0)
+diff --git a/c/busybox-1.22.0/test-1.c b/c/busybox-1.22.0/test-1.c
+index feae015142..aed2eda04f 100644
+--- a/c/busybox-1.22.0/test-1.c
++++ b/c/busybox-1.22.0/test-1.c
+@@ -35,9 +35,6 @@
+ struct operator_t;
+ 
+ // file coreutils/test.c line 377
+-struct test_statics;
+-
+-struct test_statics *const test_ptr_to_statics;
+ 
+ #ifndef NULL
+ #define NULL ((void*)0)
+diff --git a/c/busybox-1.22.0/test-1.i b/c/busybox-1.22.0/test-1.i
+index 27f6527d7e..cce92ddf8c 100644
+--- a/c/busybox-1.22.0/test-1.i
++++ b/c/busybox-1.22.0/test-1.i
+@@ -2448,8 +2448,6 @@ extern int getutline_r (const struct utmp *__line,
+    struct utmp *__buffer, struct utmp **__result) __attribute__ ((__nothrow__ , __leaf__));
+ 
+ struct operator_t;
+-struct test_statics;
+-struct test_statics *const test_ptr_to_statics;
+ static signed long int aexpr(signed int n);
+ static const char * bb_basename(const char *name);
+ static void bb_error_msg(const char *s, ...);
