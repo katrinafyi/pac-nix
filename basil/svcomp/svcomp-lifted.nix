@@ -58,5 +58,10 @@ pkgsCross.aarch64-multiplatform.pkgsBuildHost.stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out/bin
     cd ./c/bin/ && tar -czf $out/svcomp20.tar.gz *
+    tar -ztvf $out/svcomp20.tar.gz | grep '.gts$' | sed 's/  / /' | cut -d' ' -f 6 | sed 's/\.gts//' > examples.txt
+
+    echo "#!/bin/bash\ntar -zxvf $out/svcomp20.tar.gz $1.gts $1.relf" >> $out/bin/svcomp-extract-example.sh
+    echo "#!/bin/bash\ncat $out/examples.txt" >> $out/bin/svcomp-list.sh
+
   '';
 }
