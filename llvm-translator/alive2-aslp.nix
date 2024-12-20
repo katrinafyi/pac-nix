@@ -13,7 +13,7 @@
 
 (alive2-regehr.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
-  version = "0-unstable-2024-12-16";
+  version = "0-unstable-2024-12-17";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
   nativeBuildInputs = prev.nativeBuildInputs ++ [ jre makeWrapper ];
@@ -21,9 +21,11 @@
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "a41421eecbfb786925c936c1b4131f33937b615c";
-    hash = "sha256-+8Q1m4QX0/jA6AJ5gWaCytzCB6UOMAHE0SZo/wnmogg=";
+    rev = "e51f11b74c77682700bdd8e886c56a562a338b69";
+    hash = "sha256-fvcvC/SJOtLq0tR0h/GT983ScHZnXbjui9PwutJtnsA=";
   };
+
+  CXXFLAGS = (prev.CXXFLAGS or "") + " -Wno-error=deprecated-declarations";
 
   cmakeFlags = prev.cmakeFlags
     ++ [ (lib.cmakeFeature "ANTLR4_JAR_LOCATION" "${antlr.jarLocation}") ];
