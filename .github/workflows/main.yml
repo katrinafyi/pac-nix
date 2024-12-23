@@ -141,8 +141,8 @@ jobs:
         git log
         gh pr close "$branch" || echo "no previous pr"
         git push -u origin HEAD --force
-        gh pr create --fill-verbose --base "$base"
-        gh pr merge --auto --delete-branch --merge
+        gh pr create --fill-verbose --base "$base" --name "bot: update packages in $base"
+        gh pr merge --delete-branch --merge || gh pr merge --auto --delete-branch --merge
       env:
         base: ${{ github.head_ref || github.ref_name }}
         branch: zz-bot-pr-into-${{ github.head_ref || github.ref_name }}
