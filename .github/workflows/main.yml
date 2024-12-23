@@ -136,6 +136,6 @@ jobs:
 
     - run: |
         git checkout -b bot-${{ github.run_number }}
-        git push --set-upstream origin bot-380
-        gh pr create --fill-verbose --base ${{ github.head_ref || github.ref_name }}
+        git push
+        gh pr create --fill-verbose
         gh pr merge --auto --delete-branch
