@@ -135,7 +135,8 @@ jobs:
         for f in prev-patches/*; do git am "$f"; done
 
     - run: |
+        git log
         git checkout -b bot-${{ github.run_number }}
-        git push --set-upstream origin bot-380
+        git push origin bot-380
         gh pr create --fill-verbose --base ${{ github.head_ref || github.ref_name }}
         gh pr merge --auto --delete-branch
