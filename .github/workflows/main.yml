@@ -134,10 +134,11 @@ jobs:
 
         for f in prev-patches/*; do git am "$f"; done
 
-    - run: |
+    - name: gh pr create --fill-verbose --base ${{ github.head_ref || github.ref_name }}
+      run: |
         git log
         git checkout -b bot-${{ github.run_number }}
-        git push -u origin HEAD
+        git push -u origin HEAD --force
         gh pr create --fill-verbose --base ${{ github.head_ref || github.ref_name }}
         gh pr merge --auto --delete-branch
       env:
