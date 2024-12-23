@@ -134,8 +134,17 @@ jobs:
 
         for f in prev-patches/*; do git am "$f"; done
 
-    - run: |
-        git checkout -b bot-${{ github.run_number }}
-        git push --set-upstream origin bot-380
-        gh pr create --fill-verbose --base ${{ github.head_ref || github.ref_name }}
-        gh pr merge --auto --delete-branch
+    - name: gh pr create --fill-verbose --base ${{ github.head_ref || github.ref_name }}
+      run: |
+        git branch -f "$branch"
+        git switch "$branch"
+        git log
+        gh pr close "$branch" || echo "no previous pr"
+        git push -u origin HEAD --force
+        gh pr create --fill-verbose --base "$base" --title "bot: update packages in $base"
+        gh pr merge --delete-branch --merge || gh pr merge --auto --delete-branch --merge
+      env:
+        base: ${{ github.head_ref || github.ref_name }}
+        branch: zz-bot-pr-into-${{ github.head_ref || github.ref_name }}
+        GH_TOKEN: ${{ github.token }}
+
