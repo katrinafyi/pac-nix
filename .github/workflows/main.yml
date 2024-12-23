@@ -140,3 +140,6 @@ jobs:
         git push -u origin HEAD
         gh pr create --fill-verbose --base ${{ github.head_ref || github.ref_name }}
         gh pr merge --auto --delete-branch
+      env:
+        GH_TOKEN: ${{ github.token }}
+
