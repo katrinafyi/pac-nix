@@ -13,7 +13,7 @@
 
 (alive2-regehr.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
-  version = "0-unstable-2024-12-17";
+  version = "0-unstable-2024-12-21";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
   nativeBuildInputs = prev.nativeBuildInputs ++ [ jre makeWrapper ];
@@ -21,8 +21,8 @@
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "e51f11b74c77682700bdd8e886c56a562a338b69";
-    hash = "sha256-fvcvC/SJOtLq0tR0h/GT983ScHZnXbjui9PwutJtnsA=";
+    rev = "4cc28ada8b776d1e48416ed05efd7bbb30bcfd3c";
+    hash = "sha256-DD3PyBLDQqLjjVieTuv/h6aA334J9H6+qtGWuyNyfFY=";
   };
 
   CXXFLAGS = (prev.CXXFLAGS or "") + " -Wno-error=deprecated-declarations";
