@@ -134,8 +134,4 @@ jobs:
 
         for f in prev-patches/*; do git am "$f"; done
 
-    - run: |
-        git checkout -b bot-${{ github.run_number }}
-        git push
-        gh pr create --fill-verbose
-        gh pr merge --auto --delete-branch
+    - run: git push
