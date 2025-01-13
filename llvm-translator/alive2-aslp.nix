@@ -1,5 +1,5 @@
 { lib
-, alive2-regehr
+, alive2-aslp
 , llvmPackages
 , fetchFromGitHub
 , aslp-cpp
@@ -8,10 +8,10 @@
 , perlPackages
 , makeWrapper
 , runCommand
-, alive2-aslp
+, alive2
 }:
 
-(alive2-regehr.override { inherit llvmPackages; }).overrideAttrs (prev: {
+(alive2.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
   version = "0-unstable-2024-12-26";
 
@@ -24,6 +24,8 @@
     rev = "6fcd5a09eeb5aceab368910c3c8fd68339d14a11";
     hash = "sha256-p17JsM6IJeaX35QLo8tXKmAVqtaWblxiMmS2ZM14Tqo=";
   };
+
+  patches = [ ];  # undoing patch needed for upstream alive2
 
   CXXFLAGS = (prev.CXXFLAGS or "") + " -Wno-error=deprecated-declarations";
 
