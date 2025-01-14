@@ -13,7 +13,7 @@
 
 (alive2.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-aslp";
-  version = "0-unstable-2024-12-26";
+  version = "0-unstable-2025-01-14";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
   nativeBuildInputs = prev.nativeBuildInputs ++ [ jre makeWrapper ];
@@ -21,8 +21,8 @@
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "alive2";
-    rev = "6fcd5a09eeb5aceab368910c3c8fd68339d14a11";
-    hash = "sha256-p17JsM6IJeaX35QLo8tXKmAVqtaWblxiMmS2ZM14Tqo=";
+    rev = "78657f9693767952ffad6a9901421dd820386b41";
+    hash = "sha256-Sp6+H5SP6gTEY5z0D+nykW4hvMUBGc+RdD5kDTv3tSM=";
   };
 
   patches = [ ];  # undoing patch needed for upstream alive2
