@@ -77,16 +77,15 @@ let
       llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
       llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
       llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix {
-        llvmPackages = final.llvmPackages_git;
-        # .override (p: {
+        # llvmPackages = final.llvmPackages_git.override (p: {
         #   gitRelease =
         #     prev.lib.throwIfNot
-        #     (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2024-11-15")
+        #     (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2025-01-13")
         #     "llvmPackages_git seems to have updated, is this override no longer needed?"
         #     {
-        #       rev = "35710ab392b50c815765f03c12409147502dfb86";
-        #       rev-version = "20.0.0-unstable-2024-11-15";
-        #       sha256 = "sha256-n3YpwHT/ptCKgrDLqsZJb60/MZhUJk+g889APhAz9a8=";
+        #       rev = "d90a42751f9bfa73ed3555c702e70cf34d97bb39";
+        #       rev-version = "20.0.0-unstable-2025-01-13";
+        #       sha256 = "sha256-MoBKeZUUGVfpmIS3HXcOd8n28Ek/mkwhOjrwv0eDixs=";
         #     };
         # });
       };
