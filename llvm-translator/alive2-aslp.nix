@@ -11,7 +11,7 @@
 , alive2
 }:
 
-(alive2.override { inherit llvmPackages; }).overrideAttrs (prev: {
+(alive2.override { inherit llvmPackages; }).overrideAttrs (final: prev: {
   pname = "alive2-aslp";
   version = "tag-aslp-before-upstream-squash-unstable-2025-02-05";
 
@@ -73,4 +73,7 @@
   #   touch $out
   # '';
 
+  passthru.tests.backend-tv-basic = runCommand "test-backend-tv-basic" {} ''
+    ${lib.getExe' final.finalPackage "backend-tv"} ${final.src}/tests/arm-tv/smoketest/x.aarch64.ll
+  '';
 })
