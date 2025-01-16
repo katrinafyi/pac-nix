@@ -7,13 +7,13 @@
 
 (alive2-aslp.override { inherit llvmPackages; }).overrideAttrs (prev: {
   pname = "alive2-regehr";
-  version = "0-unstable-2025-01-14";
+  version = "0-unstable-2025-01-16";
 
   src = fetchFromGitHub {
     owner = "regehr";
     repo = "alive2";
-    rev = "78657f9693767952ffad6a9901421dd820386b41";
-    hash = "sha256-Sp6+H5SP6gTEY5z0D+nykW4hvMUBGc+RdD5kDTv3tSM=";
+    rev = "c6e1e1a78fa5fabd54562a80fb534d525d0b7eaf";
+    hash = "sha256-1bMkUO6YFoFGi/16vUKMSVV0zbO421BnlDQ+2178Fj4=";
   };
 
 })
