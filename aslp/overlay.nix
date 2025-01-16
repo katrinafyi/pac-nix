@@ -5,16 +5,29 @@ final: prev:
 
   inherit (final.ocamlPackages_pac) aslp asli;
   inherit (final.ocamlPackages_pac_5) aslp_web;
+  inherit (final.ocamlPackages_pac_5) aslp-server;
 
   overlay_ocamlPackages = ofinal: oprev: {
     asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.z3; };
     aslp = ofinal.asli;
     # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
+    aslp-server = ofinal.callPackage ./aslp-server.nix {};
 
     zarith_stubs_js_0_17 = ofinal.callPackage ./zarith_stubs_js.nix { };
     aslp_web = ofinal.callPackage ./aslp_web.nix { zarith_stubs_js = ofinal.zarith_stubs_js_0_17; };
 
     mlbdd = ofinal.callPackage ./mlbdd.nix { };
+    cohttp = oprev.cohttp.overrideAttrs (p: rec {
+      version = "6.0.0";
+      src = final.fetchurl {
+        url = "https://github.com/mirage/ocaml-cohttp/releases/download/v${version}/cohttp-${version}.tbz";
+        hash = "sha256-VMw0rxKLNC9K5gimaWUNZmYf/dUDJQ5N6ToaXvHvIqk=";
+      };
+      propagatedBuildInputs = p.propagatedBuildInputs ++ [ ofinal.cohttp-http ofinal.logs ];
+      doCheck = false;
+    });
+    cohttp-eio = ofinal.callPackage ./cohttp-eio.nix {};
+    cohttp-http = ofinal.callPackage ./cohttp-http.nix {};
 
     buildDunePackage = final.makeOverridable ({ pname, version, ... }@args:
       let
