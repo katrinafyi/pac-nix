@@ -38,7 +38,7 @@ mkSbtDerivation' {
   };
   postPatch = replaceProtocPlaceholder;
 
-  depsSha256 = "sha256-tDJuleKVLMPCZNJGNxokuScDOU4siLQEmM1FZff+5oM=";
+  depsSha256 = "sha256-KBhHr11b9/Ku2zhuw8wcNefG41IZSSmgC+AeRyvuZ0M=";
 
   buildPhase = ''
     runHook preBuild
