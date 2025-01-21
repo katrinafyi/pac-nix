@@ -16,15 +16,15 @@
 
 buildDunePackage {
   pname = "aslp_server_http";
-  version = "0.0";
+  version = "unstable-2025-01-21";
 
   minimalOCamlVersion = "5.0";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp-rpc";
-    rev = "1a31d940e47246e24fb45cbc5614f24e425566ca";
-    hash = "sha256-o5+vNRIM0NslWc2NpgPuzdkVFlWmb6lMUGgNQvuNC60=";
+    rev = "4670a3c94b6dcaf2b0403b655e3f640b355ef578";
+    hash = "sha256-hIELzXYr6uMWijeBZ6Rhip9JCronn2JLiJJsijzRjco=";
   };
 
   checkInputs = [ ];
