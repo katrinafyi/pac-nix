@@ -5,6 +5,7 @@ final: prev:
 
   inherit (final.ocamlPackages_pac) aslp asli;
   inherit (final.ocamlPackages_pac_5) aslp_web;
+  inherit (final.ocamlPackages_pac) aslp_offline;
 
   overlay_ocamlPackages = ofinal: oprev: {
     asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.z3; };
@@ -13,6 +14,8 @@ final: prev:
 
     zarith_stubs_js_0_17 = ofinal.callPackage ./zarith_stubs_js.nix { };
     aslp_web = ofinal.callPackage ./aslp_web.nix { zarith_stubs_js = ofinal.zarith_stubs_js_0_17; };
+
+    aslp_offline = ofinal.callPackage ./aslp_offline.nix { };
 
     mlbdd = ofinal.callPackage ./mlbdd.nix { };
 

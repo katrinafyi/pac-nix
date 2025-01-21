@@ -33,15 +33,15 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "e61acb030d779d8c759c4d42c20be7dbf793d000";
-    hash = "sha256-6cNutu3gnwaP2GO79Ms6+vmjg1LxkbA3lgNJLWY0Rnk=";
+    rev = "export-offline-lifter";
+    hash = "sha256-lnIkX4V/lvrYyzWhwjEuprDAepb44k7lOZ8jg6WcCZY=";
   };
 
   checkInputs = [ alcotest ];
   nativeCheckInputs = [ jdk ];
   buildInputs = [ linenoise ppx_blob ];
   nativeBuildInputs = [ ott menhir ];
-  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix mlbdd ];
+  propagatedBuildInputs = [ z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix mlbdd ];
 
   preConfigure = ''
     mkdir -p $out/share/asli
@@ -49,7 +49,7 @@ buildDunePackage {
   '';
 
   postInstall = ''
-    mv -v $out/bin/asli $out/bin/aslp
+    cp -v $out/bin/asli $out/bin/aslp
   '';
 
   env = {
@@ -70,12 +70,6 @@ buildDunePackage {
       package = asli;
       command = "aslp --version";
       version = "ASL";
-    };
-
-    tests.aslp-server = testers.testVersion {
-      package = asli;
-      command = "command -v aslp-server";
-      version = "aslp-server";
     };
   };
 
