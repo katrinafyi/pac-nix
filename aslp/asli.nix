@@ -26,22 +26,22 @@
 
 buildDunePackage {
   pname = "asli";
-  version = "cpp-backend-test-unstable-2024-12-27";
+  version = "offline-package-2025-01-21";
 
   minimalOCamlVersion = "4.09";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "dde3c1de0044e812c2badfa53f18b5da929546f4";
-    hash = "sha256-85y72OMSO6Bw0LcPSryRYnLUYKbNwq3DyQiMX6D3oGs=";
+    rev = "export-offline-lifter";
+    hash = "sha256-HmdHfbfrqLRmvS8EjSqgiu/vWF8BEm7E6DS7MecX6Qw=";
   };
 
   checkInputs = [ alcotest ];
   nativeCheckInputs = [ jdk ];
   buildInputs = [ linenoise ppx_blob ];
   nativeBuildInputs = [ ott menhir ];
-  propagatedBuildInputs = [ dune-site z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix mlbdd ];
+  propagatedBuildInputs = [ z3 pcre pprint zarith ocaml_z3 ocaml_pcre yojson cohttp-lwt-unix mlbdd ];
 
   preConfigure = ''
     mkdir -p $out/share/asli
@@ -49,7 +49,7 @@ buildDunePackage {
   '';
 
   postInstall = ''
-    mv -v $out/bin/asli $out/bin/aslp
+    cp -v $out/bin/asli $out/bin/aslp
   '';
 
   env = {
@@ -70,12 +70,6 @@ buildDunePackage {
       package = asli;
       command = "aslp --version";
       version = "ASL";
-    };
-
-    tests.aslp-server = testers.testVersion {
-      package = asli;
-      command = "command -v aslp-server";
-      version = "aslp-server";
     };
   };
 
