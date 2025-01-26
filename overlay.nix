@@ -17,7 +17,7 @@ let
       ocamlPackages_pac_5 = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
 
-      # llvm-translator packages 
+      # llvm-translator packages
       overlay_ocamlPackages = ofinal: oprev: {
         # ctypes and ctypes-foreign v0.22.0 do not build on macOS
         ctypes = oprev.ctypes.overrideAttrs (old: {
@@ -33,13 +33,13 @@ let
           ctypes = ofinal.ctypes;
         });
 
-        ocaml-llvm-14 = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix { 
-          libllvm = final.llvmPackages_14.libllvm; 
-          ctypes = ofinal.ctypes; 
-          ctypes-foreign = ofinal.ctypes-foreign ; 
+        ocaml-llvm-14 = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix {
+          libllvm = final.llvmPackages_14.libllvm;
+          ctypes = ofinal.ctypes;
+          ctypes-foreign = ofinal.ctypes-foreign ;
         };
-        asl-translator = ofinal.callPackage ./llvm-translator/asl-translator.nix { 
-          llvm = ofinal.ocaml-llvm-14; 
+        asl-translator = ofinal.callPackage ./llvm-translator/asl-translator.nix {
+          llvm = ofinal.ocaml-llvm-14;
         };
       };
       inherit (final.ocamlPackages_pac) asl-translator;
@@ -53,12 +53,12 @@ let
         llvmPackages = final.llvmPackages_git.override (p: {
           gitRelease =
             prev.lib.throwIfNot
-            (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2024-11-15")
+            (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2025-01-13")
             "llvmPackages_git seems to have updated, is this override no longer needed?"
             {
-              rev = "35710ab392b50c815765f03c12409147502dfb86";
-              rev-version = "20.0.0-unstable-2024-11-15";
-              sha256 = "sha256-n3YpwHT/ptCKgrDLqsZJb60/MZhUJk+g889APhAz9a8=";
+              rev = "d90a42751f9bfa73ed3555c702e70cf34d97bb39";
+              rev-version = "20.0.0-unstable-2025-01-13";
+              sha256 = "sha256-MoBKeZUUGVfpmIS3HXcOd8n28Ek/mkwhOjrwv0eDixs=";
             };
         });
       };
