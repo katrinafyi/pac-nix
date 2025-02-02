@@ -46,7 +46,7 @@ pkgsCross.aarch64-multiplatform.pkgsBuildHost.stdenv.mkDerivation rec {
     export GTIRB_SEM_SOCKET=$(pwd .)/gtirb-sem-socket
     export CC=aarch64-unknown-linux-gnu-gcc
     gtirb-semantics --serve & sleep 3
-    for ex in "uthash-2.0.2" "busybox-1.22.0" "aws-c-common"; do
+    for ex in "uthash-2.0.2" ; do
       cp ${./stubs.c} ./c/$ex/stubs.c
       sed -i 's/__float128/_Float128/g' ./c/$ex/*.i
       make -C ./c/$ex SYNTAX_ONLY=0 SUPPRESS_WARNINGS=1 -j8
@@ -57,10 +57,9 @@ pkgsCross.aarch64-multiplatform.pkgsBuildHost.stdenv.mkDerivation rec {
   '';
   installPhase = ''
     mkdir -p $out/bin
-    cd ./c/bin/ && tar -czf $out/svcomp20.tar.gz *
-    tar -ztvf $out/svcomp20.tar.gz | grep '.gts$' | sed 's/  / /' | cut -d' ' -f 6 | sed 's/\.gts//' > examples.txt
+    mkdir -p $out/examples
+    cp -r ./c/bin/* $out/examples
 
-    echo "#!/bin/bash\ntar -zxvf $out/svcomp20.tar.gz $1.gts $1.relf" >> $out/bin/svcomp-extract-example.sh
     echo "#!/bin/bash\ncat $out/examples.txt" >> $out/bin/svcomp-list.sh
 
   '';

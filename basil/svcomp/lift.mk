@@ -17,7 +17,7 @@ GTIRB_SEMANTICS ?= gtirb-semantics
 all: $(RELFS) $(GTS) $(BINS)
 
 %.out : %.oi
-	$(CC)  $< stubs.oc -o $@
+	$(CC) -O1 $< stubs.oc -o $@
 
 %.adt : %.out
 	$(BAP) $< -d adt:$@

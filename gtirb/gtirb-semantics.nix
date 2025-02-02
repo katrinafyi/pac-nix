@@ -22,11 +22,9 @@
 
 let
   wrapper = writeShellApplication {
-    name = "basil-svcomp";
+    name = "gtirb-semantics-wrapper";
     text = ''
-
-      tar -ztvf ${out}/svcomp20.tar.gz | grep '.gts$' | sed 's/  / /' | cut -d' ' -f 6 | sed 's/\.gts//'
-
+      echo 'gtirb-semantics-nix is no longer needed, please use gtirb-semantics instead.' >&2
       exit 1
     '';
   };
@@ -43,8 +41,8 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
-    rev = "caching";
-    hash = "sha256-c4WZn8+X6/AkMBQ2v9eRfmVwoc1PDVfuobw2BJ8cqPQ=";
+    rev = "27bad449f02cfbedb5c1c4e03dd442f2836c9361";
+    hash = "sha256-zTKlZ18K2zFVrMq2nRFPJoE3izGsGa+6jLCmQr6rI6Y=";
   };
 
   buildInputs = [ python' asli ocaml-hexstring ocaml-protoc-plugin yojson  ppx_jane lwt lru_cache mtime ];
