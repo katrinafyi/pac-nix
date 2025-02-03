@@ -17,7 +17,7 @@ jobs:
       matrix:
         pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
               asl-translator, alive2-aslp, alive2-regehr, aslp_web, compiler-explorer,
-              aslp-cpp
+              aslp-cpp, aslp_client_server_ocaml
         ]
 
     runs-on: ubuntu-24.04
