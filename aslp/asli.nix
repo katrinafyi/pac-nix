@@ -30,12 +30,15 @@ buildDunePackage {
 
   minimalOCamlVersion = "4.09";
 
-  src = fetchFromGitHub {
-    owner = "UQ-PAC";
-    repo = "aslp";
-    rev = "9b487c687d2acd8ad4c9256d79ccd43aa990f612";
-    hash = "sha256-eUBWZkA/xoACBuNKfb10BBT74FY2uniyte/zjuRYUdU=";
-  };
+  src =
+
+fetchFromGitHub {
+  owner = "UQ-PAC";
+  repo = "aslp";
+  rev = "export-offline-lifter";
+  hash = "sha256-dR2kVHpr1PeWZ+72rf9wUiD8aginBleIRi8cercXClQ=";
+}
+    ;
 
   checkInputs = [ alcotest ];
   nativeCheckInputs = [ jdk ];
@@ -49,7 +52,7 @@ buildDunePackage {
   '';
 
   postInstall = ''
-    mv -v $out/bin/asli $out/bin/aslp
+    ln -v $out/bin/asli $out/bin/aslp
   '';
 
   env = {
