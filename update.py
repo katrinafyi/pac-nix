@@ -95,6 +95,7 @@ PACKAGES: list[Package] = [
   Package('aslp_web', 'katrinafyi/aslp-web', 'main'),
   Package('compiler-explorer', 'ailrst/compiler-explorer', 'main'),
   Package('aslp-server', 'UQ-PAC/aslp-rpc'),
+  Package('aslp-cpp', 'UQ-PAC/aslp-rpc'),
 ]
 # NOTE: also change files in ./.github/workflows/*.yml
 
