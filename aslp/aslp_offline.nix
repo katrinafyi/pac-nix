@@ -28,10 +28,10 @@ buildDunePackage {
   outputs = [ "out" "dev" ];
 
   passthru = {
-    tests.aslp-server = testers.testVersion {
+    tests.asloff-sem = testers.testVersion {
       package = aslp_offline;
-      command = "command -v ${aslp_offline.meta.mainProgram}";
-      version = "asloff-sem";
+      command = "${lib.getExe aslp_offline} 0x8b031041";
+      version = "add_bits";
     };
   };
 
