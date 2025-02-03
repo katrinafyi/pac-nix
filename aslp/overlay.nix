@@ -17,7 +17,7 @@ final: prev:
 
     zarith_stubs_js_0_17 = ofinal.callPackage ./zarith_stubs_js.nix { };
     aslp_web = ofinal.callPackage ./aslp_web.nix { zarith_stubs_js = ofinal.zarith_stubs_js_0_17; };
-    aslp_client_server_ocaml = ofinal.callPackage ./aslp-client-server-marshallrpc.nix { };
+    aslp_client_server_ocaml = ofinal.callPackage ./aslp_client_server_ocaml.nix.nix { };
 
     mlbdd = ofinal.callPackage ./mlbdd.nix { };
     cohttp = oprev.cohttp.overrideAttrs (p: rec {
