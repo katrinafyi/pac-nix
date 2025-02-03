@@ -16,7 +16,9 @@ jobs:
       fail-fast: false
       matrix:
         pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
-              asl-translator, alive2-aslp, alive2-regehr, aslp_web, compiler-explorer]
+              asl-translator, alive2-aslp, alive2-regehr, aslp_web, compiler-explorer,
+              aslp-cpp
+        ]
 
     runs-on: ubuntu-24.04
 
@@ -85,7 +87,7 @@ jobs:
 
   update-build:
     if: always()
-    needs: [ collate ] 
+    needs: [ collate ]
     uses: ./.github/workflows/main.yml
     with:
       patches-b64: ${{ needs.collate.outputs.patches }}

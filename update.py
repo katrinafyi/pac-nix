@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-# vim: ts=2 sts=2 sw=2 et 
+# vim: ts=2 sts=2 sw=2 et
 
 # updates the revision hash for each upstream package.
 # for each updated package, this checks the derivation can be built
 # then commits its results.
 
-# usage in flake: 
+# usage in flake:
 # nix run .#update -- ARGS
 
 import os
@@ -77,7 +77,7 @@ class Package:
     assert all(c in string.hexdigits for c in commit)
     return commit
 
-@dataclass 
+@dataclass
 class Args:
   mode: Literal['check', 'upgrade']
   dir: str
@@ -94,6 +94,7 @@ PACKAGES: list[Package] = [
   Package('alive2-regehr', 'regehr/alive2', 'arm-tv'),
   Package('aslp_web', 'katrinafyi/aslp-web', 'main'),
   Package('compiler-explorer', 'ailrst/compiler-explorer', 'main'),
+  Package('aslp-cpp', 'UQ-PAC/aslp-rpc', 'main'),
 ]
 # NOTE: also change files in ./.github/workflows/*.yml
 
@@ -153,7 +154,7 @@ def upgrade(p: Package, args: Args):
 
     current = run(['nix', 'eval', flakeattr + '.src.rev'],
                   stdout=subprocess.PIPE).stdout.decode('ascii').strip('"\n')
-  
+
     total_commits = p.fetch_commits_behind(current)
     latest = p.fetch_latest_commit()
     permalink = p.compare_permalink(current, latest)
