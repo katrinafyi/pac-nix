@@ -12,6 +12,7 @@ final: prev:
     aslp = ofinal.asli;
     # .overrideAttrs { src = prev.lib.cleanSource ~/progs/aslp; }
     aslp-server = ofinal.callPackage ./aslp-server.nix {};
+    aslp_server_http = ofinal.aslp-server;
 
     zarith_stubs_js_0_17 = ofinal.callPackage ./zarith_stubs_js.nix { };
     aslp_web = ofinal.callPackage ./aslp_web.nix { zarith_stubs_js = ofinal.zarith_stubs_js_0_17; };
