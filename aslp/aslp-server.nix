@@ -5,7 +5,6 @@
   # ocamlPackages
 , eio
 , eio_main
-, core
 , cohttp
 , cohttp-eio
   # for testing
@@ -16,27 +15,31 @@
 
 buildDunePackage {
   pname = "aslp_server_http";
-  version = "0.0";
+  version = "0-unstable-2025-02-03";
 
   minimalOCamlVersion = "5.0";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp-rpc";
-    rev = "1a31d940e47246e24fb45cbc5614f24e425566ca";
-    hash = "sha256-o5+vNRIM0NslWc2NpgPuzdkVFlWmb6lMUGgNQvuNC60=";
+    rev = "12a5dfbda19429cc0c52f941ef67d184b227e3a4";
+    hash = "sha256-zsqdxE6HqqSZ86rMF32yTzUEz97mywSKrn3qndmxrDI=";
   };
 
   checkInputs = [ ];
   nativeCheckInputs = [ ];
-  buildInputs = [ aslp eio eio_main core cohttp cohttp-eio ];
+  buildInputs = [ aslp eio eio_main cohttp cohttp-eio ];
   nativeBuildInputs = [ ];
   propagatedBuildInputs = [ ];
 
   doCheck = true;
 
   postPatch = ''
-    substituteInPlace aslp-server-http/bin/dune --replace-warn ' core ' ' '
+    substituteInPlace aslp-server-http/bin/dune --replace-fail ' core ' ' '
+  '';
+
+  postInstall = ''
+    mv $out/bin/{aslp_server_http,aslp-server} -v
   '';
 
   outputs = [ "out" "dev" ];
@@ -44,7 +47,7 @@ buildDunePackage {
   passthru = {
     tests.aslp-server = testers.testVersion {
       package = aslp-server;
-      command = "command -v aslp-server";
+      command = "command -v ${aslp-server.meta.mainProgram}";
       version = "aslp-server";
     };
   };
