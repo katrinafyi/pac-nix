@@ -33,8 +33,8 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "d264ef3eb5adef7cc5ed65e4832ff17c4d355581";
-    hash = "sha256-ELI69cj0Y2A4cvnQe9/IsFDZVR1pHGYBtO0OFMeBP8o=";
+    rev = "export-offline-lifter";
+    hash = "sha256-dR2kVHpr1PeWZ+72rf9wUiD8aginBleIRi8cercXClQ=";
   };
 
   checkInputs = [ alcotest ];
@@ -49,7 +49,7 @@ buildDunePackage {
   '';
 
   postInstall = ''
-    mv -v $out/bin/asli $out/bin/aslp
+    ln -v $out/bin/asli $out/bin/aslp
   '';
 
   env = {

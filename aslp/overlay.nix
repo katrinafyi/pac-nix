@@ -15,6 +15,9 @@ final: prev:
     aslp-server = ofinal.callPackage ./aslp-server.nix {};
     aslp_server_http = ofinal.aslp-server;
 
+
+    aslp_offline = ofinal.callPackage ./aslp_offline.nix {};
+
     zarith_stubs_js_0_17 = ofinal.callPackage ./zarith_stubs_js.nix { };
     aslp_web = ofinal.callPackage ./aslp_web.nix { zarith_stubs_js = ofinal.zarith_stubs_js_0_17; };
     aslp_client_server_ocaml = ofinal.callPackage ./aslp_client_server_ocaml.nix { };
