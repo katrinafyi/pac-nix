@@ -5,6 +5,7 @@
 , lwt
 , mtime
 , aslp
+, aches
 }:
 
 buildDunePackage {
@@ -24,7 +25,7 @@ buildDunePackage {
   nativeCheckInputs = [ ];
   buildInputs = [ ];
   nativeBuildInputs = [ ];
-  propagatedBuildInputs = [ aslp lwt mtime ];
+  propagatedBuildInputs = [ aslp lwt mtime aches ];
 
   doCheck = true;
 
