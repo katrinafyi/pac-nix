@@ -8,13 +8,13 @@ let
   stdenv' = if stdenv.isDarwin then clang17Stdenv else stdenv;
 in stdenv'.mkDerivation {
   pname = "aslp-cpp";
-  version = "0.0.1-unstable-2025-02-03";
+  version = "0.1.1-unstable-2025-02-04";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp-rpc";
-    rev = "cb0a294275c945f5be2a82b689bbc42a54af28f2";
-    hash = "sha256-t8D17pykyDcJBCj/WUMEZpA2t8m8EqnlD6FhHx+4D8k=";
+    rev = "9ae165336d70e8f0c8aaf075fdfb02d86de11097";
+    hash = "sha256-3p8WNnbwA//y3Vf5VbibGcZUfU0IBtCRzXCLM1RZeps=";
   };
 
   prePatch = ''
