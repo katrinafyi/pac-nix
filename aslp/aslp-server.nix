@@ -15,15 +15,15 @@
 
 buildDunePackage {
   pname = "aslp_server_http";
-  version = "0-unstable-2025-02-03";
+  version = "0.1.1-unstable-2025-02-04";
 
   minimalOCamlVersion = "5.0";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp-rpc";
-    rev = "12a5dfbda19429cc0c52f941ef67d184b227e3a4";
-    hash = "sha256-zsqdxE6HqqSZ86rMF32yTzUEz97mywSKrn3qndmxrDI=";
+    rev = "9ae165336d70e8f0c8aaf075fdfb02d86de11097";
+    hash = "sha256-3p8WNnbwA//y3Vf5VbibGcZUfU0IBtCRzXCLM1RZeps=";
   };
 
   checkInputs = [ ];
@@ -33,10 +33,6 @@ buildDunePackage {
   propagatedBuildInputs = [ ];
 
   doCheck = true;
-
-  postPatch = ''
-    substituteInPlace aslp-server-http/bin/dune --replace-fail ' core ' ' '
-  '';
 
   postInstall = ''
     mv $out/bin/{aslp_server_http,aslp-server} -v
