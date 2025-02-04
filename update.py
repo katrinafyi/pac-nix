@@ -96,6 +96,7 @@ PACKAGES: list[Package] = [
   Package('compiler-explorer', 'ailrst/compiler-explorer', 'main'),
   Package('aslp-server', 'UQ-PAC/aslp-rpc'),
   Package('aslp-cpp', 'UQ-PAC/aslp-rpc'),
+  Package('aslp_client_server_ocaml', 'UQ-PAC/aslp-rpc'),
 ]
 # NOTE: also change files in ./.github/workflows/*.yml
 

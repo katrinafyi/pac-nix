@@ -14,6 +14,7 @@
 , python3Packages
 , python-gtirb
 , gtirb-semantics
+, aslp_client_server_ocaml
 }:
 
 let
@@ -34,16 +35,17 @@ buildDunePackage {
   pname = "gtirb_semantics";
   version = "0-unstable-2024-12-19";
 
-  src = fetchFromGitHub {
-    owner = "UQ-PAC";
+  src = 
+  fetchFromGitHub {
+    owner = "uq-pac";
     repo = "gtirb-semantics";
-    rev = "3044b50fadf54d441e80d68d8fb1f15b28906fb3";
-    sha256 = "sha256-zCP9oQ1T9SUiHLoDDPyyzjGGVTOGpJMoosOunc5EK+g=";
+    rev = "caching";
+    hash = "sha256-kyptRpD3D0ZyTGVI0To3gfdek7V+p/ZgtohEiSI0ZDk=";
   };
 
   buildInputs = [ python' asli ocaml-hexstring ocaml-protoc-plugin yojson ];
   nativeBuildInputs = [ protobuf ocaml-protoc-plugin ];
-  propagatedBuildInputs = [ base64 ];
+  propagatedBuildInputs = [ base64 aslp_client_server_ocaml];
 
   postInstall = ''
     ln -sv ${wrapper}/bin/* $out/bin/gtirb-semantics-nix
