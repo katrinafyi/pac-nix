@@ -34,10 +34,6 @@ buildDunePackage {
 
   doCheck = true;
 
-  postPatch = ''
-    substituteInPlace aslp-server-http/bin/dune --replace-fail ' core ' ' '
-  '';
-
   postInstall = ''
     mv $out/bin/{aslp_server_http,aslp-server} -v
   '';
