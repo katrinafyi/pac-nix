@@ -22,8 +22,8 @@ buildDunePackage {
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp-rpc";
-    rev = "9ae165336d70e8f0c8aaf075fdfb02d86de11097";
-    hash = "sha256-3p8WNnbwA//y3Vf5VbibGcZUfU0IBtCRzXCLM1RZeps=";
+    rev = "4deea4f561853388dd54fcb2ccae14bd9bbe22e1";
+    hash = "sha256-PbZNrFFXNVvnuwTeiDtil6jMKHqPddvTGYpQnnbhJ5Q=";
   };
 
   checkInputs = [ ];
