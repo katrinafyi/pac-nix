@@ -50,7 +50,7 @@ final: prev:
 
   };
 
-  inherit (final.ocamlPackages_pac_5) gtirb-semantics;
+  inherit (final.ocamlPackages_pac) gtirb-semantics;
 
   proto-json = prev.callPackage ./proto-json.nix { };
 
