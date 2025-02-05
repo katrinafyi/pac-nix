@@ -33,12 +33,12 @@ jobs:
       matrix:
         os: [ubuntu-24.04, macos-latest]
         # end-user packages to ci build for cache
-        pkg: 
+        pkg:
           [aslp, bap-aslp, bap-primus, basil,
           retdec-uq-pac, asl-translator,
-          gtirb-semantics, ddisasm, 
+          gtirb-semantics, ddisasm,
           retdec5, remill, alive2-aslp, alive2-regehr,
-          aslp_web, godbolt
+          aslp_web, godbolt, aslp-server
         ]
     runs-on: ${{ matrix.os }}
 
@@ -82,17 +82,17 @@ jobs:
     - run: ./nix-cached.sh build --impure -L .#${{matrix.pkg}}
       id: build
       continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
-      
+
     - name: Run nix build .#${{matrix.pkg}}.tests
       id: test
       run: |
         for test in $(nix eval --impure .#${{matrix.pkg}}.tests --json | jq -r keys[]); do
-          t=.#${{matrix.pkg}}.tests.$test 
+          t=.#${{matrix.pkg}}.tests.$test
           ./nix-cached.sh build --impure -L "$t" --no-link
         done
       continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
       if: steps.build.outcome == 'success'
-      
+
     - name: Report status of broken packages
       run: |
         echo '::warning title=${{ matrix.pkg }}::broken package has status build=${{steps.build.outcome}}, test=${{steps.test.outcome}}'
