@@ -1,7 +1,10 @@
 final: prev:
 {
   lief-0-13-2 = prev.callPackage ./lief-0-13-2.nix { python = final.python3; };
-  ddisasm = prev.callPackage ./ddisasm.nix { lief = final.lief-0-13-2; };
+  ddisasm = prev.callPackage ./ddisasm.nix {
+    lief = final.lief-0-13-2;
+    souffle = final.souffle.override { stdenv = final.gccStdenv; };
+  };
   ddisasm-deterministic = prev.ddisasm.deterministic;
 
   gtirb = prev.callPackage ./gtirb.nix { };
