@@ -33,7 +33,7 @@ let
 in
 buildDunePackage {
   pname = "gtirb_semantics";
-  version = "0.1.2-unstable-2025-02-04";
+  version = "0.1.2-unstable-2025-02-05";
 
   src = 
   fetchFromGitHub {
