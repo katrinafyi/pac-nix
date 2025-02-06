@@ -71,6 +71,7 @@ let
       };
       alive2-aslp = prev.callPackage ./llvm-translator/alive2-aslp.nix {
         llvmPackages = final.llvm-custom-git;
+        antlr = final.antlr4_12;
       };
       xed2022 = prev.xed.overrideAttrs rec {
         version = "2022.08.11";
