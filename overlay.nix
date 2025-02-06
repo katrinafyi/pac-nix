@@ -50,7 +50,8 @@ let
       llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
       llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
       llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix {
-        # llvmPackages = final.llvmPackages_git.override (p: {
+        llvmPackages = final.llvmPackages_git;
+        # .override (p: {
         #   gitRelease =
         #     prev.lib.throwIfNot
         #     (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2024-11-15")
