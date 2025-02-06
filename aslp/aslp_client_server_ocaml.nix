@@ -11,7 +11,7 @@
 
 buildDunePackage {
   pname = "aslp_client_server_ocaml";
-  version = "0.1.2-unstable-2025-02-05";
+  version = "0.1.3-unstable-2025-02-05";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
