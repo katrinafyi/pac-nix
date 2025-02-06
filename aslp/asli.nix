@@ -49,7 +49,7 @@ buildDunePackage {
   '';
 
   postInstall = ''
-    mv -v $out/bin/asli $out/bin/aslp
+    ln -v $out/bin/asli $out/bin/aslp
   '';
 
   env = {

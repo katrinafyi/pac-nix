@@ -38,7 +38,7 @@ jobs:
           retdec-uq-pac, asl-translator,
           gtirb-semantics, ddisasm,
           retdec5, remill, alive2-aslp, alive2-regehr,
-          aslp_web, godbolt, aslp-server
+          aslp_web, godbolt, aslp-server, aslp_offline
         ]
     runs-on: ${{ matrix.os }}
 
