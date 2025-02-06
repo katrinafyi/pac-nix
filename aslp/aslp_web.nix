@@ -3,10 +3,11 @@
 , buildDunePackage
 , nix-gitignore
 , asli
+, aslp_offline_js
 , js_of_ocaml
 , js_of_ocaml-ppx
 , js_of_ocaml-compiler
-, zarith_stubs_js 
+, zarith_stubs_js
 , nodejs-slim
 , python3
 }:
@@ -15,7 +16,7 @@ buildDunePackage rec {
   pname = "aslp_web";
   version = "0-unstable-2025-02-05";
 
-  buildInputs = [ asli js_of_ocaml js_of_ocaml-ppx zarith_stubs_js ];
+  propagatedBuildInputs = [ asli js_of_ocaml js_of_ocaml-ppx zarith_stubs_js aslp_offline_js ];
   nativeBuildInputs = [ python3 js_of_ocaml-compiler nodejs-slim ];
 
   src = fetchFromGitHub {
