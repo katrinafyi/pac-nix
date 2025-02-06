@@ -9,4 +9,5 @@ retdec.overrideAttrs (final: prev: {
     })
   ];
   doInstallCheck = false;
+  env.CXXFLAGS = "-includestring";
 })

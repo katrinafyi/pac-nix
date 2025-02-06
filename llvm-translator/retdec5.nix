@@ -186,6 +186,8 @@ stdenv.mkDerivation (self: {
     (lib.cmakeBool "RETDEC_COMPILE_YARA" compileYaraPatterns) # build and install compiled patterns
   ] ++ lib.mapAttrsToList (k: v: lib.cmakeFeature "${k}_URL" "${v}") deps;
 
+  env.CXXFLAGS = "-includestring";
+
   preConfigure =
     lib.concatLines (lib.mapAttrsToList check-dep deps)
     +
