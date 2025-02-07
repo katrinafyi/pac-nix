@@ -99,6 +99,18 @@ jobs:
       if: ${{ fromJSON(steps.broken.outputs.bool) }}
     - run: ls -l
 
+    - if: failure()
+      run: |
+        mkdir _logs && cd _logs && cp -v /nix/var/log/nix/drvs/*/* .
+        bunzip2 *.bz2 || true
+        ls -l .
+
+    - if: failure() && ! fromJSON(steps.broken.outputs.bool)
+      uses: actions/upload-artifact@v4
+      with:
+        name: nix-build-failed-${{ matrix.os }}-${{ matrix.pkg }}
+        path: _logs
+
   result:
     if: ${{ always() }}
     runs-on: ubuntu-24.04
