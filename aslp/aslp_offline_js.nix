@@ -22,9 +22,9 @@ buildDunePackage {
 
   checkInputs = [ ];
   nativeCheckInputs = [ ];
-  buildInputs = [ js_of_ocaml-ppx ];
+  buildInputs = [ aslp_offline js_of_ocaml zarith_stubs_js js_of_ocaml-ppx ];
   nativeBuildInputs = [ js_of_ocaml ];
-  propagatedBuildInputs = [ aslp_offline js_of_ocaml zarith_stubs_js ];
+  propagatedBuildInputs = [ ];
 
   doCheck = true;
 
