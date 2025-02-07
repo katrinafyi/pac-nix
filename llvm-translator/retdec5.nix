@@ -241,6 +241,8 @@ stdenv.mkDerivation (self: {
         --replace-fail /usr/local/bin/gtime ${time}
       substituteInPlace scripts/retdec-unpacker.py \
         --replace-fail "'upx'" "'${upx}'"
+
+      substituteInPlace include/retdec/utils/string.h --replace-fail 'WideCharType = std::uint32_t' 'WideCharType = char32_t'
     '';
 
   # build first to make sure YARA_DIR has u+w permissions?
