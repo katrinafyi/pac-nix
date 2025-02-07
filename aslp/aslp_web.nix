@@ -2,6 +2,7 @@
 , fetchFromGitHub
 , buildDunePackage
 , nix-gitignore
+, nukeReferences
 , asli
 , aslp_offline_js
 , js_of_ocaml
@@ -16,8 +17,8 @@ buildDunePackage rec {
   pname = "aslp_web";
   version = "0-unstable-2025-02-07";
 
-  propagatedBuildInputs = [ asli js_of_ocaml js_of_ocaml-ppx zarith_stubs_js aslp_offline_js ];
-  nativeBuildInputs = [ python3 js_of_ocaml-compiler nodejs-slim ];
+  buildInputs = [ asli js_of_ocaml js_of_ocaml-ppx zarith_stubs_js aslp_offline_js ];
+  nativeBuildInputs = [ python3 js_of_ocaml-compiler nodejs-slim nukeReferences ];
 
   src = fetchFromGitHub {
     owner = "katrinafyi";
@@ -33,6 +34,10 @@ buildDunePackage rec {
     export aslp_web_commit=$(cat COMMIT || echo ${src.rev or "unknown"})
 
     substituteAllInPlace web/index.html
+  '';
+
+  postInstall = ''
+    find "$out" -type f ! -name dune-package -exec nuke-refs '{}' +
   '';
 
   meta = {
