@@ -3,7 +3,13 @@ final: prev:
   lief-0-13-2 = prev.callPackage ./lief-0-13-2.nix { python = final.python3; };
   ddisasm = prev.callPackage ./ddisasm.nix {
     lief = final.lief-0-13-2;
-    souffle = final.souffle.override { stdenv = final.gccStdenv; };
+    souffle = final.souffle.overrideAttrs (p: {
+      patches = (p.patches or []) ++ [(final.fetchpatch {
+        # https://github.com/souffle-lang/souffle/pull/2529
+        url = "https://github.com/rina-forks/souffle/commit/2fb4d065a.patch";
+        hash = "sha256-NnZtTTlXa33EHWXnoPyVeHifIzlSyOdWh859j0+MwHg=";
+      })];
+    });
   };
   ddisasm-deterministic = prev.ddisasm.deterministic;
 
