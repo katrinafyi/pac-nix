@@ -44,7 +44,7 @@ let
       };
       inherit (final.ocamlPackages_pac) asl-translator;
 
-      retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
+      retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { stdenv = final.gccStdenv; };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
 
       llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
