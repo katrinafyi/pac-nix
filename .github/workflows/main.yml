@@ -79,7 +79,7 @@ jobs:
         echo NIXPKGS_ALLOW_BROKEN="$("$broken" && echo 1 || echo 0)" > "$GITHUB_ENV"
       id: broken
 
-    - run: ./nix-cached.sh build --impure -L .#${{matrix.pkg}}
+    - run: ./nix-cached.sh build --impure -L .#${{matrix.pkg}} --keep-failed
       id: build
       continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
 
@@ -103,6 +103,11 @@ jobs:
       run: |
         mkdir _logs && cd _logs && cp -v /nix/var/log/nix/drvs/*/* .
         bunzip2 *.bz2 || true
+
+        for f in *.drv; do mv -- "$f" "$f.txt"; done
+
+        sudo cp -r --no-preserve=mode,ownership /tmp/nix-build-* . || true
+
         ls -l .
 
     - if: failure() && ! fromJSON(steps.broken.outputs.bool)
