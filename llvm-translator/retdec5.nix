@@ -294,5 +294,8 @@ stdenv.mkDerivation (self: {
     homepage = "https://retdec.com";
     license = licenses.mit;
     maintainers = with maintainers; [ katrinafyi ];
+
+    # "missing char_traits for unsigned int"
+    broken = stdenv.isDarwin;
   };
 })
