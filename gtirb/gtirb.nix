@@ -4,20 +4,20 @@
 , fetchFromGitHub
 , cmake
 , python3
-, boost
+, boost183
 , protobuf
 , doxygen
 }:
 
 stdenv.mkDerivation {
   pname = "gtirb";
-  version = "2.2.0";
+  version = "2.2.0-unstable-2025-01-24";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "gtirb";
-    rev = "v2.2.0";
-    hash = "sha256-dzkVwQ7MvVm4KUX/Lo03yd1P9OHj+q1/kp4ZpdO8NDk=";
+    rev = "9b27239b4a9155cdd4a902f3cccbeb4b2e324b63";
+    hash = "sha256-P8waGCuDHXbUxafrSVYk/JvC3cwKk89B9733AphbH08=";
   };
 
   patches = [
@@ -35,7 +35,7 @@ stdenv.mkDerivation {
   '';
 
   nativeBuildInputs = [ ];
-  buildInputs = [ cmake python3 boost doxygen ];
+  buildInputs = [ cmake python3 boost183 doxygen ];
   propagatedBuildInputs = [ protobuf ];
 
   cmakeFlags = [
@@ -49,7 +49,7 @@ stdenv.mkDerivation {
   preConfigure = ''
     substituteInPlace CMakeLists.txt \
       --replace-warn '$'{PYTHON_VERSION} ${python3.version}
-    
+
     substituteInPlace src/CMakeLists.txt src/gtirb/proto/CMakeLists.txt \
       --replace-fail 'DESTINATION lib' 'DESTINATION ''${CMAKE_INSTALL_LIBDIR}' \
       --replace-warn 'DESTINATION include' 'DESTINATION ''${CMAKE_INSTALL_INCLUDEDIR}'

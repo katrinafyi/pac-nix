@@ -79,7 +79,7 @@ jobs:
         echo NIXPKGS_ALLOW_BROKEN="$("$broken" && echo 1 || echo 0)" > "$GITHUB_ENV"
       id: broken
 
-    - run: ./nix-cached.sh build --impure -L .#${{matrix.pkg}}
+    - run: ./nix-cached.sh build --impure -L .#${{matrix.pkg}} --keep-failed
       id: build
       continue-on-error: ${{ fromJSON(steps.broken.outputs.bool) }}
 
@@ -98,6 +98,24 @@ jobs:
         echo '::warning title=${{ matrix.pkg }}::broken package has status build=${{steps.build.outcome}}, test=${{steps.test.outcome}}'
       if: ${{ fromJSON(steps.broken.outputs.bool) }}
     - run: ls -l
+
+    - if: failure()
+      run: |
+        mkdir _logs && cd _logs && cp -v /nix/var/log/nix/drvs/*/* .
+        bunzip2 *.bz2 || true
+
+        for f in *.drv; do mv -- "$f" "$f.txt"; done
+
+        sudo cp -R /tmp/nix-build-* . || true
+        sudo chmod -R a+rw . || true
+
+        ls -l .
+
+    - if: failure() && ! fromJSON(steps.broken.outputs.bool)
+      uses: actions/upload-artifact@v4
+      with:
+        name: nix-build-failed-${{ matrix.os }}-${{ matrix.pkg }}
+        path: _logs
 
   result:
     if: ${{ always() }}

@@ -239,6 +239,8 @@ stdenv.mkDerivation (self: {
         --replace-fail /usr/local/bin/gtime ${time}
       substituteInPlace scripts/retdec-unpacker.py \
         --replace-fail "'upx'" "'${upx}'"
+
+      substituteInPlace include/retdec/utils/string.h --replace-fail 'WideCharType = std::uint32_t' 'WideCharType = char32_t'
     '';
 
   # build first to make sure YARA_DIR has u+w permissions?
@@ -292,5 +294,8 @@ stdenv.mkDerivation (self: {
     homepage = "https://retdec.com";
     license = licenses.mit;
     maintainers = with maintainers; [ katrinafyi ];
+
+    # "missing char_traits for unsigned int"
+    broken = stdenv.isDarwin;
   };
 })
