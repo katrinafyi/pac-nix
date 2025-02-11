@@ -106,7 +106,8 @@ jobs:
 
         for f in *.drv; do mv -- "$f" "$f.txt"; done
 
-        sudo cp -r --no-preserve=mode,ownership /tmp/nix-build-* . || true
+        sudo cp -R /tmp/nix-build-* . || true
+        sudo chmod -R a+rw . || true
 
         ls -l .
 
