@@ -26,15 +26,15 @@
 
 buildDunePackage {
   pname = "asli";
-  version = "0.3.0-unstable-2025-02-06";
+  version = "0.3.0-unstable-2025-02-07";
 
   minimalOCamlVersion = "4.09";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp";
-    rev = "19b1283fa6b4d33fb65a04b01ae4ba8223fe5e6b";
-    hash = "sha256-0qVtusKNWUOaDK8VQ4xiIyS1mnJUVMyxU6fQQRMT0h8=";
+    rev = "7d03b87bd965ddfea4c7a59d6d8d84c736f17aa1";
+    hash = "sha256-4tW9MTlUX42J/1bLgivTKTHq/efXV6pyqCizLmnGOTw=";
   };
 
   checkInputs = [ alcotest ];
@@ -70,12 +70,6 @@ buildDunePackage {
       package = asli;
       command = "aslp --version";
       version = "ASL";
-    };
-
-    tests.aslp-server = testers.testVersion {
-      package = asli;
-      command = "command -v aslp-server";
-      version = "aslp-server";
     };
   };
 
