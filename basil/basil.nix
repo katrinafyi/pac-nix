@@ -11,25 +11,26 @@
 
 let
   replaceProtocPlaceholder = ''
-    substituteInPlace build.sbt \
-      --replace-fail 'PROTOC_PLACEHOLDER' '${lib.getExe protobuf}'
+    cat <<EOF >> build.sbt
+    PB.protocExecutable := file("${lib.getExe protobuf}")
+    EOF
   '';
   mkSbtDerivation' = mkSbtDerivation.withOverrides { sbt = sbt.override { jre = jdk17; }; };
 in
 mkSbtDerivation' {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-02-17";
+  version = "0.1.2-alpha-unstable-2025-02-19";
 
   nativeBuildInputs = [ makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "2d006ebadc761079bcecfd3ae0a683116db72e34";
-    sha256 = "sha256-yFylN1C6HK32tsokNr0UDhSNESOFOE+abYh3ZLBPEvU=";
+    rev = "880b0e4ab877253e2d59a6a472a78d8e71a01b1a";
+    sha256 = "sha256-CqjNS9mP+CeTKnrGIZJhaWemIB/QMq/grGrswWgHPtc=";
   };
 
-  patches = [ ./0001-basil-protoc-version.patch ] ;
+  patches = [ ] ;
 
   # we must run the command in both the main derivation
   # and the dependency-generating derivation.
@@ -38,7 +39,7 @@ mkSbtDerivation' {
   };
   postPatch = replaceProtocPlaceholder;
 
-  depsSha256 = "sha256-KBhHr11b9/Ku2zhuw8wcNefG41IZSSmgC+AeRyvuZ0M=";
+  depsSha256 = "sha256-fT9MaztD3YGp36RHa/6quZmWX0OAEpchbxxIcCAcMT4=";
 
   buildPhase = ''
     runHook preBuild
