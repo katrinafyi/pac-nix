@@ -11,8 +11,9 @@
 
 let
   replaceProtocPlaceholder = ''
-    substituteInPlace build.sbt \
-      --replace-fail 'PROTOC_PLACEHOLDER' '${lib.getExe protobuf}'
+    cat <<EOF >> build.sbt
+    PB.protocExecutable := file("${lib.getExe protobuf}")
+    EOF
   '';
   mkSbtDerivation' = mkSbtDerivation.withOverrides { sbt = sbt.override { jre = jdk17; }; };
 in
@@ -29,7 +30,7 @@ mkSbtDerivation' {
     sha256 = "sha256-yFylN1C6HK32tsokNr0UDhSNESOFOE+abYh3ZLBPEvU=";
   };
 
-  patches = [ ./0001-basil-protoc-version.patch ] ;
+  patches = [ ] ;
 
   # we must run the command in both the main derivation
   # and the dependency-generating derivation.
