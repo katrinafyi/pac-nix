@@ -19,15 +19,15 @@ let
 in
 mkSbtDerivation' {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-02-19";
+  version = "0.1.2-alpha-unstable-2025-02-27";
 
   nativeBuildInputs = [ makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "880b0e4ab877253e2d59a6a472a78d8e71a01b1a";
-    sha256 = "sha256-CqjNS9mP+CeTKnrGIZJhaWemIB/QMq/grGrswWgHPtc=";
+    rev = "a7c77db3e197ada7e24762983d742dcf24bc320c";
+    sha256 = "sha256-wX0BqgKq1TywIdZrm2Rl4JXvJU58M9BGCtBq+Ji+9f4=";
   };
 
   patches = [ ] ;
@@ -39,7 +39,7 @@ mkSbtDerivation' {
   };
   postPatch = replaceProtocPlaceholder;
 
-  depsSha256 = "sha256-fT9MaztD3YGp36RHa/6quZmWX0OAEpchbxxIcCAcMT4=";
+  depsSha256 = "sha256-dbCdvd9j5DaOqAClNgBtTJ996JilEtKvuxvJ3qjdGTQ=";
 
   buildPhase = ''
     runHook preBuild
