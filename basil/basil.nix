@@ -19,15 +19,15 @@ let
 in
 mkSbtDerivation' {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-03-17";
+  version = "0.1.2-alpha-unstable-2025-03-18";
 
   nativeBuildInputs = [ makeBinaryWrapper ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "2b77cc39bde36d0bb15f10f8cc2645d454f078ab";
-    sha256 = "sha256-PjA9iudQ7+mSN0PwABU/NWNHgJqEPfif4049oLiq7M0=";
+    rev = "4cad6a5602efe1a1f1201314233cc9eb0c745f68";
+    sha256 = "sha256-v+12bYoaKO5+aSXcpyOKbrty6eIbVk5oKl/nblku22M=";
   };
 
   patches = [ ] ;
