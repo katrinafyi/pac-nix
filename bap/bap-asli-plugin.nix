@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
     owner = "UQ-PAC";
     repo = "bap-asli-plugin";
     rev = "ad9c51b12f721317568f94181197d8ff4a01b1d3";
-    sha256 = "sha256-CsdUjXHHVisfiTP2XGOHfm+Aa23KZep4IdgoYHQsnXg=";
+    sha256 = "sha256-gVWqOoHhHpNxubM5UZyFyvZnauWdwSTE882OYLd13HA=";
   };
 
   buildInputs = [ asli bap findlib ];
