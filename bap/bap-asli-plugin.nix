@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation rec {
   pname = "bap-asli-plugin";
-  version = "0-unstable-2024-12-04";
+  version = "0-unstable-2025-04-16";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bap-asli-plugin";
-    rev = "ad9c51b12f721317568f94181197d8ff4a01b1d3";
-    sha256 = "sha256-gVWqOoHhHpNxubM5UZyFyvZnauWdwSTE882OYLd13HA=";
+    rev = "0b86c3a6437c32d5b4dc6d7121f8ec4497bc4185";
+    sha256 = "sha256-NvmIuftrsoASH82fCf14PQ7Q4DwreRuMOI8XyrV6vFg=";
   };
 
   buildInputs = [ asli bap findlib ];
