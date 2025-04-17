@@ -41,6 +41,9 @@ jobs:
           git restore .
           nix run .#update -- upgrade -A ${{matrix.pkg}} -- --commit
           echo "::endgroup::"
+          echo prefix="failed-" >> "$GITHUB_OUTPUT"
+        else
+          echo prefix="" >> "$GITHUB_OUTPUT"
         fi
       id: do-upgrade
 
@@ -51,7 +54,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       if: ${{ success() || failure() }}
       with:
-        name: ${{ steps.do-upgrade.outcome != 'success' && 'failed-' || '' }}partial-patches-${{matrix.pkg}}
+        name: ${{ steps.do-upgrade.outputs.prefix }}partial-patches-${{matrix.pkg}}
         path: new-patches
         if-no-files-found: ignore
 
