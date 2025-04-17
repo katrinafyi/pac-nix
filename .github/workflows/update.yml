@@ -36,19 +36,15 @@ jobs:
         nix run .#update -- check -A ${{matrix.pkg}}
 
     - run: |
-        nix run .#update -- do-upgrade -A ${{matrix.pkg}}
+        nix run .#update -- do-upgrade -A ${{matrix.pkg}} || nix run .#update -- upgrade -A ${{matrix.pkg}} -- --commit
       id: do-upgrade
 
     - run: |
-        [[ -z "$(git log '@{push}..')" ]] && nix run .#update -- upgrade -A ${{matrix.pkg}} -- --commit
-      if: failure()
-
-    - run: |
         git format-patch $COMMIT -o new-patches
-      if: always()
+      if: ${{ success() || failure() }}
 
     - uses: actions/upload-artifact@v4
-      if: always()
+      if: ${{ success() || failure() }}
       with:
         name: ${{ steps.do-upgrade.outcome != 'success' && 'failed-' || '' }}partial-patches-${{matrix.pkg}}
         path: new-patches
