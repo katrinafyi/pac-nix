@@ -36,7 +36,12 @@ jobs:
         nix run .#update -- check -A ${{matrix.pkg}}
 
     - run: |
-        nix run .#update -- do-upgrade -A ${{matrix.pkg}} || nix run .#update -- upgrade -A ${{matrix.pkg}} -- --commit
+        if ! nix run .#update -- do-upgrade -A ${{matrix.pkg}}; then
+          echo "::group::Commiting failed patches"
+          git restore .
+          nix run .#update -- upgrade -A ${{matrix.pkg}} -- --commit
+          echo "::endgroup::"
+        fi
       id: do-upgrade
 
     - run: |
