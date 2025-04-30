@@ -6,11 +6,15 @@
 , jdk17
 , testers
 , basil
+, protobuf
 }:
 
 let
   # postPatch to be shared by deps and main derivation
-  postPatch = "";
+  postPatch = ''
+    substituteInPlace build.sc --replace-fail 'ScalaPBModule {' 'ScalaPBModule {
+      override def scalaPBProtocPath = Some("${lib.getExe protobuf}")'
+  '';
 in
 mkMillDerivation {
   pname = "basil";
@@ -40,13 +44,14 @@ mkMillDerivation {
   postPatch = postPatch;
 
   depsWarmupCommand = ''
-    rm -rf src/main/scala
+    echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
+    rm -rf src/main/scala src/test
     ./mill __.prepareOffline --all
     ./mill compile
-    ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/tree.txt
+    ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
 
-  depsSha256 = "sha256-TvkwJHKiGOWQXQFMSGhc54k7wHestt3issni6fk5qVA=";
+  depsSha256 = "sha256-t20K0BdLdqvX6sGHE1sJBMJdIiI8K/Bndf052Oi2Y3I=";
   depsArchivalStrategy = "link";
 
   buildPhase = ''
