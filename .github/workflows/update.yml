@@ -48,9 +48,8 @@ jobs:
 
           # fail the CI job if update fails, except for certain difficult packages.
           case '${{matrix.pkg}}' in
-            alive2-regehr)
-            alive2-aslp) true;;
-            *) exit 1;;
+            alive2-regehr | alive2-aslp) true ;;
+            *) exit 1 ;;
           esac
         else
           echo prefix="" >> "$GITHUB_OUTPUT"
