@@ -2,7 +2,7 @@
   lib,
   stdenv,
   callPackage,
-  sbt,
+  mill,
 }: {
   pname,
   version,
@@ -18,7 +18,7 @@
   depsSha256,
   #
   # Command to run to let sbt fetch all the required dependencies for the build.
-  depsWarmupCommand ? "sbt compile",
+  depsWarmupCommand ? "mill compile",
   #
   # Strategy to use to package and unpackage the dependencies
   # - copy: regular directory, copy before build
@@ -41,6 +41,16 @@
   # this convenient for testing.
   sbtEnvSetupCmds = ''
     export SBT_DEPS=$(mktemp -d)
+
+    if [[ -x ./mill ]]; then
+      patchShebangs ./mill
+    fi
+
+    export XDG_CACHE_HOME=$SBT_DEPS/project/.cache
+
+    echo "" >> .mill-jvm-opts
+    echo "-Divy.home=$SBT_DEPS/project/.ivy" >> .mill-jvm-opts
+
     export SBT_OPTS="-Dsbt.global.base=$SBT_DEPS/project/.sbtboot -Dsbt.boot.directory=$SBT_DEPS/project/.boot -Dsbt.ivy.home=$SBT_DEPS/project/.ivy $SBT_OPTS"
     export COURSIER_CACHE=$SBT_DEPS/project/.coursier
     mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier}
@@ -59,7 +69,7 @@
 in
   stdenv.mkDerivation (drvAttrs
     // {
-      nativeBuildInputs = [sbt] ++ nativeBuildInputs;
+      nativeBuildInputs = [mill] ++ nativeBuildInputs;
 
       passthru =
         passthru
