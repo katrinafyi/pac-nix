@@ -5,6 +5,8 @@ let
   };
   sbt-drv-overlay = import "${sbt-drv-repo}/overlay.nix";
 
+  mill-drv-overlay = import ../mill-derivation/overlay.nix;
+
   overlay = final: prev: {
     basil = (prev.callPackage ./basil.nix { })
       # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
@@ -20,4 +22,11 @@ let
   };
 in
 final: prev:
-prev.lib.composeExtensions sbt-drv-overlay overlay final prev
+prev.lib.composeManyExtensions
+  [
+    sbt-drv-overlay
+    overlay
+    mill-drv-overlay
+  ]
+  final
+  prev

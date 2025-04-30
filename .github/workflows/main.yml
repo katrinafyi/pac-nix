@@ -106,8 +106,8 @@ jobs:
 
         for f in *.drv; do mv -- "$f" "$f.txt"; done
 
-        sudo cp -R /tmp/nix-build-* . || true
-        sudo chmod -R a+rw . || true
+        sudo chown -R $(id -u):$(id -g) /tmp/nix-build-* . || true
+        # tar caf builds.tar.gz /tmp/nix-build-*
 
         ls -l .
 

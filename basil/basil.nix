@@ -1,8 +1,8 @@
 { lib
 , fetchFromGitHub
-, mkSbtDerivation
+, mkMillDerivation
 , makeBinaryWrapper
-, sbt
+, fetchpatch
 , jdk17
 , testers
 , basil
@@ -10,66 +10,69 @@
 }:
 
 let
-  replaceProtocPlaceholder = ''
-    cat <<EOF >> build.sbt
-    PB.protocExecutable := file("${lib.getExe protobuf}")
-    EOF
+  # postPatch to be shared by deps and main derivation
+  postPatch = ''
+    substituteInPlace build.sc --replace-fail 'ScalaPBModule {' 'ScalaPBModule {
+      override def scalaPBProtocPath = Some("${lib.getExe protobuf}")'
   '';
-  mkSbtDerivation' = mkSbtDerivation.withOverrides { sbt = sbt.override { jre = jdk17; }; };
 in
-mkSbtDerivation' {
+mkMillDerivation {
   pname = "basil";
   version = "0.1.2-alpha-unstable-2025-04-16";
 
-  nativeBuildInputs = [ makeBinaryWrapper ];
+  nativeBuildInputs = [ makeBinaryWrapper jdk17 ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "f140e1866e05b8fb6cd193a2fc2d6e831e87d64b";
-    sha256 = "sha256-1UZlmTvIl9yTZKgPVxbIo8xiDTkxLHf7kQuQCDNY4yk=";
+    rev = "7603ae67c451b71af97b2c642a96e9769a70bc9a";
+    sha256 = "sha256-GA6ygXHzoCvw3qwRt9yMuK2GnYtfD4EghR6/Vj6Idvk=";
   };
 
-  patches = [ ] ;
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/UQ-PAC/BASIL/commit/a1c4f6a733c193214d5ab9bc1e3a46775bb00313.patch";
+      hash = "sha256-PkW8RGIhH378fUNvfdvOwH5/sPqJrQFdqgDWcfDXn/Y=";
+    })
+  ];
 
   # we must run the command in both the main derivation
   # and the dependency-generating derivation.
   overrideDepsAttrs = depsfinal: depsprev: {
-    postPatch = replaceProtocPlaceholder;
+    postPatch = postPatch;
   };
-  postPatch = replaceProtocPlaceholder;
+  postPatch = postPatch;
 
-  depsSha256 = "sha256-dbCdvd9j5DaOqAClNgBtTJ996JilEtKvuxvJ3qjdGTQ=";
+  depsWarmupCommand = ''
+    echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
+    rm -rf src/main/scala src/test
+    ./mill __.prepareOffline --all
+    ./mill compile
+    ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
+  '';
+
+  depsSha256 = "sha256-t20K0BdLdqvX6sGHE1sJBMJdIiI8K/Bndf052Oi2Y3I=";
+  depsArchivalStrategy = "link";
 
   buildPhase = ''
     runHook preBuild
-
-    sbt assembly
-
+    ./mill assembly
     runHook postBuild
   '';
 
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/bin
-    mkdir -p $out/share/basil
-
-    JAR="$(echo target/scala*/wptool-boogie*.jar)"
-
-    if ! [[ -f "$JAR" ]]; then
-      echo "ERROR: basil jar file not found!" >&2
-      ls -l target/scala*
-      false
-    fi
+    mkdir -p $out/bin $out/share/basil
 
     # copy jar to output directory
-    cp -v "$JAR" $out/share/basil/$(basename $JAR)
+    dest=$out/share/basil/basil.jar
+    cp -v "out/assembly.dest/out.jar" $dest
 
     # make wrapper to run jar with appropriate arguments
     makeWrapper "${lib.getExe jdk17}" $out/bin/basil \
       --add-flags -jar \
-      --add-flags "$out/share/basil/$(basename $JAR)"
+      --add-flags "$dest"
 
     runHook postInstall
   '';
