@@ -46,7 +46,7 @@
       patchShebangs ./mill
     fi
 
-    export XDG_CACHE_HOME=$SBT_DEPS/project/.cache
+    export MILL_DOWNLOAD_PATH=$SBT_DEPS/project/.cache/mill/download
 
     echo "" >> .mill-jvm-opts
     echo "-Divy.home=$SBT_DEPS/project/.ivy" >> .mill-jvm-opts
