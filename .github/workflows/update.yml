@@ -41,7 +41,17 @@ jobs:
           git restore .
           nix run .#update -- upgrade -A ${{matrix.pkg}} -- --commit
           echo "::endgroup::"
+          subject="$(git show -s --format='%s')"
+
+          echo '::error title=update failure: ${{matrix.pkg}}::'"$subject"
           echo prefix="failed-" >> "$GITHUB_OUTPUT"
+
+          # fail the CI job if update fails, except for certain difficult packages.
+          case '${{matrix.pkg}}' in
+            alive2-regehr)
+            alive2-aslp) true;;
+            *) exit 1;;
+          esac
         else
           echo prefix="" >> "$GITHUB_OUTPUT"
         fi
