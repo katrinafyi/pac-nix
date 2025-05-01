@@ -18,7 +18,7 @@ let
 in
 mkMillDerivation {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-04-16";
+  version = "0.1.2-alpha-unstable-2025-04-28";
 
   nativeBuildInputs = [ makeBinaryWrapper jdk17 ];
 
