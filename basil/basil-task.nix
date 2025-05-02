@@ -20,13 +20,13 @@ in stdenv.mkDerivation (self: {
   buildInputs = [ ];
 
   preBuild = ''
-    mkdir -p $out/bin
+    mkdir -p $out/bin $out/lib/basil-task
     cd basil-task
 
     cp basil-task.sh basil-task
-    cp -v mutex.sh basil-task Taskfile.yml $out/bin
+    cp -v mutex.sh basil-task.sh Taskfile.yml $out/lib/basil-task
 
-    wrapProgram $out/bin/basil-task \
+    makeWrapper $out/lib/basil-task/basil-task.sh $out/bin/basil-task \
       --prefix PATH : $out/bin:${lib.makeBinPath []}
   '';
 })
