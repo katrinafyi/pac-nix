@@ -11,10 +11,10 @@
 
 let
   bins = [
+    basil
     util-linux
     go-task
     coreutils
-    basil
     boogie
   ];
 in stdenv.mkDerivation (self: {

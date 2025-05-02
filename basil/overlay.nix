@@ -10,7 +10,7 @@ let
   overlay = final: prev: {
     basil = (prev.callPackage ./basil.nix {
       jdk = final.jdk17;
-      jre = final.jre17_minimal;
+      jre = final.temurin-jre-bin-17;
     })
       # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
     ;
