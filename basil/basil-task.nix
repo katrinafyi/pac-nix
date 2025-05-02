@@ -2,13 +2,20 @@
 , stdenv
 , makeWrapper
 , go-task
-, basil
+, coreutils
+, util-linux
 , compiler-explorer
+, boogie
+, basil
 }:
 
 let
   bins = [
-
+    util-linux
+    go-task
+    coreutils
+    basil
+    boogie
   ];
 in stdenv.mkDerivation (self: {
   pname = "basil-task";
@@ -27,6 +34,6 @@ in stdenv.mkDerivation (self: {
     cp -v mutex.sh basil-task.sh Taskfile.yml $out/lib/basil-task
 
     makeWrapper $out/lib/basil-task/basil-task.sh $out/bin/basil-task \
-      --prefix PATH : $out/bin:${lib.makeBinPath []}
+      --prefix PATH : $out/bin:${lib.makeBinPath bins}
   '';
 })
