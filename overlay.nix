@@ -7,9 +7,18 @@ let
       update = prev.callPackage ./update.nix { };
 
       basil-tools-shell = prev.callPackage ./basil-shell.nix { };
+      basil-godbolt-shell = prev.callPackage ./basil-shell.nix {
+        extraPackages = [final.basil-task final.compiler-explorer];
+      };
+
       basil-tools-docker = (prev.callPackage ./docker-tools.nix { }).streamNixShellImage {
         name = "ghcr.io/uq-pac/basil-tools-docker";
         drv = final.basil-tools-shell;
+      };
+
+      basil-godbolt-docker = (prev.callPackage ./docker-tools.nix { }).streamNixShellImage {
+        name = "ghcr.io/uq-pac/basil-godbolt-docker";
+        drv = final.basil-godbolt-shell;
       };
 
       ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
