@@ -19,6 +19,7 @@ let
     compiler-explorer = (prev.callPackage ./compiler-explorer.nix { });
     godbolt = (prev.callPackage ./godbolt.nix { });
     basil-tool = prev.callPackage ./basil-tool.nix { };
+    basil-task = prev.callPackage ./basil-task.nix { };
   };
 in
 final: prev:
