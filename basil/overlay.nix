@@ -8,7 +8,10 @@ let
   mill-drv-overlay = import ../mill-derivation/overlay.nix;
 
   overlay = final: prev: {
-    basil = (prev.callPackage ./basil.nix { })
+    basil = (prev.callPackage ./basil.nix {
+      jdk = final.jdk17;
+      jre = final.jre17_minimal;
+    })
       # .overrideAttrs { src = prev.lib.cleanSource ~/progs/basil; }
     ;
 
