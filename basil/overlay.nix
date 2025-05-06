@@ -20,7 +20,8 @@ let
     clang-aarch64 = final.pkgsCross.aarch64-multiplatform.pkgsBuildHost.clang;
 
     compiler-explorer = (prev.callPackage ./compiler-explorer.nix { });
-    godbolt = (prev.callPackage ./godbolt.nix { });
+    godbolt = final.compiler-explorer;
+
     basil-tool = prev.callPackage ./basil-tool.nix { };
     basil-task = prev.callPackage ./basil-task.nix { };
   };

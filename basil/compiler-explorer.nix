@@ -17,16 +17,12 @@ buildNpmPackage {
 
   # https://github.com/ailrst/compiler-explorer/tree/fe7ed875f644a7fc0841382439ebe1f619bff05d
   # https://github.com/ailrst/compiler-explorer/compare/fe7ed875f644a7fc0841382439ebe1f619bff05d...main
-  src = builtins.fetchGit {
-    url = "file:///home/rina/progs/compiler-explorer";
-    ref = "basil-new";
+  src = fetchFromGitHub {
+    owner = "rina-forks";
+    repo = "compiler-explorer";
+    rev = "ba39642d0b9483b788d983c7111199ce8b09155a";
+    sha256 = "sha256-+zbw9F3C0OwCAyXHVmJ7wuhODWT+Tg/0fDimQ3Ac1SM=";
   };
-  #   fetchFromGitHub {
-  #   owner = "ailrst";
-  #   repo = "compiler-explorer";
-  #   rev = "fe7ed875f644a7fc0841382439ebe1f619bff05d";
-  #   sha256 = "sha256-sZcD8CwO55fQYdxRZmZEgMjao91EOAo7zRzLn6zDRIo=";
-  # };
 
   npmDepsHash = "sha256-3tt+k6ruIzDKeMTfXM6CkPpkCdwVawbOzFwCCxhdltQ=";
 
