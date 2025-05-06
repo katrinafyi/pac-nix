@@ -29,12 +29,7 @@ mkMillDerivation {
     sha256 = "sha256-GA6ygXHzoCvw3qwRt9yMuK2GnYtfD4EghR6/Vj6Idvk=";
   };
 
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/UQ-PAC/BASIL/commit/a1c4f6a733c193214d5ab9bc1e3a46775bb00313.patch";
-      hash = "sha256-PkW8RGIhH378fUNvfdvOwH5/sPqJrQFdqgDWcfDXn/Y=";
-    })
-  ];
+  patches = [ ];
 
   # we must run the command in both the main derivation
   # and the dependency-generating derivation.
