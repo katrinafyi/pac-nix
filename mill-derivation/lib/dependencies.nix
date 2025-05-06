@@ -6,7 +6,6 @@
   gnused,
   lib,
   rdfind,
-  mill,
   curl,
   cacert,
   stdenv,
@@ -33,7 +32,7 @@
     name = namePrefix + archivalStrategy.fileExtension;
 
     nativeBuildInputs =
-      [mill curl cacert gnused strip-nondeterminism file findutils]
+      [curl cacert gnused strip-nondeterminism file findutils]
       ++ nativeBuildInputs
       ++ archivalStrategy.nativeBuildInputs;
 

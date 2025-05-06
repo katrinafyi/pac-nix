@@ -2,7 +2,6 @@
   lib,
   stdenv,
   callPackage,
-  mill,
 }: {
   pname,
   version,
@@ -70,7 +69,7 @@
 in
   stdenv.mkDerivation (drvAttrs
     // {
-      nativeBuildInputs = [mill] ++ nativeBuildInputs;
+      nativeBuildInputs = [] ++ nativeBuildInputs;
 
       passthru =
         passthru
