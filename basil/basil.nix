@@ -3,7 +3,8 @@
 , mkMillDerivation
 , makeBinaryWrapper
 , fetchpatch
-, jdk17
+, jdk
+, jre
 , testers
 , basil
 , protobuf
@@ -20,7 +21,7 @@ mkMillDerivation {
   pname = "basil";
   version = "0.1.2-alpha-unstable-2025-05-05";
 
-  nativeBuildInputs = [ makeBinaryWrapper jdk17 ];
+  nativeBuildInputs = [ makeBinaryWrapper jdk ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
@@ -65,7 +66,7 @@ mkMillDerivation {
     cp -v "out/assembly.dest/out.jar" $dest
 
     # make wrapper to run jar with appropriate arguments
-    makeWrapper "${lib.getExe jdk17}" $out/bin/basil \
+    makeWrapper "${lib.getExe' jre "java"}" $out/bin/basil \
       --add-flags -jar \
       --add-flags "$dest"
 

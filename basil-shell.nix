@@ -8,6 +8,7 @@
 , gtirb-pprinter
 , gtirb-semantics
 , pkgsCross
+, extraPackages ? []
 }:
 let
   packages = [
@@ -19,13 +20,13 @@ let
 
     asli
 
-    bap-aslp
-    bap-asli-plugin
+    # bap-aslp
+    # bap-asli-plugin
 
     ddisasm
     gtirb-pprinter
     gtirb-semantics
-  ];
+  ] ++ extraPackages;
 in mkShell {
   inherit packages;
   inputsFrom = [ ];
@@ -34,11 +35,14 @@ in mkShell {
     echo == pac-nix/BASIL tool shell ==
     echo
     echo 'with packages installed:'
-    printf ' - %s\n' ${toString (map (x: x.name) packages)}
+    printf ' - %s\n' ''$PACKAGES
     echo
   '';
+
+  PACKAGES = toString (map (x: x.name) packages);
+
   meta = {
-    description = "shell containing tools used in the BASIL pipeline"; 
+    description = "shell containing tools used in the BASIL pipeline";
   };
 
   hardeningDisable = [ "all" ];

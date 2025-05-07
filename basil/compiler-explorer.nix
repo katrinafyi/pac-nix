@@ -2,25 +2,32 @@
 , fetchurl
 , fetchFromGitHub
 , buildNpmPackage
+, writeShellScript
+, nodejs
+, fetchpatch
+, makeWrapper
+, husky
 }:
 
 buildNpmPackage {
   pname = "compiler-explorer-ailrst";
   version = "0-unstable-2024-07-30";
 
+  nativeBuildInputs = [ makeWrapper husky ];
+
   # https://github.com/ailrst/compiler-explorer/tree/fe7ed875f644a7fc0841382439ebe1f619bff05d
   # https://github.com/ailrst/compiler-explorer/compare/fe7ed875f644a7fc0841382439ebe1f619bff05d...main
   src = fetchFromGitHub {
-    owner = "ailrst";
+    owner = "rina-forks";
     repo = "compiler-explorer";
-    rev = "fe7ed875f644a7fc0841382439ebe1f619bff05d";
-    sha256 = "sha256-sZcD8CwO55fQYdxRZmZEgMjao91EOAo7zRzLn6zDRIo=";
+    rev = "d6a405a418097b2ef96145609a316c7f0c11a274";
+    sha256 = "sha256-+QNxpbVcZSOkLAmW3NZ37o6vtZhI4YyU/1eRtxPQrvk=";
   };
 
-  npmDepsHash = "sha256-i2agFqHb1Sr82ZZKgL+97oRYRLgrmbGM5+jU/CtGF2M=";
+  npmDepsHash = "sha256-3tt+k6ruIzDKeMTfXM6CkPpkCdwVawbOzFwCCxhdltQ=";
 
   patches = [
-    (fetchurl {
+    (fetchpatch {
       url = "https://gist.githubusercontent.com/katrinafyi/e5a6b6d8bed540af46bba8c3cc3d9d08/raw/0001-support-environment-variables-in-properties.patch";
       hash = "sha256-Tpx272FGaSBcScI0ee/4cT3QGI56V1QixKYjL7m1/Q8=";
     })
@@ -35,16 +42,12 @@ buildNpmPackage {
   buildPhase = ''
     runHook preBuild
 
-    substituteInPlace etc/config/compiler-explorer.defaults.properties \
-      --replace out/compiler-cache \''${COMPILER_CACHE} \
-      --replace /storage/data \''${LOCAL_STORAGE}
-
-    substituteInPlace etc/config/{c,boogie}.defaults.properties \
-      --replace /compiler-explorer/basil-tool.py \''${BASIL_TOOL}
-
-    # https://github.com/compiler-explorer/compiler-explorer/commit/5d776aaae3be2cf07a2442f839812ca6b076df4d
-    substituteInPlace package.json \
-      --replace 'ts-node-esm ' 'node --no-warnings=ExperimentalWarning --loader ts-node/esm '
+    cat <<'EOF' >etc/config/compiler-explorer.local.properties
+    cacheConfig=InMemory(50)
+    executableCacheConfig=InMemory(50)
+    compilerCacheConfig=OnDisk(/tmp/out/compiler-cache,1024)
+    localStorageFolder=''${LOCAL_STORAGE}
+    EOF
 
     npm run webpack
     npm run ts-compile
@@ -57,9 +60,16 @@ buildNpmPackage {
 
   postInstall = ''
     lib=$out/lib/node_modules/compiler-explorer
+    mkdir -p $out/bin
 
-    cp -r out $src/package.json $src/package-lock.json $lib
+    cp -r etc out $src/package.json $src/package-lock.json $lib
     rm -rf $lib/test $lib/node_modules/.cache
+
+    makeWrapper ${lib.getExe nodejs} $out/bin/compiler-explorer \
+      --set-default NODE_ENV production \
+      --set-default LOCAL_STORAGE ./compiler-explorer-storage \
+      --chdir $lib \
+      --add-flags "$lib/out/dist/app.js --webpackContent $lib/out/webpack/static"
   '';
 
   meta = {

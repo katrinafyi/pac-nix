@@ -35,6 +35,7 @@ in
     , shell ? bashInteractive + "/bin/bash"
     , command ? null
     , run ? null
+    , config ? {}
     }:
       assert lib.assertMsg (! (drv.drvAttrs.__structuredAttrs or false))
         "streamNixShellImage: Does not work with the derivation ${drv.name} because it uses __structuredAttrs";
@@ -155,6 +156,11 @@ in
           # Gives the user control over the build directory
           mkdir -p .${sandboxBuildDir}
           chown -R ${toString uid}:${toString gid} .${sandboxBuildDir}
+          chmod a+rwx ./${sandboxBuildDir}
+
+          mkdir -p ./app
+          chown -R ${toString uid}:${toString gid} ./app
+          chmod a+rwx ./app
 
           mkdir -p ./tmp
           chmod a+rwx ./tmp
@@ -172,15 +178,19 @@ in
           chmod +x ./usr/bin/_exec
         '';
 
-        # Run this image as the given uid/gid
-        config.User = "${toString uid}:${toString gid}";
-        config.Cmd =
-          # https://github.com/NixOS/nix/blob/2.8.0/src/nix-build/nix-build.cc#L185-L186
-          # https://github.com/NixOS/nix/blob/2.8.0/src/nix-build/nix-build.cc#L534-L536
-          if run == null
-          then [ shell "--rcfile" rcfile ]
-          else [ shell rcfile ];
-        config.WorkingDir = sandboxBuildDir;
-        config.Env = lib.mapAttrsToList (name: value: "${name}=${value}") envVars;
+
+        config = lib.recursiveUpdate {
+          # Run this image as the given uid/gid
+          User = "${toString uid}:${toString gid}";
+          Cmd =
+            # https://github.com/NixOS/nix/blob/2.8.0/src/nix-build/nix-build.cc#L185-L186
+            # https://github.com/NixOS/nix/blob/2.8.0/src/nix-build/nix-build.cc#L534-L536
+            if run == null
+            then [ shell "--rcfile" rcfile ]
+            else [ shell rcfile ];
+          WorkingDir = sandboxBuildDir;
+          Env = lib.mapAttrsToList (name: value: "${name}=${value}") envVars;
+        } config;
+
       };
 }
