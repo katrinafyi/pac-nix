@@ -17,10 +17,11 @@ dockerTools.streamLayeredImage {
 
   fakeRootCommands = ''
     mkdir -p ./data
+    chmod a+rwx ./data
   '';
 
   config = {
-    Cmd = [ "/bin/gtirb-semantics" "--serve" ];
+    Cmd = [ "/bin/sh" "-c" "umask 000 && exec /bin/gtirb-semantics --serve" ];
     WorkingDir = "/data";
     Volumes = {
       "/data" = { };

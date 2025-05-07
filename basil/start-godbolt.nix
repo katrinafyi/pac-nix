@@ -7,8 +7,11 @@
 writeShellScriptBin "start-godbolt" ''
   DOCKER="''${DOCKER:-docker}"
 
+  set -eu
+
   mkdir -p /tmp/start-godbolt
   cd /tmp/start-godbolt
+
   s="${basil-godbolt-docker} ${gtirb-semantics-server-docker}"
 
   : >> hash
@@ -19,5 +22,6 @@ writeShellScriptBin "start-godbolt" ''
     ${gtirb-semantics-server-docker} | $DOCKER image load
     echo "$s" > hash
   fi
+  set -x
   exec $DOCKER compose -f ${godbolt-docker-compose} "$@"
 ''
