@@ -20,8 +20,8 @@ buildNpmPackage {
   src = fetchFromGitHub {
     owner = "rina-forks";
     repo = "compiler-explorer";
-    rev = "eeae9c326d0da0f1d81a8f0add6d598928003333";
-    sha256 = "sha256-7wLhdp2ozEjOkYSt6/RbZTXIe7PhLk4beLrdPVnsHYs=";
+    rev = "d6a405a418097b2ef96145609a316c7f0c11a274";
+    sha256 = "sha256-+QNxpbVcZSOkLAmW3NZ37o6vtZhI4YyU/1eRtxPQrvk=";
   };
 
   npmDepsHash = "sha256-3tt+k6ruIzDKeMTfXM6CkPpkCdwVawbOzFwCCxhdltQ=";

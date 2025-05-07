@@ -156,9 +156,11 @@ in
           # Gives the user control over the build directory
           mkdir -p .${sandboxBuildDir}
           chown -R ${toString uid}:${toString gid} .${sandboxBuildDir}
+          chmod a+rwx ./${sandboxBuildDir}
 
           mkdir -p ./app
           chown -R ${toString uid}:${toString gid} ./app
+          chmod a+rwx ./app
 
           mkdir -p ./tmp
           chmod a+rwx ./tmp

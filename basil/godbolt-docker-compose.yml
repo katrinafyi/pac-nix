@@ -10,6 +10,7 @@ services:
     volumes:
       - gtirb_sem_socket:/run/gts
       - godbolt:/app/storage
+    user: 1100
 
   gtirb-semantics:
     image: ghcr.io/uq-pac/gtirb-semantics-server
@@ -18,6 +19,7 @@ services:
       GTIRB_SEM_SOCKET: "/run/gts/aslp_rpc_socket"
     volumes:
       - gtirb_sem_socket:/run/gts
+    user: 1100
 
 volumes:
   gtirb_sem_socket:
