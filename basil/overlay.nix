@@ -24,6 +24,13 @@ let
 
     basil-tool = prev.callPackage ./basil-tool.nix { };
     basil-task = prev.callPackage ./basil-task.nix { };
+
+    gtirb-semantics-server-docker = final.callPackage ./gtirb-semantics-server-docker.nix { };
+
+    godbolt-docker-compose = ./godbolt-docker-compose.yml;
+
+    start-godbolt = final.callPackage ./start-godbolt.nix { };
+
   };
 in
 final: prev:

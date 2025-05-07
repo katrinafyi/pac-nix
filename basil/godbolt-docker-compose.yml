@@ -1,0 +1,24 @@
+version: "3.20"
+
+services:
+  godbolt:
+    image: ghcr.io/uq-pac/basil-godbolt-docker
+    restart: always
+    ports: "10240:10240"
+    environment:
+      GTIRB_SEM_SOCKET: "/run/gts/aslp_rpc_socket"
+    volumes:
+      - gtirb_sem_socket:/run/gts
+      - godbolt:/app/storage
+
+  gtirb-semantics:
+    image: ghcr.io/uq-pac/gtirb-semantics-server
+    restart: always
+    environment:
+      GTIRB_SEM_SOCKET: "/run/gts/aslp_rpc_socket"
+    volumes:
+      - gtirb_sem_socket:/run/gts
+
+volumes:
+  gtirb_sem_socket:
+  godbolt:

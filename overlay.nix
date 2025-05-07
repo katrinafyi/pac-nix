@@ -25,6 +25,8 @@ let
 
       basil-godbolt-docker = (prev.callPackage ./docker-tools.nix { }).streamNixShellImage {
         name = "ghcr.io/uq-pac/basil-godbolt-docker";
+        tag = "latest";
+
         drv = final.basil-godbolt-shell;
         config = {
           Cmd = ["/usr/bin/_exec" "compiler-explorer"];
