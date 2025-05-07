@@ -11,8 +11,10 @@ services:
     volumes:
       - gtirb_sem_socket:/run/gts
       - godbolt:/app/storage
+    command: |
+      /usr/bin/_exec compiler-explorer --language=c++,c,boogie
 
-  gtirb-semantics:
+  gts:
     image: ghcr.io/uq-pac/gtirb-semantics-server
     restart: always
     environment:

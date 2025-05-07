@@ -17,11 +17,12 @@ writeShellScriptBin "start-godbolt" ''
   : >> hash
   if [[ "$(cat hash)" == "$s" ]]; then
     echo "$0: skipping image load due to matching hash in" "$(realpath hash)" >&2
+    set -x
   else
+    set -x
     ${basil-godbolt-docker} | $DOCKER image load
     ${gtirb-semantics-server-docker} | $DOCKER image load
     echo "$s" > hash
   fi
-  set -x
   exec $DOCKER compose -f ${godbolt-docker-compose} "$@"
 ''
