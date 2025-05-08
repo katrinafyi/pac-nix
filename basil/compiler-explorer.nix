@@ -11,7 +11,7 @@
 
 buildNpmPackage {
   pname = "compiler-explorer-ailrst";
-  version = "0-unstable-2025-05-01";
+  version = "0-unstable-2025-05-07";
 
   nativeBuildInputs = [ makeWrapper husky ];
 
@@ -20,8 +20,8 @@ buildNpmPackage {
   src = fetchFromGitHub {
     owner = "rina-forks";
     repo = "compiler-explorer";
-    rev = "3c6c1fcfd1299b8fd1a739fb5949664053708dff";
-    sha256 = "sha256-EnHRYX1/vXGKNuRqzPgtGaTkyKjZouF40+bn1KENjho=";
+    rev = "7735245e44dbf50b510f4fb1e1f245fce94dbe92";
+    sha256 = "sha256-wHgTCM6VkPCw3eMmZCmMZZLn1GhYBZ1ACYq7sCaTFIU=";
   };
 
   npmDepsHash = "sha256-3tt+k6ruIzDKeMTfXM6CkPpkCdwVawbOzFwCCxhdltQ=";
