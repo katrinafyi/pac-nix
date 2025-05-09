@@ -42,7 +42,15 @@ The gtirb-semantics server should also appear in the log with the message
 "Initialised lifter environment".
 To stop the server, simply Ctrl+C the console.
 
-### Details
+### Manual command
+
+If the previous commands show an error after loading the images
+(e.g., a Python error or a docker-compose error), you can try this command to manually start the Docker container:
+```bash
+podman run -it --rm -p10240:10240 ghcr.io/uq-pac/basil-godbolt-docker:latest
+```
+
+### Extra details
 
 The `start-godbolt` script is a thin wrapper around docker-compose, which is a framework
 for managing multiple docker containers.
