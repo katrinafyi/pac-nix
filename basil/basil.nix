@@ -19,15 +19,15 @@ let
 in
 mkMillDerivation {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-05-09";
+  version = "0.1.2-alpha-unstable-2025-05-12";
 
   nativeBuildInputs = [ makeBinaryWrapper jdk ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "5e4de993af7260719984e492667e39de45cb90e1";
-    sha256 = "sha256-X76ttdKy17BfOI1saVl1YoyQl8VIhwu/pmn8ommR+rg=";
+    rev = "55587f08f4f90ecd35e86c14c8729669f67ca0b3";
+    sha256 = "sha256-iA7rX3SE89JvAHSxECZ+qdNk3HVWYowKpiWKB87eedM=";
   };
 
   patches = [ ];
