@@ -13,21 +13,21 @@
 let
   # postPatch to be shared by deps and main derivation
   postPatch = ''
-    substituteInPlace build.sc --replace-fail 'ScalaPBModule {' 'ScalaPBModule {
+    substituteInPlace build.mill --replace-fail 'ScalaPBModule {' 'ScalaPBModule {
       override def scalaPBProtocPath = Some("${lib.getExe protobuf}")'
   '';
 in
 mkMillDerivation {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-05-12";
+  version = "0.1.2-alpha-unstable-2025-05-13";
 
   nativeBuildInputs = [ makeBinaryWrapper jdk ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "55587f08f4f90ecd35e86c14c8729669f67ca0b3";
-    sha256 = "sha256-iA7rX3SE89JvAHSxECZ+qdNk3HVWYowKpiWKB87eedM=";
+    rev = "59f1f2b870006e6268afe69a628882998690bdb3";
+    sha256 = "sha256-rghUo8+vcPdGhWuFmwz+uGrXNUVSYVCJl7ZS+c3PO/M=";
   };
 
   patches = [ ];
@@ -43,11 +43,11 @@ mkMillDerivation {
     echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
     rm -rf src/main/scala src/test
     ./mill __.prepareOffline --all
-    ./mill compile
+    ./mill assembly
     ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
 
-  depsSha256 = "sha256-t20K0BdLdqvX6sGHE1sJBMJdIiI8K/Bndf052Oi2Y3I=";
+  depsSha256 = "sha256-Nd09NVXzJShY4WJB+S01z7XEezCA4O+15N496ANxeVE=";
   depsArchivalStrategy = "link";
 
   buildPhase = ''
