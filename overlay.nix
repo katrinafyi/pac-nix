@@ -6,7 +6,12 @@ let
 
       update = prev.callPackage ./update.nix { };
 
-      basil-tools-shell = prev.callPackage ./basil-shell.nix { };
+      basil-tools-shell = prev.callPackage ./basil-shell.nix {
+        extraPackages = [
+          final.bap-aslp
+          final.bap-asli-plugin
+        ];
+      };
       basil-godbolt-shell = (prev.callPackage ./basil-shell.nix {
         extraPackages = [
           final.basil
