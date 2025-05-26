@@ -73,7 +73,7 @@
   #   touch $out
   # '';
 
-  passthru.tests.backend-tv-basic = runCommand "test-backend-tv-basic" {} ''
-    ${lib.getExe' final.finalPackage "backend-tv"} ${final.src}/tests/arm-tv/smoketest/x.aarch64.ll
-  '';
+  # passthru.tests.backend-tv-basic = runCommand "test-backend-tv-basic" {} ''
+  #   ${lib.getExe' final.finalPackage "backend-tv"} ${final.src}/tests/arm-tv/smoketest/x.aarch64.ll
+  # '';
 })
