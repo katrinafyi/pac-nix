@@ -77,17 +77,17 @@ let
       llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
       llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
       llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix {
-        # llvmPackages = final.llvmPackages_git.override (p: {
-        #   gitRelease =
-        #     prev.lib.throwIfNot
-        #     (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2025-01-13")
-        #     "llvmPackages_git seems to have updated, is this override no longer needed?"
-        #     {
-        #       rev = "d90a42751f9bfa73ed3555c702e70cf34d97bb39";
-        #       rev-version = "20.0.0-unstable-2025-01-13";
-        #       sha256 = "sha256-MoBKeZUUGVfpmIS3HXcOd8n28Ek/mkwhOjrwv0eDixs=";
-        #     };
-        # });
+        llvmPackages = final.llvmPackages_git.override (p: {
+          # gitRelease =
+          #   prev.lib.throwIfNot
+          #   (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2025-01-13")
+          #   "llvmPackages_git seems to have updated, is this override no longer needed?"
+          #   {
+          #     rev = "d90a42751f9bfa73ed3555c702e70cf34d97bb39";
+          #     rev-version = "20.0.0-unstable-2025-01-13";
+          #     sha256 = "sha256-MoBKeZUUGVfpmIS3HXcOd8n28Ek/mkwhOjrwv0eDixs=";
+          #   };
+        });
       };
 
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {
