@@ -10,7 +10,7 @@ let
         "-DLLVM_ENABLE_RTTI=ON"
         "-DLLVM_ENABLE_EH=ON"
         "-DLLVM_ENABLE_ASSERTIONS=ON"  # alive2 needs NDEBUG unset
-        "-DLLVM_TARGETS_TO_BUILD=AArch64;ARM"
+        "-DLLVM_TARGETS_TO_BUILD=AArch64;ARM;RISCV"
       ];
       doCheck = false;
 
