@@ -12,8 +12,8 @@
   src = fetchFromGitHub {
     owner = "regehr";
     repo = "alive2";
-    rev = "c2564d3c0a9771f8f37a2659ef1af55e770a0c67";
-    hash = "sha256-nXFYntQjkOMMEaX5fQQR3udHXqE5pxIauL51IatGKxQ=";
+    rev = "2d5bac5c673c786daee8fe36fa578ba9f140aedb";
+    hash = "sha256-I068NxjsbXNbfmlxbfqgef1XpqwD8f+ivpYapudDBhQ=";
   };
 
 })
