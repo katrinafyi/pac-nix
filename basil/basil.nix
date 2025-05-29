@@ -8,6 +8,7 @@
 , testers
 , basil
 , protobuf
+, haskellPackages
 }:
 
 let
@@ -21,7 +22,7 @@ mkMillDerivation {
   pname = "basil";
   version = "0.1.2-alpha-unstable-2025-05-22";
 
-  nativeBuildInputs = [ makeBinaryWrapper jdk ];
+  nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
