@@ -4,7 +4,18 @@ let
       # MOVED: basil-related packages now in ./basil/overlay.nix
       # basil = prev.basil;
 
-      update = prev.callPackage ./update.nix { };
+      nix-update-fork = prev.nix-update.overrideAttrs (prev: {
+        patches = (prev.patches or []) ++ [
+          (final.fetchpatch {
+            url = "https://github.com/Mic92/nix-update/compare/main...a5e540465949b4c2bee251f5e4308c99872bd7f0.patch";
+            hash = "sha256-lFLTqt+B/8mzlfDl73z1zAiC8FI7EAdBHv22WUjJG1A=";
+          })
+        ];
+      });
+
+      update = prev.callPackage ./update.nix {
+        nix-update = final.nix-update-fork;
+      };
 
       basil-tools-shell = prev.callPackage ./basil-shell.nix {
         extraPackages = [
