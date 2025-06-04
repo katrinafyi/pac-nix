@@ -43,12 +43,12 @@ mkMillDerivation {
   depsWarmupCommand = ''
     echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
     rm -rf src/main/scala src/test
-    ./mill __.prepareOffline --all
+    # ./mill __.prepareOffline --all
     ./mill assembly
-    ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
+    # ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
 
-  depsSha256 = "sha256-JqNBlefAj6iCYkqg8tn4JoVvh57Kp55RppYbWT+MB7I=";
+  depsSha256 = "sha256-JQtKQfCBPnyGISzRjtZwwHtA7bhSkCAV0gDPQ2CWoDc=";
   depsArchivalStrategy = "link";
 
   buildPhase = ''
