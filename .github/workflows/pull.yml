@@ -77,9 +77,13 @@ jobs:
         token: "${{ secrets.PAT }}"
         add-paths: neverautomaticallyaddfiles
 
-    - if: steps.cpr.outputs.pull-request-operation == 'created'
-      run: gh pr merge --merge --auto "$PR"
+    - if: ${{ steps.cpr.outputs.pull-request-url && steps.cpr.outputs.pull-request-operation != 'none' }}
+      shell: bash
       env:
         PR: "${{ steps.cpr.outputs.pull-request-number }}"
+        PR_URL: "${{ steps.cpr.outputs.pull-request-url }}"
+        PR_OPERATION: "${{ steps.cpr.outputs.pull-request-operation }}"
         GH_TOKEN: "${{ secrets.PAT }}"
-
+      run: |
+        gh pr merge --merge --auto "$PR"
+        echo "::notice::${PR_URL} was ${PR_OPERATION}."
