@@ -53,7 +53,7 @@ jobs:
         done
 
         packages="$(git log $base..HEAD --oneline --pretty=format:%s | cut -d: -f1 | tr '\n' ',' | head -c -1)"
-        echo "title=$packages: update" >> "$GITHUB_OUTPUT"
+        echo "title=$packages: ${{ inputs.source }} update $(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
 
         url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         echo "url=$url: update" >> "$GITHUB_OUTPUT"
