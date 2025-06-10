@@ -99,7 +99,7 @@ jobs:
         ls -lh *.tar*
 
   update-build:
-    if: ${{ always() && needs.collate.outputs.patches }}
+    if: ${{ always() && needs.collate.outputs.patches && inputs.push }}
     needs: [ collate ]
     uses: ./.github/workflows/pull.yml
     with:
