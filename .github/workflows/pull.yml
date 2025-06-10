@@ -12,7 +12,7 @@ on:
       patches-b64: { type: string, required: false }
 
 concurrency:
-  group: pull-create-${{ inputs.source }}-${{ inputs.push }}
+  group: "pull-create-${{ inputs.source }}-${{ inputs.push }}"
   cancel-in-progress: false
 
 permissions:
@@ -47,7 +47,10 @@ jobs:
 
         base=$(git rev-parse HEAD)
 
-        for f in prev-patches/*; do git am "$f"; done
+        for f in prev-patches/*; do
+          git am "$f"
+          git commit --amend --no-edit --reset-author
+        done
 
         packages="$(git log $base..HEAD --oneline --pretty=format:%s | cut -d: -f1 | tr '\n' ',' | head -c -1)"
         echo "title=$packages: update" >> "$GITHUB_OUTPUT"
@@ -73,10 +76,11 @@ jobs:
         title: "${{ steps.git.outputs.title }}"
         body: "${{ fromJSON(steps.git.outputs.body) }}"
         token: "${{ secrets.PAT }}"
+        add-paths: neverautomaticallyaddfiles
 
     - if: steps.cpr.outputs.pull-request-operation == 'created'
       run: gh pr merge --merge --auto "$PR"
       env:
         PR: "${{ steps.cpr.outputs.pull-request-number }}"
-
+        GH_TOKEN: "${{ secrets.PAT }}"
 
