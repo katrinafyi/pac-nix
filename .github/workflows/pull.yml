@@ -8,10 +8,11 @@ on:
   workflow_call:
     inputs:
       push: { type: boolean, default: false, required: false }
+      source: { type: string, default: "default" }
       patches-b64: { type: string, required: false }
 
 concurrency:
-  group: pull-create
+  group: pull-create-${{ inputs.source }}-${{ inputs.push }}
   cancel-in-progress: false
 
 permissions:
@@ -65,7 +66,7 @@ jobs:
       id: cpr
       with:
         author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-        branch: "pac-nix-update/${{ inputs.push }}"
+        branch: "pac-nix-update/${{ inputs.source }}-${{ inputs.push }}"
         sign-commits: true
         reviewers: katrinafyi
         draft: "${{ ! inputs.push }}"
