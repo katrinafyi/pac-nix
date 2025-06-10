@@ -101,9 +101,10 @@ jobs:
   update-build:
     if: ${{ always() && needs.collate.outputs.patches }}
     needs: [ collate ]
-    uses: ./.github/workflows/main.yml
+    uses: ./.github/workflows/pull.yml
     with:
       patches-b64: ${{ needs.collate.outputs.patches }}
       push: ${{ inputs.push || github.event_name == 'schedule' }}
+      source: nightly
     secrets: inherit
 

@@ -45,8 +45,9 @@ jobs:
   monthly-build:
     if: always()
     needs: [ flake-update ]
-    uses: ./.github/workflows/main.yml
+    uses: ./.github/workflows/pull.yml
     with:
       patches-b64: ${{ needs.flake-update.outputs.patches }}
       push: ${{ inputs.push || github.event_name == 'schedule' }}
+      source: monthly
     secrets: inherit
