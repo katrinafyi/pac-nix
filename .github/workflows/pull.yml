@@ -80,10 +80,14 @@ jobs:
     - if: ${{ steps.cpr.outputs.pull-request-url && steps.cpr.outputs.pull-request-operation != 'none' }}
       shell: bash
       env:
-        PR: "${{ steps.cpr.outputs.pull-request-number }}"
         PR_URL: "${{ steps.cpr.outputs.pull-request-url }}"
         PR_OPERATION: "${{ steps.cpr.outputs.pull-request-operation }}"
-        GH_TOKEN: "${{ secrets.PAT }}"
+      run: |
+        echo "::notice::${PR_URL} was ${PR_OPERATION}."
+
+    - if: ${{ steps.cpr.outputs.pull-request-url && steps.cpr.outputs.pull-request-operation != 'none' && inputs.push }}
       run: |
         gh pr merge --merge --auto "$PR"
-        echo "::notice::${PR_URL} was ${PR_OPERATION}."
+      env:
+        PR: "${{ steps.cpr.outputs.pull-request-number }}"
+        GH_TOKEN: "${{ github.token }}"
