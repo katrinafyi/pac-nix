@@ -1,0 +1,81 @@
+
+name: "pull request"
+on:
+  workflow_dispatch:
+    inputs:
+      push: { type: boolean, default: false }
+      patches-b64: { type: string, required: false }
+  workflow_call:
+    inputs:
+      push: { type: boolean, default: false, required: false }
+      patches-b64: { type: string, required: false }
+
+concurrency:
+  group: pull-create
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create:
+    runs-on: ubuntu-24.04
+
+    defaults:
+      run: { shell: "bash -ex -o pipefail {0}" }
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - name: Apply staged patch commits
+      id: git
+      if: ${{ inputs.patches-b64 }}
+      run: |
+        shopt -s nullglob
+
+        cat <<EOF | base64 -d > patches.tar.zst
+        ${{ inputs.patches-b64 }}
+        EOF
+
+        mkdir prev-patches
+        tar xvf patches.tar.zst -C prev-patches
+
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+        base=$(git rev-parse HEAD)
+
+        for f in prev-patches/*; do git am "$f"; done
+
+        packages="$(git log $base..HEAD --oneline --pretty=format:%s | cut -d: -f1 | tr '\n' ',' | head -c -1)"
+        echo "title=$packages: update" >> "$GITHUB_OUTPUT"
+
+        url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        echo "url=$url: update" >> "$GITHUB_OUTPUT"
+
+        body="
+        $(git log $base..HEAD --oneline --no-decorate)
+
+        $url
+        "
+        echo "body=$(echo "$body" | jq -Rsa .)" >> "$GITHUB_OUTPUT"
+
+    - uses: peter-evans/create-pull-request@v7
+      id: cpr
+      with:
+        author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+        branch: "pac-nix-update/${{ inputs.push }}"
+        sign-commits: true
+        reviewers: katrinafyi
+        draft: "${{ ! inputs.push }}"
+        title: "${{ steps.git.outputs.title }}"
+        body: "${{ fromJSON(steps.git.outputs.body) }}"
+        token: "${{ secrets.PAT }}"
+
+    - if: steps.cpr.outputs.pull-request-operation == 'created'
+      run: gh pr merge --merge --auto "$PR"
+      env:
+        PR: "${{ steps.cpr.outputs.pull-request-number }}"
+
+
