@@ -69,7 +69,7 @@ jobs:
       id: cpr
       with:
         author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
-        branch: "pac-nix-update/${{ inputs.source }}-${{ inputs.push }}"
+        branch: "bot/${{ inputs.source }}-${{ inputs.push }}"
         reviewers: katrinafyi
         draft: "${{ ! inputs.push }}"
         title: "${{ steps.git.outputs.title }}"
