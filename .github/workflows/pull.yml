@@ -1,4 +1,3 @@
-
 name: "pull request"
 on:
   workflow_dispatch:
@@ -87,7 +86,7 @@ jobs:
 
     - if: ${{ steps.cpr.outputs.pull-request-url && steps.cpr.outputs.pull-request-operation != 'none' && inputs.push }}
       run: |
-        gh pr merge --merge --auto "$PR"
+        gh pr merge --rebase --auto --delete-branch "$PR"
       env:
         PR: "${{ steps.cpr.outputs.pull-request-number }}"
         GH_TOKEN: "${{ github.token }}"
