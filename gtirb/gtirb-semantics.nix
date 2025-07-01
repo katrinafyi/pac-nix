@@ -33,14 +33,14 @@ let
 in
 buildDunePackage {
   pname = "gtirb_semantics";
-  version = "0.1.3-unstable-2025-04-11";
+  version = "0.1.3-unstable-2025-06-30";
 
   src = 
   fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "gtirb-semantics";
-    rev = "8ecbaee19eef1f9c8482d20583a9da5d8255709a";
-    hash = "sha256-KzCCPqOYcg2jSU8kWV1Q+ClzY+mDYWaEyJ+0yqHwb9M=";
+    rev = "b1f703c7193de62de1024bedcb2ffd748533f42c";
+    hash = "sha256-ncyhM79LdiBFGphJMTBrJMVRIJ/Didede45GBuaYCCc=";
   };
 
   buildInputs = [ python' asli ocaml-hexstring ocaml-protoc-plugin yojson ];
