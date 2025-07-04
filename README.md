@@ -70,34 +70,34 @@ Other Nix files also define dependencies needed by the end-user tools.
 
 ### first time
 
-First, install a Nix-compatible package manager with flakes enabled.
-This command will install [Lix], a fork of the original Nix implementation:
-```bash
-curl -sSf -L https://install.lix.systems/lix | sh -s -- install --enable-flakes
-```
-This should extend your PATH with ~/.nix-profile/bin which is where installed programs will go.
+1. First, install a Nix-compatible package manager with flakes enabled.
+   This command will install [Lix], a fork of the original Nix implementation:
+   ```bash
+   curl -sSf -L https://install.lix.systems/lix | sh -s -- install --enable-flakes
+   ```
+   This should extend your PATH with ~/.nix-profile/bin which is where installed programs will go.
 
-[Lix]: https://lix.systems/
+   [Lix]: https://lix.systems/
 
-Then, set up the pac-nix cache for faster package installation.
-```bash
-printf '%s\n' \
-  "extra-substituters = https://pac-nix.cachix.org/" \
-  "extra-trusted-public-keys = pac-nix.cachix.org-1:l29Pc2zYR5yZyfSzk1v17uEZkhEw0gI4cXuOIsxIGpc=" \
-  "extra-trusted-users = $USER" \
-| sudo tee -a /etc/nix/nix.conf
-```
+2. Set up the pac-nix cache for faster package installation.
+   ```bash
+   printf '%s\n' \
+     "extra-substituters = https://pac-nix.cachix.org/" \
+     "extra-trusted-public-keys = pac-nix.cachix.org-1:l29Pc2zYR5yZyfSzk1v17uEZkhEw0gI4cXuOIsxIGpc=" \
+     "extra-trusted-users = $USER" \
+   | sudo tee -a /etc/nix/nix.conf
+   ```
 
-Restart your terminal and make sure the cache is set up with this command:
-```
-nix-build --dry-run --expr '(builtins.getFlake "github:katrinafyi/pac-nix").lib.nixpkgs.aslp'
-```
-If the cache is working, its output should have "these N paths will be fetched" and the output *should not* include
-"these M derivations will be built".
+3. Restart your terminal.
+4. Make sure the cache is set up with this command:
+   ```bash
+   nix-build --dry-run --expr '(builtins.getFlake "github:katrinafyi/pac-nix").lib.nixpkgs.aslp'
+   ```
+   If the cache is working, its output should have "these N paths will be fetched", and the output *should not* include "these M derivations will be built".
 
-If you see "derivations will be built", the cache is not yet working.
-On Linux, you can try `sudo systemctl restart nix-daemon.service`.
-Otherwise, restart your computer and try again.
+5. If you see "derivations will be built", the cache is not yet working.
+   On Linux, you can try `sudo systemctl restart nix-daemon.service` then repeat the `nix-build` command.
+   Otherwise, restart your computer and try again.
 
 (Optional) Add an alias for this package repository.
 This lets you write `pac` in place of `github:katrinafyi/pac-nix` in the commands below.
