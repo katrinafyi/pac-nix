@@ -9,7 +9,7 @@ tools with the Nix package manager.
 
 This repository contains fixed-output derivations which fetch
 and build a fixed version of each tool and its dependencies.
-Nix's declarative nature makes this fast and reliable, 
+Nix's declarative nature makes this fast and reliable,
 independent of particular distributions or their package repository quirks.
 Further, since each dependency is itself a static derivation, these can be cached.
 z3 and BAP, which previously took dozens of minutes each,
@@ -20,7 +20,7 @@ of a consistent meta-build and dependency manager system.
 
 ## structure
 
-The **pkgs.nix** file defines the package set as 
+The **pkgs.nix** file defines the package set as
 the usual \<nixpkgs\> extended with those from this repo.
 
 For users of tools, the main packages are:
@@ -56,7 +56,7 @@ We also package some related third-party tools (without endorsement from their a
 <details>
 <summary>Other packages</summary>
 These are less frequently used and might be untested.
-  
+
 - **[bap-primus][]**: PAC's fork of BAP with the [Primus Lisp PR][] but without ASLp (provides `bap-primus`)
 - **[godbolt][]**: the Godbolt compiler explorer with the Basil toolchain for interactive use (provides `godbolt`)
 - **[alive2][]**: translation validation of LLVM IR, designed to verify LLVM's middle-end optimisations (currently this version is frozen to llvm-translator's version)
@@ -73,16 +73,31 @@ Other Nix files also define dependencies needed by the end-user tools.
 First, install a Nix-compatible package manager with flakes enabled.
 This command will install [Lix], a fork of the original Nix implementation:
 ```bash
-curl -sSf -L https://install.lix.systems/lix | sh -s -- install
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install --enable-flakes
 ```
 This should extend your PATH with ~/.nix-profile/bin which is where installed programs will go.
 
 [Lix]: https://lix.systems/
 
-Then, allow your user to use binary caches for faster package installation.
+Then, set up the pac-nix cache for faster package installation.
 ```bash
-printf '%s\n' "extra-trusted-users = $USER" | sudo tee -a /etc/nix/nix.conf
+printf '%s\n' \
+  "extra-substituters = https://pac-nix.cachix.org/" \
+  "extra-trusted-public-keys = pac-nix.cachix.org-1:l29Pc2zYR5yZyfSzk1v17uEZkhEw0gI4cXuOIsxIGpc=" \
+  "extra-trusted-users = $USER" \
+| sudo tee -a /etc/nix/nix.conf
 ```
+
+Restart your terminal and make sure the cache is set up with this command:
+```
+nix-build --dry-run --expr '(builtins.getFlake "github:katrinafyi/pac-nix").lib.nixpkgs.aslp'
+```
+If the cache is working, its output should have "these N paths will be fetched" and the output *should not* include
+"these M derivations will be built".
+
+If you see "derivations will be built", the cache is not yet working.
+On Linux, you can try `sudo systemctl restart nix-daemon.service`.
+Otherwise, restart your computer and try again.
 
 (Optional) Add an alias for this package repository.
 This lets you write `pac` in place of `github:katrinafyi/pac-nix` in the commands below.
@@ -123,7 +138,7 @@ Installing a package is straightforward.
 nix profile install github:katrinafyi/pac-nix#aslp  # add -L for more progress output
 # say 'y' to config settings
 ```
-For other packages, change the term after `#` to bap-aslp, basil, etc. 
+For other packages, change the term after `#` to bap-aslp, basil, etc.
 This will build and make available an executable on your PATH (stored in ~/.nix-profile/bin).
 
 Note that this will install the package at a particular commit hash from the upstream repository.
@@ -208,7 +223,7 @@ To use local sources, check out this repository then
 uncomment the line and change the path to be your local path.
 (It is important the path is not quoted so Nix handles it correctly.)
 
-When installing packages, you'll need to reference your local clone. 
+When installing packages, you'll need to reference your local clone.
 For example, from this repository's directory:
 ```bash
 nix profile install .#aslp
@@ -223,7 +238,7 @@ and you may also add more Nix files or override other attributes.
 With each package, Nix also downloads and stores its dependencies.
 As such, you may want to re-use these when developing instead of
 duplicating them into your local system.
-This may also speed up the getting-started process and make it more reliable. 
+This may also speed up the getting-started process and make it more reliable.
 
 This is done with the `nix develop` which
 starts a subshell within a particular Nix environment.
@@ -294,7 +309,7 @@ The depsSha256 will need to be changed manually if the script fails at that poin
 [search.nixos.org](https://search.nixos.org/)
 is very useful for searching package names.
 
-[Nix pills](https://nixos.org/guides/nix-pills/) and [nix.dev](https://nix.dev/tutorials/packaging-existing-software.html) 
+[Nix pills](https://nixos.org/guides/nix-pills/) and [nix.dev](https://nix.dev/tutorials/packaging-existing-software.html)
 are good resources if you wish to write your own packages.
 It is also a good idea to browse the [nixpkgs](https://github.com/NixOS/nixpkgs/) monorepo for similar derivations.
 
