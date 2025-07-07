@@ -58,7 +58,7 @@ jobs:
         echo "url=$url: update" >> "$GITHUB_OUTPUT"
 
         body="
-        $(git log $base..HEAD --oneline --no-decorate)
+        $(git log $base..HEAD --pretty=email)
 
         $url
         "
