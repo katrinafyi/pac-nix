@@ -25,6 +25,13 @@ jobs:
     defaults:
       run: { shell: "bash -ex -o pipefail {0}" }
     steps:
+
+    - run: |
+        gh auth status
+        touch /tmp/pr-body
+      env:
+        GH_TOKEN: "${{ secrets.PAT }}"
+
     - uses: actions/checkout@v4
       with:
         persist-credentials: false
@@ -58,7 +65,7 @@ jobs:
         echo "url=$url: update" >> "$GITHUB_OUTPUT"
 
         body="
-        $(git log $base..HEAD --oneline)
+        $(git log $base..HEAD --pretty=email)
 
         $url
         "
