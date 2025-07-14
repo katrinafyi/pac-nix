@@ -1,11 +1,11 @@
-version: "3.20"
 name: basil-godbolt
 
 services:
   godbolt:
     image: ghcr.io/uq-pac/basil-godbolt-docker
     restart: always
-    ports: "10240:10240"
+    ports:
+      - "10240:10240"
     environment:
       GTIRB_SEM_SOCKET: "/run/gts/aslp_rpc_socket"
     volumes:
