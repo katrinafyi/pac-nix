@@ -13,12 +13,12 @@
 
 let
   # postPatch to be shared by deps and main derivation
-  postPatch = ''
+  postPatchProto = ''
     substituteInPlace build.mill --replace-fail 'ScalaPBModule {' 'ScalaPBModule {
       override def scalaPBProtocPath = Some("${lib.getExe protobuf}")'
   '';
 in
-mkMillDerivation {
+mkMillDerivation rec {
   pname = "basil";
   version = "0.1.2-alpha-unstable-2025-07-11";
 
@@ -36,9 +36,9 @@ mkMillDerivation {
   # we must run the command in both the main derivation
   # and the dependency-generating derivation.
   overrideDepsAttrs = depsfinal: depsprev: {
-    postPatch = postPatch;
+    postPatch = postPatchProto;
   };
-  postPatch = postPatch;
+  postPatch = postPatchProto;
 
   depsWarmupCommand = ''
     echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
@@ -53,6 +53,8 @@ mkMillDerivation {
 
   buildPhase = ''
     runHook preBuild
+    export COMMIT=${version}
+    export GITHUB_SHA=${src.rev}
     ./mill assembly
     runHook postBuild
   '';
@@ -80,9 +82,9 @@ mkMillDerivation {
     maintainers = with lib.maintainers; [ katrinafyi ];
   };
 
-  passthru.tests.basil-arg = testers.testVersion {
+  passthru.tests.basil-version = testers.testVersion {
     package = basil;
-    command = ''basil --help'';
-    version = ''analyse'';
+    command = ''basil --version'';
+    version = version;
   };
 }
