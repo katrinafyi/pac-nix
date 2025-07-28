@@ -47,7 +47,8 @@
 
     export MILL_DOWNLOAD_PATH=$SBT_DEPS/project/.cache/mill/download
 
-    export JAVA_USER_HOME="$(mktemp -d)/project"
+    export XDG_CACHE_HOME="$(mktemp -d)"
+    export JAVA_USER_HOME="$XDG_CACHE_HOME/project"
     mkdir -p $JAVA_USER_HOME
 
     echo "" >> .mill-jvm-opts
