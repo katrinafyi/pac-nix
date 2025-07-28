@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , testVersion
 , basls
+, menhir
 , linol
 , linol-lwt
 , lsp
@@ -10,6 +11,7 @@
 , zarith
 , hashcons
 , ppx_deriving
+, ppxlib
 }:
 
 buildDunePackage {
@@ -23,7 +25,8 @@ buildDunePackage {
     hash = "sha256-TRWfjcPDAR9PQKFJQ+mqAszwuQ7YcVr2AVzaseMjatE=";
   };
 
-  buildInputs = [ linol linol-lwt lsp containers zarith hashcons ppx_deriving ];
+  buildInputs = [ linol linol-lwt lsp containers zarith hashcons ppx_deriving ppxlib ];
+  nativeBuildInputs = [ menhir ];
 
   outputs = [ "out" "dev" ];
 
