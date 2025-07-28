@@ -13,6 +13,9 @@ python3Packages.buildPythonPackage {
     hash = "sha256-rSl4i+ivo4onFTt8Q+tWAsBJoEy5Xy+BHJ1INH0xrWw=";
   };
 
+  pyproject = true;
+  build-system = [ python3Packages.setuptools ];
+
   # fetchFromGitHub {
   #   owner = "GrammaTech";
   #   repo = "retypd";

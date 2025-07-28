@@ -13,7 +13,7 @@
 }:
 
 buildDunePackage {
-  pname = "basls";
+  pname = "basil_lsp";
   version = "0.1.0";
 
   src = fetchFromGitHub {
