@@ -117,6 +117,9 @@ jobs:
         name: nix-build-failed-${{ matrix.os }}-${{ matrix.pkg }}
         path: _logs
 
+    - if: failure() && ! fromJSON(steps.broken.outputs.bool)
+      uses: mxschmitt/action-tmate@v3
+
   result:
     if: ${{ always() }}
     runs-on: ubuntu-24.04
