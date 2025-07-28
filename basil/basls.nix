@@ -14,13 +14,13 @@
 
 buildDunePackage {
   pname = "basil_lsp";
-  version = "0.1.0";
+  version = "0.1.0-unstable-2025-07-11";
 
   src = fetchFromGitHub {
     owner = "ailrst";
     repo = "basls";
-    rev = "499f19cd30bdde5be4a6612771a0a3a3a37c483a";
-    hash = "sha256-qof9cjPAkZu+mVibOUzM9lzeAmq0NEK58oqP9u1EopA=";
+    rev = "04d27999b1beec5bce8ada08e12ffa1625ed176e";
+    hash = "sha256-TRWfjcPDAR9PQKFJQ+mqAszwuQ7YcVr2AVzaseMjatE=";
   };
 
   buildInputs = [ linol linol-lwt lsp containers zarith hashcons ppx_deriving ];
