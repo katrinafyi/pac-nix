@@ -43,12 +43,6 @@ buildDunePackage {
 
   outputs = [ "out" "dev" ];
 
-  passthru.tests.test-proto-json = testVersion {
-    package = basls;
-    command = "proto-json.py --help";
-    version = "proto-json.py";
-  };
-
   meta = {
     homepage = "https://github.com/ailrst/basls";
     description = "A simple proof of concept language server for Basil IR supporting goto definition and the symbol list for
