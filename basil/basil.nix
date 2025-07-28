@@ -44,6 +44,7 @@ mkMillDerivation rec {
     echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
     rm -rf src/main/scala src/test
     # ./mill __.prepareOffline --all
+    ./mill z3.prepareOffline
     ./mill assembly
     # ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
