@@ -2,7 +2,7 @@
 , fetchFromGitHub
 , mkMillDerivation
 , makeBinaryWrapper
-, fetchpatch
+, which
 , jdk
 , jre
 , testers
@@ -20,15 +20,15 @@ let
 in
 mkMillDerivation rec {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-07-23";
+  version = "0.1.2-alpha-unstable-2025-07-28";
 
-  nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC ];
+  nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC which ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "ca17ba045c877aa4a3184d8e0a03a4317d02a06e";
-    sha256 = "sha256-1GhV9PVt6O9fKWDNYsPbeR+j5q3St5tmDHeyuZtmYvY=";
+    rev = "6e92b64a3f236a2ab203912bc27a22d0af68ad7b";
+    sha256 = "sha256-FPLgXQRhn1n631zZAY3bmYclJCWd+X62mk9Hw+mj8O8=";
   };
 
   patches = [ ];
@@ -48,7 +48,7 @@ mkMillDerivation rec {
     # ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
 
-  depsSha256 = "sha256-UrwrZDxqbdMcGB+Pp9tQpPM2fuujvr5CKLMVqrd1zAQ=";
+  depsSha256 = "sha256-5PxJAAI6z7kIeHcz6tU3NXpZ6mFJXnOtOob2ro5XdoA=";
   depsArchivalStrategy = "link";
 
   buildPhase = ''

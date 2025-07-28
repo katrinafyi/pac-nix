@@ -47,9 +47,12 @@
 
     export MILL_DOWNLOAD_PATH=$SBT_DEPS/project/.cache/mill/download
 
+    export JAVA_USER_HOME="$(mktemp -d)/project"
+    mkdir -p $JAVA_USER_HOME
+
     echo "" >> .mill-jvm-opts
     echo "-Divy.home=$SBT_DEPS/project/.ivy" >> .mill-jvm-opts
-    echo "-Duser.home=$(mktemp -d)/project" >> .mill-jvm-opts
+    echo "-Duser.home=$JAVA_USER_HOME" >> .mill-jvm-opts
 
     export SBT_OPTS="-Dsbt.global.base=$SBT_DEPS/project/.sbtboot -Dsbt.boot.directory=$SBT_DEPS/project/.boot -Dsbt.ivy.home=$SBT_DEPS/project/.ivy $SBT_OPTS"
     export COURSIER_CACHE=$SBT_DEPS/project/.coursier
