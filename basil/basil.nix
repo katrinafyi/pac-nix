@@ -2,7 +2,7 @@
 , fetchFromGitHub
 , mkMillDerivation
 , makeBinaryWrapper
-, fetchpatch
+, which
 , jdk
 , jre
 , testers
@@ -20,15 +20,15 @@ let
 in
 mkMillDerivation rec {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-07-23";
+  version = "0.1.2-alpha-unstable-2025-07-29";
 
-  nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC ];
+  nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC which ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "ca17ba045c877aa4a3184d8e0a03a4317d02a06e";
-    sha256 = "sha256-1GhV9PVt6O9fKWDNYsPbeR+j5q3St5tmDHeyuZtmYvY=";
+    rev = "60d0d4cd2cefd2843deeed837dcca4745dd787aa";
+    sha256 = "sha256-MIvbe5NXHPC4qcrCx8JWSnVyKo2OitmnSlWVn26mCXw=";
   };
 
   patches = [ ];
@@ -44,11 +44,12 @@ mkMillDerivation rec {
     echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
     rm -rf src/main/scala src/test
     # ./mill __.prepareOffline --all
+    ./mill z3.prepareOffline
     ./mill assembly
     # ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
 
-  depsSha256 = "sha256-UrwrZDxqbdMcGB+Pp9tQpPM2fuujvr5CKLMVqrd1zAQ=";
+  depsSha256 = "sha256-d/um0fhvDqYney6x66zz/2U94y6ClNrlt54MBCOC19A=";
   depsArchivalStrategy = "link";
 
   buildPhase = ''
@@ -88,3 +89,4 @@ mkMillDerivation rec {
     version = version;
   };
 }
+
