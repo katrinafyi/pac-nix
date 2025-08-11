@@ -11,7 +11,7 @@
 
 stdenv.mkDerivation {
   pname = "gtirb";
-  version = "2.2.0-unstable-2025-01-24";
+  version = "2.3.1";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
