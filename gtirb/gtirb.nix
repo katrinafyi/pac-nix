@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation {
   pname = "gtirb";
-  version = "2.2.0-unstable-2025-01-24";
+  version = "2.3.1";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "gtirb";
-    rev = "9b27239b4a9155cdd4a902f3cccbeb4b2e324b63";
-    hash = "sha256-P8waGCuDHXbUxafrSVYk/JvC3cwKk89B9733AphbH08=";
+    rev = "062aff5f0a22a101a22fb2592b504e68b8241a14";
+    hash = "sha256-/lVgSfxpJC2jdieYL5I/YeiBp+9sk1ywOjqcM1h6NLc=";
   };
 
   patches = [
