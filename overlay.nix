@@ -50,9 +50,7 @@ let
         };
       };
 
-      ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
-        // { _overlay = final.overlay_ocamlPackages; };
-      ocamlPackages_pac_5 = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
+      ocamlPackages_pac = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
 
       # llvm-translator packages

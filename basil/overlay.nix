@@ -31,7 +31,7 @@ let
 
     start-godbolt = final.callPackage ./start-godbolt.nix { };
 
-    basls = final.ocamlPackages_pac_5.basil_lsp;
+    basls = final.ocamlPackages_pac.basil_lsp;
 
     overlay_ocamlPackages = ofinal: oprev: {
       basil_ast = ofinal.callPackage ./basls.nix { } "basil_ast";
