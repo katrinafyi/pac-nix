@@ -52,6 +52,8 @@ let
 
       ocamlPackages_pac = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
+      ocamlPackages_pac_4 = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
+        // { _overlay = final.overlay_ocamlPackages; };
 
       # llvm-translator packages
       overlay_ocamlPackages = ofinal: oprev: {
@@ -78,7 +80,7 @@ let
           llvm = ofinal.ocaml-llvm-14;
         };
       };
-      inherit (final.ocamlPackages_pac) asl-translator;
+      inherit (final.ocamlPackages_pac_4) asl-translator;
 
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
