@@ -1,5 +1,9 @@
 final: prev:
 {
+  lief-static = prev.lief.overrideAttrs (p: {
+    cmakeFlags = p.cmakeFlags ++ [ (prev.lib.cmakeBool "BUILD_SHARED_LIBS" false) ];
+  });
+
   souffle =
     # clang 19 failure re atomics: https://github.com/souffle-lang/souffle/issues/2530
     (prev.souffle.override { stdenv = final.gccStdenv; })
@@ -11,7 +15,9 @@ final: prev:
       });
     });
 
-  ddisasm = prev.callPackage ./ddisasm.nix { };
+  ddisasm = prev.callPackage ./ddisasm.nix {
+    lief = final.lief-static;
+  };
   ddisasm-deterministic = prev.ddisasm.deterministic;
 
   gtirb = prev.callPackage ./gtirb.nix { };
