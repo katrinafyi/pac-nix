@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v31
     - run: nix build .#update
     - run: nix run .#update -- check
 
@@ -46,7 +46,7 @@ jobs:
       run: { shell: "bash -ex -o pipefail {0}" }
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v31
     - uses: cachix/cachix-action@v14
       with:
         name: pac-nix
