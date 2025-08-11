@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         pkg: [asli, bap-asli-plugin, bap-primus, basil, gtirb-semantics,
-              asl-translator, alive2-aslp, alive2-regehr, aslp_web, compiler-explorer,
+              asl-translator, alive2-regehr, aslp_web, compiler-explorer,
               aslp-cpp, aslp-server, aslp_client_server_ocaml
         ]
 
