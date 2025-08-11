@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , cmake
 , python3
-, boost183
+, boost
 , abseil-cpp
 , doxygen
 , gtirb
@@ -31,7 +31,7 @@ stdenv.mkDerivation {
     )
   '';
 
-  buildInputs = [ cmake python3 gtirb boost183 abseil-cpp gtest ];
+  buildInputs = [ cmake python3 gtirb boost abseil-cpp gtest ];
   nativeBuildInputs = [ capstone-grammatech ];
 
   cmakeFlags = [ "-DGTIRB_PPRINTER_ENABLE_TESTS=OFF" ];

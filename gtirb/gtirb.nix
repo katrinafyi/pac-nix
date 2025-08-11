@@ -4,7 +4,7 @@
 , fetchFromGitHub
 , cmake
 , python3
-, boost183
+, boost
 , protobuf
 , doxygen
 }:
@@ -35,7 +35,7 @@ stdenv.mkDerivation {
   '';
 
   nativeBuildInputs = [ ];
-  buildInputs = [ cmake python3 boost183 doxygen ];
+  buildInputs = [ cmake python3 boost doxygen ];
   propagatedBuildInputs = [ protobuf ];
 
   cmakeFlags = [

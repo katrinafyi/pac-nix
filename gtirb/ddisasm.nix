@@ -4,7 +4,7 @@
 , fetchFromGitHub
 , fetchzip
 , cmake
-, boost183
+, boost
 , lief
 , libehp
 , gtirb
@@ -40,7 +40,7 @@ in stdenv.mkDerivation {
     })
   ] ++ lib.optional stdenv.isDarwin ./0001-ddisasm-disable-concurrent-souffle.patch;
 
-  buildInputs = [ cmake boost183 lief gtirb gtirb-pprinter libehp ];
+  buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
   nativeBuildInputs = [ capstone-grammatech souffle ];
 
   cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" ];
