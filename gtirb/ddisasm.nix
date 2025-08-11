@@ -24,13 +24,13 @@ let
   };
 in stdenv.mkDerivation {
   pname = "ddisasm";
-  version = "0-unstable-2024-10-31";
+  version = "1.8.0-unstable-2025-07-14";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "ddisasm";
-    rev = "17396b59537aaff73e2c7657ccd3b3eb2c3b6a04";
-    hash = "sha256-yFZ0QR1upmTzEyATsTM5bGPr0EPWxkyXKbGa5nYSEIE=";
+    rev = "5a8779f427ddfecd085f5bfd86c3a2006251ef8d";
+    hash = "sha256-ZSmm+uwfXvTRRiLFLZVy2XOSI/rFd5piJ+8J+s2lJG8=";
   };
 
   patches = [
