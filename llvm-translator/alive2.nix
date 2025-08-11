@@ -9,7 +9,6 @@
 , re2c
 , zlib
 , ncurses
-, clang
 , llvmPackages
 , git-am-shim
 , overrideCC
@@ -44,8 +43,8 @@ buildStdenv.mkDerivation {
 
   postPatch = ''
     substituteInPlace scripts/alivecc.in \
-      --replace '@LLVM_BINARY_DIR@/bin/clang++' ${lib.getBin clang}/bin/clang++ \
-      --replace '@LLVM_BINARY_DIR@/bin/clang' ${lib.getBin clang}/bin/clang
+      --replace '@LLVM_BINARY_DIR@/bin/clang++' ${lib.getBin llvmPackages.clang}/bin/clang++ \
+      --replace '@LLVM_BINARY_DIR@/bin/clang' ${lib.getBin llvmPackages.clang}/bin/clang
   '';
 
   installPhase = ''
