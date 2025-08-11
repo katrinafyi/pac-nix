@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-latest]
+        os: [ubuntu-24.04, macos-14]
         # end-user packages to ci build for cache
         pkg:
           [aslp, bap-aslp, bap-primus, basil,
