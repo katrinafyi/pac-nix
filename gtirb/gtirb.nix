@@ -25,7 +25,7 @@ stdenv.mkDerivation {
       url = "https://github.com/rina-forks/gtirb/compare/master..det.patch";
       hash = "sha256-86cRmnV5CL5DjOzFj+cJYUYKQpHQ6DsqnZDaMGa/kog=";
     })
-  ] ++ lib.optional stdenv.isDarwin ./0001-gtirb-link-absl.patch;
+  ];
 
   postPatch = ''
     (
