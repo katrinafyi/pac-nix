@@ -3,7 +3,7 @@
 }:
 
 let
-  tools = llvmPackages.tools.extend (finaltools: prevtools: {
+  overlay = finaltools: prevtools: {
 
     libllvm = prevtools.libllvm.overrideAttrs (final: prev: {
       cmakeFlags = prev.cmakeFlags ++ [
@@ -25,11 +25,12 @@ let
         popd
       '';
     });
+  };
 
-  });
+  tools = llvmPackages.tools.extend overlay;
 
   noExtend = extensible: lib.attrsets.removeAttrs extensible [ "extend" ];
 in
 with llvmPackages;
-{ inherit tools libraries release_version; } // (noExtend libraries) // (noExtend tools)
+{ inherit tools libraries release_version; } // (noExtend tools)
 # https://github.com/NixOS/nixpkgs/blob/52a9f2036eb3a139453459b16904b972a0984f9a/pkgs/development/compilers/llvm/common/default.nix

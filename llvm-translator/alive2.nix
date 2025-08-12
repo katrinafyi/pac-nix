@@ -43,8 +43,8 @@ buildStdenv.mkDerivation {
 
   postPatch = ''
     substituteInPlace scripts/alivecc.in \
-      --replace '@LLVM_BINARY_DIR@/bin/clang++' ${lib.getBin llvmPackages.clang}/bin/clang++ \
-      --replace '@LLVM_BINARY_DIR@/bin/clang' ${lib.getBin llvmPackages.clang}/bin/clang
+      --replace '@LLVM_BINARY_DIR@/bin/clang++' /nowhere/bin/clang++ \
+      --replace '@LLVM_BINARY_DIR@/bin/clang' /nowhere/bin/clang
   '';
 
   installPhase = ''
