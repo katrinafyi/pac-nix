@@ -71,10 +71,10 @@ let
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
 
-      llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
-      llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
-      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix {
-        llvmPackages = final.llvmPackages_git.override (p: {
+      llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { };
+      llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { };
+      llvmPackages_pac = prev.callPackage ./llvm-translator/llvm-custom.nix {
+        # llvmPackages = final.llvmPackages_git.override (p: {
           # gitRelease =
           #   prev.lib.throwIfNot
           #   (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2025-01-13")
@@ -84,8 +84,9 @@ let
           #     rev-version = "20.0.0-unstable-2025-01-13";
           #     sha256 = "sha256-MoBKeZUUGVfpmIS3HXcOd8n28Ek/mkwhOjrwv0eDixs=";
           #   };
-        });
+        # });
       };
+      llvm-custom-git = final.llvmPackages_pac;
 
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {
         llvmPackages = final.llvm-custom-15;
