@@ -41,10 +41,10 @@ buildStdenv.mkDerivation {
   cmakeFlags = [ "-DBUILD_TV=1" "-DGIT_EXECUTABLE=${git-am-shim}" ];
   CXXFLAGS = "-Wno-error=cpp";
 
+    # substituteInPlace scripts/alivecc.in \
+    #   --replace '@LLVM_BINARY_DIR@/bin/clang++' ${lib.getExe llvmPackages.clang}/bin/clang++ \
+    #   --replace '@LLVM_BINARY_DIR@/bin/clang' ${lib.getExe llvmPackages.clang}/bin/clang
   postPatch = ''
-    substituteInPlace scripts/alivecc.in \
-      --replace '@LLVM_BINARY_DIR@/bin/clang++' ${lib.getExe llvmPackages.clang}/bin/clang++ \
-      --replace '@LLVM_BINARY_DIR@/bin/clang' ${lib.getExe llvmPackages.clang}/bin/clang
   '';
 
   installPhase = ''
