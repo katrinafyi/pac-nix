@@ -7,6 +7,8 @@ python3Packages.buildPythonPackage {
   version = gtirb.version;
 
   src = gtirb.python;
+  pyproject = true;
+  build-system = [ python3Packages.setuptools ];
 
   buildInputs = with python3Packages; [ pip ];
   propagatedBuildInputs = with python3Packages; [ networkx typing-extensions sortedcontainers intervaltree protobuf ];
