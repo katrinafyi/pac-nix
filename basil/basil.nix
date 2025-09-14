@@ -20,15 +20,15 @@ let
 in
 mkMillDerivation rec {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-08-27";
+  version = "0.1.2-alpha-unstable-2025-09-12";
 
   nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC which ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "e8e5a6d4d02d7a171c3587a44e11529fc202fb21";
-    sha256 = "sha256-B5QJbAnjBgFoJvm6obNHVX52hRpIW9AFlPHlyiwahYw=";
+    rev = "5ebb92303b6b5a9e5a050ea557cff0e8611864f5";
+    sha256 = "sha256-7sVDgp76oSZlxY6G56eGj9gjQQ9NCQXI106BM/XHXuc=";
   };
 
   patches = [ ];
