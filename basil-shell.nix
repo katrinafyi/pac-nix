@@ -14,9 +14,11 @@ let
   packages = [
     pkgsCross.aarch64-multiplatform.pkgsBuildHost.gcc
     pkgsCross.aarch64-multiplatform.pkgsBuildHost.clang
+    pkgsCross.aarch64-multiplatform.pkgsBuildHost.llvmPackages_14.clang
 
     pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.gcc
     pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.clang
+    pkgsCross.aarch64-multiplatform-musl.pkgsBuildHost.llvmPackages_14.clang
 
     asli
 
