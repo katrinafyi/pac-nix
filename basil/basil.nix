@@ -20,15 +20,15 @@ let
 in
 mkMillDerivation rec {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-09-30";
+  version = "0.1.2-alpha-unstable-2025-10-22";
 
   nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC which ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "eeeda231f39e9ee69285fc1fb6df74c3a89cf666";
-    sha256 = "sha256-FCSfvSeCBZ3GaJpL2kGIEUrblOwTWk1NuILjJR4qPcc=";
+    rev = "95d40e0e9a3f3e2f60c64878379d678621c34714";
+    sha256 = "sha256-6uX2FpNhHvFL8uNKHubCPq9K/XTMFpEw1lu8IZb5xzc=";
   };
 
   patches = [ ];
@@ -49,7 +49,7 @@ mkMillDerivation rec {
     # ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
 
-  depsSha256 = "sha256-F3AyJlrWPm9cFTjSAa/FPmvCOquvVB50IwISLS6uuGA=";
+  depsSha256 = "sha256-DFiIXBs2gGJ0i57V8R+sLY8TWKpb1DyEiVjsOmfOEgI=";
   depsArchivalStrategy = "link";
 
   buildPhase = ''
