@@ -6,10 +6,15 @@ set -o pipefail
 if [[ "$1" == build ]]; then
   nix "$@" --dry-run  # ensure command would succeed
 
-  if nix "$@" --dry-run 2>&1 | grep -q "will be built"; then
+  out="$(nix "$@" --dry-run 2>&1)"
+
+  if grep -q "will be built" <<< "$out"; then
     exec nix "$@"
-  else
+  elif grep -q "will be fetched" <<< "$out"; then
     echo "$0: skipping cached build: $@"
+  else
+    echo "$0: ERROR: unknown outcome of --dry-run for $@" >&2
+    exit 1
   fi
 else
   exec nix "$@"
