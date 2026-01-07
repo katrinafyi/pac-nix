@@ -50,27 +50,13 @@ let
         };
       };
 
-      ocamlPackages_pac = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
+      ocamlPackages_pac = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
-      ocamlPackages_pac_5 = final.ocamlPackages.overrideScope final.overlay_ocamlPackages
+      ocamlPackages_pac_4 = final.ocaml-ng.ocamlPackages_4_14.overrideScope final.overlay_ocamlPackages
         // { _overlay = final.overlay_ocamlPackages; };
 
       # llvm-translator packages
       overlay_ocamlPackages = ofinal: oprev: {
-        # ctypes and ctypes-foreign v0.22.0 do not build on macOS
-        ctypes = oprev.ctypes.overrideAttrs (old: {
-          version = "0.23.0";
-          src = prev.fetchFromGitHub {
-            owner = "ocamllabs";
-            repo = "ocaml-ctypes";
-            rev = "0.23.0";
-            hash = "sha256-fZfTsOMppHiI7BVvgICVt/9ofGFAfYjXzHSDA7L4vZk=";
-          };
-        });
-        ctypes-foreign = oprev.ctypes-foreign.override (old: {
-          ctypes = ofinal.ctypes;
-        });
-
         ocaml-llvm-14 = ofinal.callPackage ./llvm-translator/ocaml-llvm.nix {
           libllvm = final.llvmPackages_14.libllvm;
           ctypes = ofinal.ctypes;
@@ -80,15 +66,15 @@ let
           llvm = ofinal.ocaml-llvm-14;
         };
       };
-      inherit (final.ocamlPackages_pac) asl-translator;
+      inherit (final.ocamlPackages_pac_4) asl-translator;
 
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
 
-      llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_15; };
-      llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { llvmPackages = final.llvmPackages_18; };
-      llvm-custom-git = prev.callPackage ./llvm-translator/llvm-custom.nix {
-        llvmPackages = final.llvmPackages_git.override (p: {
+      llvm-custom-15 = prev.callPackage ./llvm-translator/llvm-custom.nix { };
+      llvm-custom-18 = prev.callPackage ./llvm-translator/llvm-custom.nix { };
+      llvmPackages_pac = prev.callPackage ./llvm-translator/llvm-custom.nix {
+        # llvmPackages = final.llvmPackages_git.override (p: {
           # gitRelease =
           #   prev.lib.throwIfNot
           #   (prev.lib.versionOlder prev.llvmPackages_git.llvm.version "20.0.0-unstable-2025-01-13")
@@ -98,8 +84,9 @@ let
           #     rev-version = "20.0.0-unstable-2025-01-13";
           #     sha256 = "sha256-MoBKeZUUGVfpmIS3HXcOd8n28Ek/mkwhOjrwv0eDixs=";
           #   };
-        });
+        # });
       };
+      llvm-custom-git = final.llvmPackages_pac;
 
       alive2 = prev.callPackage ./llvm-translator/alive2.nix {
         llvmPackages = final.llvm-custom-15;
