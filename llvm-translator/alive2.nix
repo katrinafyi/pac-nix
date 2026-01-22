@@ -9,16 +9,12 @@
 , re2c
 , zlib
 , ncurses
-, clang
 , llvmPackages
 , git-am-shim
 , overrideCC
-, llvmPackages_17
 }:
 
-let buildStdenv = if stdenv.isDarwin then overrideCC stdenv llvmPackages_17.clang else stdenv; in
-
-buildStdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "alive2";
   version = "2022-10-26";
 
@@ -42,10 +38,10 @@ buildStdenv.mkDerivation {
   cmakeFlags = [ "-DBUILD_TV=1" "-DGIT_EXECUTABLE=${git-am-shim}" ];
   CXXFLAGS = "-Wno-error=cpp";
 
+    # substituteInPlace scripts/alivecc.in \
+    #   --replace '@LLVM_BINARY_DIR@/bin/clang++' ${lib.getExe llvmPackages.clang}/bin/clang++ \
+    #   --replace '@LLVM_BINARY_DIR@/bin/clang' ${lib.getExe llvmPackages.clang}/bin/clang
   postPatch = ''
-    substituteInPlace scripts/alivecc.in \
-      --replace '@LLVM_BINARY_DIR@/bin/clang++' ${lib.getBin clang}/bin/clang++ \
-      --replace '@LLVM_BINARY_DIR@/bin/clang' ${lib.getBin clang}/bin/clang
   '';
 
   installPhase = ''

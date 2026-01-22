@@ -147,7 +147,7 @@ def upgrade(p: Package, args: Args):
       try_remove(args.rest, '--test')
 
     run(['nix-update', '--flake', '-f', args.dir, p.attr, '--version', f'branch={p.branch}'] +
-        ['--extra-hash', 'dependencies'] +
+        ['--extra-fod', 'dependencies'] +
         args.rest)
     for p2 in p.then:
       print(f'testing downstream build of {p2}...')

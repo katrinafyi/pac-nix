@@ -4,9 +4,7 @@
 , cmake
 }:
 
-let
-  stdenv' = if stdenv.isDarwin then clang17Stdenv else stdenv;
-in stdenv'.mkDerivation {
+stdenv.mkDerivation {
   pname = "aslp-cpp";
   version = "0.1.3-unstable-2025-02-05";
 
