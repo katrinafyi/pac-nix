@@ -12,12 +12,9 @@
 , llvmPackages
 , git-am-shim
 , overrideCC
-, llvmPackages_17
 }:
 
-let buildStdenv = if stdenv.isDarwin then overrideCC stdenv llvmPackages_17.clang else stdenv; in
-
-buildStdenv.mkDerivation {
+stdenv.mkDerivation {
   pname = "alive2";
   version = "2022-10-26";
 
