@@ -14,10 +14,14 @@ llvmPackages.overrideScope (_: prev: {
     ];
     doCheck = false;
 
+    preBuild = ''
+      mkdir -p $dev/include
+      cp -rv $src/llvm/lib/Target $dev/include
+    '';
+
     # install Target .inc files from build directory for lifter project.
     # at this point, we should within the build artifact directory
     postBuild = ''
-      mkdir -p $dev/include
       pushd ./lib
       file Target
       find Target -name '*.inc' -print0 \
