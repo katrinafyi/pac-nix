@@ -16,7 +16,7 @@ llvmPackages.overrideScope (_: prev: {
 
     preBuild = ''
       mkdir -p $dev/include
-      cp -rv $src/llvm/lib/Target $dev/include
+      cp --no-preserve=mode -rv $src/llvm/lib/Target $dev/include
     '';
 
     # install Target .inc files from build directory for lifter project.
