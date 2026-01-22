@@ -7,8 +7,8 @@ let
       nix-update-fork = prev.nix-update.overrideAttrs (prev: {
         patches = (prev.patches or []) ++ [
           (final.fetchpatch {
-            url = "https://github.com/Mic92/nix-update/compare/main...a5e540465949b4c2bee251f5e4308c99872bd7f0.patch";
-            hash = "sha256-lFLTqt+B/8mzlfDl73z1zAiC8FI7EAdBHv22WUjJG1A=";
+            url = "https://github.com/Mic92/nix-update/compare/main...31ac6bcb055a4900193dc717a750ac48f0d6a6b7.patch";
+            hash = "sha256-DQSr8kET2CWjeG249aZEdh3ChJoeEhkJahSz8pzkeiQ=";
           })
         ];
       });
