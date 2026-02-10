@@ -4,7 +4,7 @@
 , fetchFromGitHub
 , fetchzip
 , cmake
-, boost183
+, boost
 , lief
 , libehp
 , gtirb
@@ -24,13 +24,13 @@ let
   };
 in stdenv.mkDerivation {
   pname = "ddisasm";
-  version = "0-unstable-2024-10-31";
+  version = "1.8.0-unstable-2025-07-14";
 
   src = fetchFromGitHub {
     owner = "GrammaTech";
     repo = "ddisasm";
-    rev = "17396b59537aaff73e2c7657ccd3b3eb2c3b6a04";
-    hash = "sha256-yFZ0QR1upmTzEyATsTM5bGPr0EPWxkyXKbGa5nYSEIE=";
+    rev = "5a8779f427ddfecd085f5bfd86c3a2006251ef8d";
+    hash = "sha256-ZSmm+uwfXvTRRiLFLZVy2XOSI/rFd5piJ+8J+s2lJG8=";
   };
 
   patches = [
@@ -38,9 +38,13 @@ in stdenv.mkDerivation {
       url = "https://github.com/rina-forks/ddisasm/compare/main..determinism.patch";
       hash = "sha256-xISyR7ptR2LfHZJAGUyXqANLIab9yZrQFh8wLbJLsx8=";
     })
+    (fetchurl {
+      url = "https://github.com/rina-forks/ddisasm/commit/469b049582b0892b6b841071352ba459a1d260b8.patch";
+      hash = "sha256-n9jAagjyEmm2YKS5JXt5HDsWXt64s8A6qrJAYJrlu0I=";
+    })
   ] ++ lib.optional stdenv.isDarwin ./0001-ddisasm-disable-concurrent-souffle.patch;
 
-  buildInputs = [ cmake boost183 lief gtirb gtirb-pprinter libehp ];
+  buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
   nativeBuildInputs = [ capstone-grammatech souffle ];
 
   cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" ];

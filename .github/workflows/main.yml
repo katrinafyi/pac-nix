@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v31
     - run: nix build .#update
     - run: nix run .#update -- check
 
@@ -37,7 +37,7 @@ jobs:
           [aslp, bap-aslp, bap-primus, basil,
           retdec-uq-pac, asl-translator,
           gtirb-semantics, ddisasm,
-          retdec5, remill, alive2-aslp, alive2-regehr,
+          retdec5, remill, alive2-regehr,
           aslp_web, godbolt, aslp-server, aslp_offline
         ]
     runs-on: ${{ matrix.os }}
@@ -46,7 +46,7 @@ jobs:
       run: { shell: "bash -ex -o pipefail {0}" }
     steps:
     - uses: actions/checkout@v4
-    - uses: cachix/install-nix-action@v25
+    - uses: cachix/install-nix-action@v31
     - uses: cachix/cachix-action@v14
       with:
         name: pac-nix

@@ -1,6 +1,8 @@
 final: prev:
 {
-  lief-0-13-2 = prev.callPackage ./lief-0-13-2.nix { python = final.python3; };
+  lief-static = prev.lief.overrideAttrs (p: {
+    cmakeFlags = p.cmakeFlags ++ [ (prev.lib.cmakeBool "BUILD_SHARED_LIBS" false) ];
+  });
 
   souffle =
     # clang 19 failure re atomics: https://github.com/souffle-lang/souffle/issues/2530
@@ -14,7 +16,7 @@ final: prev:
     });
 
   ddisasm = prev.callPackage ./ddisasm.nix {
-    lief = final.lief-0-13-2;
+    lief = final.lief-static;
   };
   ddisasm-deterministic = prev.ddisasm.deterministic;
 
