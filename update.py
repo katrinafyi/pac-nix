@@ -28,6 +28,7 @@ class Package:
   repo: str  # github owner/repository
   branch: str = ''
   then: list[str] = field(default_factory=list) # users of this package, used for testing dependent builds.
+  extra_args: list[str] = field(default_factory=list)
 
   def repo_api(self) -> str:
     return f"https://api.github.com/repos/{self.repo}"
@@ -96,7 +97,7 @@ PACKAGES: list[Package] = [
   Package('aslp-server', 'UQ-PAC/aslp-rpc'),
   Package('aslp-cpp', 'UQ-PAC/aslp-rpc'),
   Package('aslp_client_server_ocaml', 'UQ-PAC/aslp-rpc'),
-  Package('bnfc-treesitter', 'rina-forks/bnfc', 'matches-empty-merge'),
+  Package('bnfc-treesitter', 'rina-forks/bnfc', 'matches-empty-merge', extra_args=['--override-filename', 'overlay.nix']),
   Package('compiler-explorer', 'rina-forks/compiler-explorer', 'basil-new'), # XXX: not in ci!
 ]
 # NOTE: also change files in ./.github/workflows/*.yml
@@ -149,6 +150,7 @@ def upgrade(p: Package, args: Args):
 
     run(['nix-update', '--flake', '-f', args.dir, p.attr, '--version', f'branch={p.branch}'] +
         ['--extra-hash', 'dependencies'] +
+        p.extra_args +
         args.rest)
     for p2 in p.then:
       print(f'testing downstream build of {p2}...')
