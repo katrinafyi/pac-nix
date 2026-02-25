@@ -128,10 +128,10 @@ let
           src = prev.fetchFromGitHub {
             owner = "rina-forks";
             repo = "bnfc";
-            rev = "4810a26";
-            hash = "sha256-kMag8MpQPt9eT7YBXcyQSr3FkQsolvTgu5gDEUvZHVM=";
+            rev = "6c3bbc2ec0710fcc9f122ec4303c2cdf46ce33c4";
+            hash = "sha256-R4owoA3NKQIGk6RI5A10KlkIFOEna+rRQ0Ir4WHZVYE=";
           };
-          version = "2.9.6.2-treesitter";
+          version = "0-unstable-2026-02-23";
         })
         (prev.haskell.lib.compose.overrideCabal (drv: {
           postPatch = "cd source";
