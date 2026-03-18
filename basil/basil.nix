@@ -1,14 +1,15 @@
 { lib
 , fetchFromGitHub
 , mkMillDerivation
-, makeBinaryWrapper
+, makeWrapper
 , which
+, jq
 , jdk
-, jre
 , testers
 , basil
 , protobuf
 , haskellPackages
+, runCommand
 }:
 
 let
@@ -22,7 +23,7 @@ mkMillDerivation rec {
   pname = "basil";
   version = "0.1.2-alpha-unstable-2026-03-10";
 
-  nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC which ];
+  nativeBuildInputs = [ makeWrapper jdk haskellPackages.BNFC which jq ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
@@ -63,19 +64,31 @@ mkMillDerivation rec {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/bin $out/share/basil
+    mkdir -p $out/bin $out/lib/basil $out/share/basil
 
     # copy jar to output directory
     dest=$out/share/basil/basil.jar
     cp -v "out/assembly.dest/out.jar" $dest
 
+    ./mill z3.nativeLibraryPath
+    cp -v out/z3/nativeLibraryPath.dest/* $out/lib/basil
+
+    classpath="$(./mill show runClasspath | jq -r 'map(split(":")[-1]) | join(" ")')"
+
+    deps="$(jdeps --ignore-missing-deps --multi-release 17 --recursive --print-module-deps -q $classpath | tail -n1)"
+
+    jlink --add-modules "$deps" --output $jre --compress zip-6 --no-header-files --no-man-pages
+
     # make wrapper to run jar with appropriate arguments
-    makeWrapper "${lib.getExe' jre "java"}" $out/bin/basil \
+    makeWrapper "$jre/bin/java" $out/bin/basil \
+      --add-flags -Djava.library.path=$out/lib/basil \
       --add-flags -jar \
       --add-flags "$dest"
 
     runHook postInstall
   '';
+
+  outputs = [ "out" "jre" ];
 
   meta = {
     homepage = "https://github.com/UQ-PAC/bil-to-boogie-translator";
@@ -88,5 +101,11 @@ mkMillDerivation rec {
     command = ''basil --version'';
     version = version;
   };
+
+  passthru.tests.basil-verify = runCommand "basil-verify" { nativeBuildInputs = [ basil ]; }
+    ''
+    basil -i ${basil.src}/src/test/correct/secret_write/gcc/secret_write.gts --lifter --simplify-tv-verify
+    touch $out
+    '';
 }
 
