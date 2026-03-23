@@ -123,20 +123,7 @@ let
       remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; llvmPackages = final.llvmPackages_17; };
       sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
 
-      bnfc-treesitter = prev.lib.pipe prev.haskellPackages.BNFC [
-        (prev.haskell.lib.compose.overrideSrc {
-          src = prev.fetchFromGitHub {
-            owner = "rina-forks";
-            repo = "bnfc";
-            rev = "6c3bbc2ec0710fcc9f122ec4303c2cdf46ce33c4";
-            hash = "sha256-R4owoA3NKQIGk6RI5A10KlkIFOEna+rRQ0Ir4WHZVYE=";
-          };
-          version = "0-unstable-2026-02-23";
-        })
-        (prev.haskell.lib.compose.overrideCabal (drv: {
-          postPatch = "cd source";
-        }))
-      ];
+      bnfc-treesitter = prev.callPackage ./bincaml/bnfc-treesitter.nix { };
 
       _overlay = overlay;
     };
