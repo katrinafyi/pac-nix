@@ -1,10 +1,4 @@
 let
-  sbt-drv-repo = builtins.fetchTarball {
-    url = "https://github.com/zaninime/sbt-derivation/archive/master.tar.gz";
-    sha256 = "sha256:0g9dzw734k4qhvc4h88zjbrxdiz6g8kgq7qgbac8jgj8cvns6xry";
-  };
-  sbt-drv-overlay = import "${sbt-drv-repo}/overlay.nix";
-
   mill-drv-overlay = import ../mill-derivation/overlay.nix;
 
   overlay = final: prev: {
@@ -35,7 +29,6 @@ in
 final: prev:
 prev.lib.composeManyExtensions
   [
-    sbt-drv-overlay
     overlay
     mill-drv-overlay
   ]
