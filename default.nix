@@ -1,77 +1,85 @@
 { nixpkgs-rev ? "063f43f2dbdef86376cc29ad646c45c46e93234c"
-, nixpkgs ? import builtins.fetchTarball
-  { url = "https://github.com/NixOS/nixpkgs/archive/${nixpkgs-rev}.tar.gz"
-  , hash = "sha256-6m1Y3/4pVw1RWTsrkAK2VMYSzG4MMIj7sqUy7o8th1o="
-  }
-}:
+, nixpkgs-src ? (builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/${nixpkgs-rev}.tar.gz";
+    sha256 = "6m1Y3/4pVw1RWTsrkAK2VMYSzG4MMIj7sqUy7o8th1o=";
+  })
+, nixpkgs ?
     let
-      lib = nixpkgs.lib;
-      overlay = import ./overlay.nix;
+      f = (import "${nixpkgs-src}/flake.nix").outputs;
+      self = f { self = self; };
+    in self // { outPath = nixpkgs-src; }
+}:
 
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
+nixpkgs.lib.fixedPoints.makeExtensible (self:
+  let
+    lib = nixpkgs.lib;
 
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
+    overlay = import ./overlay.nix;
 
-      patches = fetchpatch: [ ];
+    systems = [
+      "x86_64-linux"
+      "aarch64-linux"
 
-      nixpkgss = lib.genAttrs systems
-        (system:
-          import nixpkgs {
-            system = system;
-            overlays = [ overlay ];
-          }
-        );
+      "aarch64-darwin"
+      "x86_64-darwin"
+    ];
 
-      applySystem = sys: lib.mapAttrs (k: v: v.${sys} or v);
+    patches = fetchpatch: [ ];
 
-      forAllSystems' = f:
-        lib.genAttrs
-          systems
-          (sys: f (applySystem sys self // { pkgs = nixpkgss.${sys}; system = sys; }));
+    nixpkgss = lib.genAttrs systems
+      (system:
+        import nixpkgs {
+          system = system;
+          overlays = [ overlay ];
+        }
+      );
 
-      forAllSystems = f: forAllSystems' (x: f x.pkgs);
+    applySystem = sys: lib.mapAttrs (k: v: v.${sys} or v);
 
-      onlyDerivations = lib.filterAttrs (_: lib.isDerivation);
+    forAllSystems' = f:
+      lib.genAttrs
+        systems
+        (sys: f (applySystem sys self // { pkgs = nixpkgss.${sys}; system = sys; }));
 
-      makeAll = nixpkgs: pkgs':
-        nixpkgs.symlinkJoin {
-          name = "pac-nix-all";
-          paths = lib.attrValues pkgs';
-        };
+    forAllSystems = f: forAllSystems' (x: f x.pkgs);
 
-      # `restrictOverlays attrs` a given attrset of packages to only those
-      # defined in the latest overlay, identified by _overlay attributes
-      # package sets.
-      restrictOverlays = lib.mapAttrsRecursiveCond
-        (as: !(as.type or null == "derivation" || as ? _overlay))
-        (ks: v:
-          if v ? _overlay
-          then restrictOverlays (v._overlay v v)
-          else v);
-    in
-    {
-      legacyPackages = forAllSystems
-        (pkgs: restrictOverlays (overlay pkgs pkgs));
+    onlyDerivations = lib.filterAttrs (_: lib.isDerivation);
 
-      packages = forAllSystems'
-        ({ legacyPackages, pkgs, ... }:
-          let drvs = onlyDerivations legacyPackages;
-          in drvs // { all = makeAll pkgs drvs; });
+    makeAll = nixpkgs: pkgs':
+      nixpkgs.symlinkJoin {
+        name = "pac-nix-all";
+        paths = lib.attrValues pkgs';
+      };
 
-      devShells = forAllSystems' ({ legacyPackages, pkgs, ... }: {
-        ocaml = pkgs.callPackage ./ocaml-shell.nix { };
-        basil-tools = legacyPackages.basil-tools-shell;
-        update = pkgs.callPackage ./update-shell.nix { };
-      });
+    # `restrictOverlays attrs` a given attrset of packages to only those
+    # defined in the latest overlay, identified by _overlay attributes
+    # package sets.
+    restrictOverlays = lib.mapAttrsRecursiveCond
+      (as: !(as.type or null == "derivation" || as ? _overlay))
+      (ks: v:
+        if v ? _overlay
+        then restrictOverlays (v._overlay v v)
+        else v);
+  in
+  {
+    legacyPackages = forAllSystems
+      (pkgs: restrictOverlays (overlay pkgs pkgs));
 
-      formatter = forAllSystems (pkgs: pkgs.nixpkgs-fmt);
+    packages = forAllSystems'
+      ({ legacyPackages, pkgs, ... }:
+        let drvs = onlyDerivations legacyPackages;
+        in drvs // { all = makeAll pkgs drvs; });
 
-      overlays.default = overlay;
+    devShells = forAllSystems' ({ legacyPackages, pkgs, ... }: {
+      ocaml = pkgs.callPackage ./ocaml-shell.nix { };
+      basil-tools = legacyPackages.basil-tools-shell;
+      update = pkgs.callPackage ./update-shell.nix { };
+    });
 
-      lib.nixpkgs = nixpkgss.${builtins.currentSystem};
-    };
-}
+    formatter = forAllSystems (pkgs: pkgs.nixpkgs-fmt);
+
+    overlays.default = overlay;
+
+    lib.nixpkgs = nixpkgss.${builtins.currentSystem};
+  }
+)
