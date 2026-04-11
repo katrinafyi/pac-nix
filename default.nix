@@ -1,12 +1,9 @@
-{
-  nixConfig.extra-substituters = [ "https://pac-nix.cachix.org/" ];
-  nixConfig.extra-trusted-public-keys = [ "pac-nix.cachix.org-1:l29Pc2zYR5yZyfSzk1v17uEZkhEw0gI4cXuOIsxIGpc=" ];
-
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  # inputs.nixpkgs-upstream.url = "github:nixos/nixpkgs/nixos-unstable";
-  # inputs.nixpkgs.url = "github:katrinafyi/nixpkgs/pac-nix";
-
-  outputs = { self, nixpkgs, ... }:
+{ nixpkgs-rev ? "063f43f2dbdef86376cc29ad646c45c46e93234c"
+, nixpkgs ? import builtins.fetchTarball
+  { url = "https://github.com/NixOS/nixpkgs/archive/${nixpkgs-rev}.tar.gz"
+  , hash = "sha256-6m1Y3/4pVw1RWTsrkAK2VMYSzG4MMIj7sqUy7o8th1o="
+  }
+}:
     let
       lib = nixpkgs.lib;
       overlay = import ./overlay.nix;
