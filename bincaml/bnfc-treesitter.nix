@@ -7,12 +7,12 @@
 lib.pipe haskellPackages.BNFC [
   (haskell.lib.compose.overrideSrc {
     src = fetchFromGitHub {
-      owner = "rina-forks";
+      owner = "BNFC";
       repo = "bnfc";
-      rev = "6c3bbc2ec0710fcc9f122ec4303c2cdf46ce33c4";
-      hash = "sha256-R4owoA3NKQIGk6RI5A10KlkIFOEna+rRQ0Ir4WHZVYE=";
+      rev = "2e4c906d99d904ba0a214ebd29ddfa95e5a74944";
+      hash = "sha256-7XPTUmdmoWM22UHdDSQSkHP8op6OZSU1a/VGy0czo+0=";
     };
-    version = "0-unstable-2026-02-23";
+    version = "2.9.6.3-unstable-2026-05-08";
   })
   (haskell.lib.compose.overrideCabal (_: {
     postPatch = "cd source";
