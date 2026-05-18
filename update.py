@@ -97,7 +97,7 @@ PACKAGES: list[Package] = [
   Package('aslp-server', 'UQ-PAC/aslp-rpc'),
   Package('aslp-cpp', 'UQ-PAC/aslp-rpc'),
   Package('aslp_client_server_ocaml', 'UQ-PAC/aslp-rpc'),
-  Package('bnfc-treesitter', 'rina-forks/bnfc', 'matches-empty-merge', extra_args=['--override-filename', 'overlay.nix']),
+  Package('bnfc-treesitter', 'bnfc/bnfc', 'master', extra_args=['--override-filename', 'bincaml/bnfc-treesitter.nix']),
   Package('compiler-explorer', 'rina-forks/compiler-explorer', 'basil-new'), # XXX: not in ci!
 ]
 # NOTE: also change files in ./.github/workflows/*.yml
