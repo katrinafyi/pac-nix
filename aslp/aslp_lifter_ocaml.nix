@@ -1,6 +1,7 @@
 { lib
 , fetchFromGitHub
 , buildDunePackage
+, aslp
 }:
 
 buildDunePackage {
@@ -8,6 +9,8 @@ buildDunePackage {
   version = "1.0.0";
 
   minimalOCamlVersion = "4.14";
+
+  propagatedBuildInputs = [ aslp ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
