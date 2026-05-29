@@ -5,8 +5,8 @@
 , nukeReferences
   # pkgs
   # ocamlPackages
-, asli
 , aslp_web
+, aslp_lifter_ocaml
 , zarith_stubs_js
 , js_of_ocaml
 , js_of_ocaml-ppx
@@ -25,7 +25,7 @@ buildDunePackage {
 
   checkInputs = [ ];
   nativeCheckInputs = [ ];
-  buildInputs = [ aslp_offline js_of_ocaml zarith_stubs_js js_of_ocaml-ppx ];
+  buildInputs = [ aslp_lifter_ocaml js_of_ocaml zarith_stubs_js js_of_ocaml-ppx ];
   nativeBuildInputs = [ js_of_ocaml nukeReferences ];
   propagatedBuildInputs = [ ];
 
