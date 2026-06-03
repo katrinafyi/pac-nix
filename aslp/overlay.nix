@@ -4,12 +4,12 @@ final: prev:
   aslp-cpp = prev.callPackage ./aslp-cpp.nix { };
 
   inherit (final.ocamlPackages_pac) aslp asli;
-  inherit (final.ocamlPackages_pac_5) aslp_web;
-  inherit (final.ocamlPackages_pac_5) aslp-server;
-  inherit (final.ocamlPackages_pac_5) aslp_client_server_ocaml;
-  inherit (final.ocamlPackages_pac_5) aslp_offline;
-  inherit (final.ocamlPackages_pac_5) aslp_offline_js;
-  inherit (final.ocamlPackages_pac_5) aslp_lifter_ocaml;
+  inherit (final.ocamlPackages_pac) aslp_web;
+  inherit (final.ocamlPackages_pac) aslp-server;
+  inherit (final.ocamlPackages_pac) aslp_client_server_ocaml;
+  inherit (final.ocamlPackages_pac) aslp_offline;
+  inherit (final.ocamlPackages_pac) aslp_offline_js;
+  inherit (final.ocamlPackages_pac) aslp_lifter_ocaml;
 
   overlay_ocamlPackages = ofinal: oprev: {
     asli = ofinal.callPackage ./asli.nix { inherit (final) z3; ocaml_z3 = ofinal.z3; };
