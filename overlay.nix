@@ -66,7 +66,7 @@ let
           llvm = ofinal.ocaml-llvm-14;
         };
       };
-      inherit (final.ocamlPackages_pac_4) asl-translator;
+      inherit (final.ocamlPackages_pac) asl-translator;
 
       retdec5 = prev.callPackage ./llvm-translator/retdec5.nix { };
       retdec-uq-pac = prev.callPackage ./llvm-translator/retdec-uq-pac.nix { retdec = final.retdec5; };
