@@ -31,14 +31,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-latest]
+        os: [ubuntu-24.04, macos-14]
         # end-user packages to ci build for cache
         pkg:
           [aslp, bap-aslp, bap-primus, basil,
           retdec-uq-pac, asl-translator,
           gtirb-semantics, ddisasm,
           retdec5, remill, alive2-regehr,
-          aslp_web, godbolt, aslp-server, aslp_offline
+          aslp_web, godbolt, aslp-server, aslp_offline,
+          bnfc-treesitter,
         ]
     runs-on: ${{ matrix.os }}
 

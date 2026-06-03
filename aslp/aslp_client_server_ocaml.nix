@@ -4,27 +4,27 @@
   # ocamlPackages
 , lwt
 , mtime
-, aslp
 , aches
-, aslp_offline
+, aslp
+, aslp_lifter_ocaml
 }:
 
 buildDunePackage {
   pname = "aslp_client_server_ocaml";
-  version = "0.1.3-unstable-2025-02-05";
+  version = "0.1.5-unstable-2026-05-29";
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "aslp-rpc";
-    rev = "360d4e3e2da0e6801cf90f93903b40e43fd9cbfd";
-    hash = "sha256-dGk1S28qdRJaQuLYhBlprV+TBlUd6XE0D+w5TGn4kls=";
+    rev = "b3cd2aaf73771a3e43a4ee113c174f7fef238cb5";
+    hash = "sha256-3K/DiuYjj7B71GvzzJN/0e4wiCh15l8rbeVpDuk1ypk=";
   };
 
   checkInputs = [ ];
   nativeCheckInputs = [ ];
   buildInputs = [ ];
   nativeBuildInputs = [ ];
-  propagatedBuildInputs = [ aslp lwt mtime aches aslp_offline ];
+  propagatedBuildInputs = [ aslp lwt mtime aches aslp_lifter_ocaml ];
 
   doCheck = true;
 

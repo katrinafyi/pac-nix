@@ -1,14 +1,15 @@
 { lib
 , fetchFromGitHub
 , mkMillDerivation
-, makeBinaryWrapper
-, fetchpatch
+, makeWrapper
+, which
+, jq
 , jdk
-, jre
 , testers
 , basil
 , protobuf
 , haskellPackages
+, runCommand
 }:
 
 let
@@ -20,15 +21,15 @@ let
 in
 mkMillDerivation rec {
   pname = "basil";
-  version = "0.1.2-alpha-unstable-2025-07-23";
+  version = "0.1.2-alpha-unstable-2026-05-21";
 
-  nativeBuildInputs = [ makeBinaryWrapper jdk haskellPackages.BNFC ];
+  nativeBuildInputs = [ makeWrapper jdk haskellPackages.BNFC which jq ];
 
   src = fetchFromGitHub {
     owner = "UQ-PAC";
     repo = "bil-to-boogie-translator";
-    rev = "ca17ba045c877aa4a3184d8e0a03a4317d02a06e";
-    sha256 = "sha256-1GhV9PVt6O9fKWDNYsPbeR+j5q3St5tmDHeyuZtmYvY=";
+    rev = "f1fbb7b86d16e8651bd9b8bef2e0d7b974baa24e";
+    sha256 = "sha256-H+uPNifQ5si9ZSegOaUAYZP150LQ6hmdjmSiuYH4ocQ=";
   };
 
   patches = [ ];
@@ -44,11 +45,12 @@ mkMillDerivation rec {
     echo "-Dfile.encoding=UTF-8" >> .mill-jvm-opts
     rm -rf src/main/scala src/test
     # ./mill __.prepareOffline --all
+    ./mill z3.prepareOffline
     ./mill assembly
     # ./mill ivyDepsTree --withCompile > $SBT_DEPS/project/.tree.txt
   '';
 
-  depsSha256 = "sha256-UrwrZDxqbdMcGB+Pp9tQpPM2fuujvr5CKLMVqrd1zAQ=";
+  depsSha256 = "sha256-AZpHtOZsji+2w7DdsCBOCwDrFft5L4/vSQagHBUdYpw=";
   depsArchivalStrategy = "link";
 
   buildPhase = ''
@@ -62,19 +64,31 @@ mkMillDerivation rec {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/bin $out/share/basil
+    mkdir -p $out/bin $out/lib/basil $out/share/basil
 
     # copy jar to output directory
     dest=$out/share/basil/basil.jar
     cp -v "out/assembly.dest/out.jar" $dest
 
+    ./mill z3.nativeLibraryPath
+    cp -v out/z3/nativeLibraryPath.dest/* $out/lib/basil
+
+    classpath="$(./mill show runClasspath | jq -r 'map(split(":")[-1]) | join(" ")')"
+
+    deps="$(jdeps --ignore-missing-deps --multi-release 17 --recursive --print-module-deps -q $classpath | tail -n1)"
+
+    jlink --add-modules "$deps" --output $jre --compress zip-6 --no-header-files --no-man-pages
+
     # make wrapper to run jar with appropriate arguments
-    makeWrapper "${lib.getExe' jre "java"}" $out/bin/basil \
+    makeWrapper "$jre/bin/java" $out/bin/basil \
+      --add-flags -Djava.library.path=$out/lib/basil \
       --add-flags -jar \
       --add-flags "$dest"
 
     runHook postInstall
   '';
+
+  outputs = [ "out" "jre" ];
 
   meta = {
     homepage = "https://github.com/UQ-PAC/bil-to-boogie-translator";
@@ -87,4 +101,11 @@ mkMillDerivation rec {
     command = ''basil --version'';
     version = version;
   };
+
+  passthru.tests.basil-verify = runCommand "basil-verify" { nativeBuildInputs = [ basil ]; }
+    ''
+    basil -i ${basil.src}/src/test/correct/secret_write/gcc/secret_write.gts --lifter --simplify-tv-verify
+    touch $out
+    '';
 }
+

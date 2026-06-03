@@ -15,7 +15,7 @@
 
 buildDunePackage rec {
   pname = "aslp_web";
-  version = "0-unstable-2025-02-07";
+  version = "0-unstable-2026-05-29";
 
   buildInputs = [ asli js_of_ocaml js_of_ocaml-ppx zarith_stubs_js aslp_offline_js ];
   nativeBuildInputs = [ python3 js_of_ocaml-compiler nodejs-slim nukeReferences ];
@@ -23,8 +23,8 @@ buildDunePackage rec {
   src = fetchFromGitHub {
     owner = "katrinafyi";
     repo = "aslp-web";
-    rev = "7064561055881a6e09d1b00f6ea82bb406d9ec65";
-    hash = "sha256-WVR9vhUnQIR2rQVzfNF4+xJJ4Tqxi4HcyDlFG2MgUNA=";
+    rev = "917974247af7f26762eb9f538a740c6b3993879d";
+    hash = "sha256-b17rjmNNgo2KlVAMRDR5xsJDk7yv9b2v7HmKAz4Zl4Y=";
   };
 
   postPatch = ''
