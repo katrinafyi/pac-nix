@@ -15,6 +15,6 @@ lib.pipe haskellPackages.BNFC [
     version = "2.9.6.3-unstable-2026-05-08";
   })
   (haskell.lib.compose.overrideCabal (_: {
-    postPatch = "cd source";
+    prePatch = "cd source";
   }))
 ]
