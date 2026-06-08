@@ -42,6 +42,7 @@ stdenv.mkDerivation {
     "-DGTIRB_ENABLE_TESTS=OFF"
     "-DGTIRB_PY_API=ON"
     "-DGTIRB_RUN_CLANG_TIDY=OFF"
+    "-DDCMAKE_POLICY_VERSION_MINIMUM=3.5"
     # "-DCLANG_TIDY_EXE=${lib.getExe' clang-tools "clang-tidy"}"
   ];
 

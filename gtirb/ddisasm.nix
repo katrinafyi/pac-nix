@@ -47,7 +47,7 @@ in stdenv.mkDerivation {
   buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
   nativeBuildInputs = [ capstone-grammatech souffle ];
 
-  cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" ];
+  cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" "-DDCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
 
   postPatch = ''
     (
