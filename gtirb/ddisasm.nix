@@ -48,6 +48,7 @@ in stdenv.mkDerivation {
   nativeBuildInputs = [ capstone-grammatech souffle ];
 
   cmakeFlags = [ "-DDDISASM_ENABLE_TESTS=OFF" "-DDDISASM_GENERATE_MANY=ON" "-DDCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+  CXXFLAGS = "-include cstdint";
 
   postPatch = ''
     (
