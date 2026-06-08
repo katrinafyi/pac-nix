@@ -1,6 +1,13 @@
 final: prev:
 {
   lief-static = prev.lief.overrideAttrs (p: {
+    version = "0.16.6";
+    src = final.fetchFromGitHub {
+      owner = "lief-project";
+      repo = "LIEF";
+      tag = "0.16.6";
+      hash = "sha256-SvwFyhIBuG0u5rE7+1OaO7VZu4/X4jVI6oFOm5+yCd8=";
+    };
     cmakeFlags = p.cmakeFlags ++ [ (prev.lib.cmakeBool "BUILD_SHARED_LIBS" false) ];
   });
 
