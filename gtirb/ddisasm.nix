@@ -42,7 +42,7 @@ in stdenv.mkDerivation {
       url = "https://github.com/rina-forks/ddisasm/commit/469b049582b0892b6b841071352ba459a1d260b8.patch";
       hash = "sha256-n9jAagjyEmm2YKS5JXt5HDsWXt64s8A6qrJAYJrlu0I=";
     })
-  ] ++ lib.optional stdenv.isDarwin ./0001-ddisasm-disable-concurrent-souffle.patch;
+  ];
 
   buildInputs = [ cmake boost lief gtirb gtirb-pprinter libehp ];
   nativeBuildInputs = [ capstone-grammatech souffle ];
@@ -58,6 +58,7 @@ in stdenv.mkDerivation {
       --replace-fail \
       'gtirb::UUID Uuid;' \
       'gtirb::UUID Uuid{gtirb::Node::UUIDGenerator()};'
+    substituteInPlace **/CMakeLists.txt --replace-quiet "-jauto" ""
     )
   '';
 

@@ -11,17 +11,6 @@ final: prev:
     cmakeFlags = p.cmakeFlags ++ [ (prev.lib.cmakeBool "BUILD_SHARED_LIBS" false) ];
   });
 
-  souffle =
-    # clang 19 failure re atomics: https://github.com/souffle-lang/souffle/issues/2530
-    (prev.souffle.override { stdenv = final.gccStdenv; })
-    .overrideAttrs (p: {
-      patches = (p.patches or []) ++ final.lib.optional final.stdenv.cc.isClang (final.fetchpatch {
-        # clang 19 failure + patch: https://github.com/souffle-lang/souffle/pull/2529
-        url = "https://github.com/rina-forks/souffle/commit/2fb4d065a.patch";
-        hash = "sha256-NnZtTTlXa33EHWXnoPyVeHifIzlSyOdWh859j0+MwHg=";
-      });
-    });
-
   ddisasm = prev.callPackage ./ddisasm.nix {
     lief = final.lief-static;
   };
