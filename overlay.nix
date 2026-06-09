@@ -107,8 +107,7 @@ let
           sha256 = "sha256-Iil+dfjuWYPbzmSjgwKTKScSE/IsWuHEKQ5HsBJDqWM=";
         };
       };
-      remill = prev.callPackage ./llvm-translator/remill.nix { xed = final.xed2022; llvmPackages = final.llvmPackages_17; };
-      sleigh = prev.callPackage ./llvm-translator/sleigh.nix { };
+      remill = throw "Please see flake in https://github.com/lifting-bits/remill/blob/master/flake.nix";
 
       bnfc-treesitter = prev.callPackage ./bincaml/bnfc-treesitter.nix { };
 
