@@ -11,7 +11,7 @@ in stdenv.mkDerivation {
 
     mkdir -p $out/bin
     cd ${_bap}/bin
-    for b in *; do 
+    for b in *; do
       if ! [[ -f $b ]]; then
         continue
       fi
@@ -44,5 +44,7 @@ in stdenv.mkDerivation {
     command = "bap --help";
     version = "asli-specs";
   };
+
+  meta.broken = true;
 }
 
