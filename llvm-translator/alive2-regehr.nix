@@ -16,5 +16,5 @@
     hash = "sha256-g3WKL+9/Lxk6GPKahMUKOwFol/l9Amxe/8Q3zQtdNIQ=";
   };
 
-  meta = prev.meta // { broken = true; };
+  meta = (prev.meta or {}) // { broken = true; };
 })
