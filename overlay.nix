@@ -107,7 +107,7 @@ let
           sha256 = "sha256-Iil+dfjuWYPbzmSjgwKTKScSE/IsWuHEKQ5HsBJDqWM=";
         };
       };
-      remill = throw "Please see flake in https://github.com/lifting-bits/remill/blob/master/flake.nix";
+      # remill = throw "Please see flake in https://github.com/lifting-bits/remill/blob/master/flake.nix";
 
       bnfc-treesitter = prev.callPackage ./bincaml/bnfc-treesitter.nix { };
 
