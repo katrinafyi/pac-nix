@@ -222,7 +222,7 @@ stdenv.mkDerivation (self: {
       # all vendored dependencies must build their libs into the "lib" subdirectory.
       # retdec's install phase will copy these into the correct Nix output.
       substituteInPlace deps/*/CMakeLists.txt \
-        --replace-quiet CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib'
+        --replace-quiet CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_POLICY_VERSION_MINIMUM=3.5'
 
       substituteInPlace src/utils/CMakeLists.txt \
         --replace-warn '$'{RETDEC_GIT_VERSION_TAG} ${self.version} \
