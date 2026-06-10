@@ -184,6 +184,7 @@ stdenv.mkDerivation (self: {
     (lib.cmakeBool "RETDEC_TESTS" self.doInstallCheck) # build tests
     (lib.cmakeBool "RETDEC_DEV_TOOLS" buildDevTools) # build tools e.g. capstone2llvmir, retdectool
     (lib.cmakeBool "RETDEC_COMPILE_YARA" compileYaraPatterns) # build and install compiled patterns
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
   ] ++ lib.mapAttrsToList (k: v: lib.cmakeFeature "${k}_URL" "${v}") deps;
 
   preConfigure =
