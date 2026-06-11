@@ -29,7 +29,7 @@ buildNpmPackage {
   patches = [
     (fetchpatch {
       url = "https://gist.githubusercontent.com/katrinafyi/e5a6b6d8bed540af46bba8c3cc3d9d08/raw/0001-support-environment-variables-in-properties.patch";
-      hash = "sha256-Tpx272FGaSBcScI0ee/4cT3QGI56V1QixKYjL7m1/Q8=";
+      hash = "sha256-DVSMc4s6jyNdeGvQFRV6kqxUILDy/z7ztXFvrlxXQyk=";
     })
   ];
 

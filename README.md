@@ -27,8 +27,8 @@ For users of tools, the main packages are:
 - **[aslp][]**: the ASLp partial evaluator with ARM's MRA (provides `aslp` and `aslp-server`),
 - **[basil][]**: the Basil tool for analysis and transpilation to Boogie code (provides `basil`),
 - **[gtirb-semantics][]**: inserts instruction semantics from ASLp into the GTIRB from ddisasm (provides `gtirb-semantics`, `debug-gts.py`, and `proto-json.py`), and
-- **[bap-aslp][]**[^1]: a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable),
-- **[alive2-aslp][]**: a fork of [regehr/alive2][alive2-regehr], using Aslp to provide semantics for translation validation of the LLVM Aarch64 backend (provides `backend-tv`, others), and
+- **[bap-aslp][]**[^1]: a version of official BAP with a bundled ASLp plugin (this is the preferred BAP and provides the `bap` executable), and
+<!-- - **[alive2-aslp][]**: a fork of [regehr/alive2][alive2-regehr], using Aslp to provide semantics for translation validation of the LLVM Aarch64 backend (provides `backend-tv`, others), and -->
 - **[aslp-web][]**: a website for using the ASLp partial evaluator within the browser.
 
 These packages are each defined in a .nix file of the same name,
@@ -37,7 +37,7 @@ built into a package set in pkgs.nix.
 
 We also package some related third-party tools (without endorsement from their authors):
 - **[ddisasm][]**: GrammaTech's datalog disassembler (provides `ddisasm`),
-- **[alive2-regehr][]**: a fork of [AliveToolkit/alive2][alive2], performs translation validation of LLVM's Aarch64 backend by lifting MCInst back to LLVM IR (provides `backend-tv`, others).
+- **[alive2-regehr][]**: a fork of [AliveToolkit/alive2][alive2], performs translation validation of LLVM's backends by lifting MCInst back to LLVM IR (provides `backend-tv`, others).
 
 
 [aslp]: https://github.com/UQ-PAC/aslp

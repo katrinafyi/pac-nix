@@ -5,6 +5,7 @@
 , aslp-cpp
 , antlr
 , jre
+, python3
 , perlPackages
 , makeWrapper
 , runCommand
@@ -16,7 +17,7 @@
   version = "tag-aslp-before-upstream-squash-unstable-2025-05-26";
 
   buildInputs = prev.buildInputs ++ [ aslp-cpp antlr.runtime.cpp ];
-  nativeBuildInputs = prev.nativeBuildInputs ++ [ jre makeWrapper ];
+  nativeBuildInputs = prev.nativeBuildInputs ++ [ jre makeWrapper python3 ];
 
   src = fetchFromGitHub {
     owner = "katrinafyi";

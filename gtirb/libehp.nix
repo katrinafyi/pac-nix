@@ -18,6 +18,9 @@ stdenv.mkDerivation {
 
   buildInputs = [ cmake ];
 
+  cmakeFlags = [ "-DCMAKE_POLICY_VERSION_MINIMUM=3.5" ];
+  CXXFLAGS = [ "-include cstdint" ];
+
   meta = {
     homepage = "https://git.zephyr-software.com/opensrc/libehp";
     description = "Exception handling parsing support for Elf files (eh_frame, etc.)";

@@ -46,4 +46,6 @@ stdenv.mkDerivation rec {
     runHook preInstall
     runHook postInstall
   '';
+
+  meta.broken = true;
 }

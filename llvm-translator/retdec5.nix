@@ -184,6 +184,7 @@ stdenv.mkDerivation (self: {
     (lib.cmakeBool "RETDEC_TESTS" self.doInstallCheck) # build tests
     (lib.cmakeBool "RETDEC_DEV_TOOLS" buildDevTools) # build tools e.g. capstone2llvmir, retdectool
     (lib.cmakeBool "RETDEC_COMPILE_YARA" compileYaraPatterns) # build and install compiled patterns
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
   ] ++ lib.mapAttrsToList (k: v: lib.cmakeFeature "${k}_URL" "${v}") deps;
 
   preConfigure =
@@ -221,7 +222,7 @@ stdenv.mkDerivation (self: {
       # all vendored dependencies must build their libs into the "lib" subdirectory.
       # retdec's install phase will copy these into the correct Nix output.
       substituteInPlace deps/*/CMakeLists.txt \
-        --replace-quiet CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib'
+        --replace-quiet CMAKE_ARGS 'CMAKE_ARGS -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_POLICY_VERSION_MINIMUM=3.5'
 
       substituteInPlace src/utils/CMakeLists.txt \
         --replace-warn '$'{RETDEC_GIT_VERSION_TAG} ${self.version} \
@@ -296,6 +297,6 @@ stdenv.mkDerivation (self: {
     maintainers = with maintainers; [ katrinafyi ];
 
     # "missing char_traits for unsigned int"
-    broken = stdenv.isDarwin;
+    broken = true;
   };
 })

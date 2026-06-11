@@ -25,5 +25,5 @@ final: prev:
     bap-build = ofinal.callPackage ./bap-build.nix { };
   };
 
-  inherit (final.ocamlPackages_pac) bap-aslp bap-asli-plugin bap-primus;
+  inherit (final.ocamlPackages_pac_4) bap-aslp bap-asli-plugin bap-primus;
 }

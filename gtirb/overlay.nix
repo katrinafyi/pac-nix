@@ -1,20 +1,18 @@
 final: prev:
 {
-  lief-0-13-2 = prev.callPackage ./lief-0-13-2.nix { python = final.python3; };
-
-  souffle =
-    # clang 19 failure re atomics: https://github.com/souffle-lang/souffle/issues/2530
-    (prev.souffle.override { stdenv = final.gccStdenv; })
-    .overrideAttrs (p: {
-      patches = (p.patches or []) ++ final.lib.optional final.stdenv.cc.isClang (final.fetchpatch {
-        # clang 19 failure + patch: https://github.com/souffle-lang/souffle/pull/2529
-        url = "https://github.com/rina-forks/souffle/commit/2fb4d065a.patch";
-        hash = "sha256-NnZtTTlXa33EHWXnoPyVeHifIzlSyOdWh859j0+MwHg=";
-      });
-    });
+  lief-static = prev.lief.overrideAttrs (p: {
+    version = "0.16.6";
+    src = final.fetchFromGitHub {
+      owner = "lief-project";
+      repo = "LIEF";
+      tag = "0.16.6";
+      hash = "sha256-SvwFyhIBuG0u5rE7+1OaO7VZu4/X4jVI6oFOm5+yCd8=";
+    };
+    cmakeFlags = p.cmakeFlags ++ [ (prev.lib.cmakeBool "BUILD_SHARED_LIBS" false) ];
+  });
 
   ddisasm = prev.callPackage ./ddisasm.nix {
-    lief = final.lief-0-13-2;
+    lief = final.lief-static;
   };
   ddisasm-deterministic = prev.ddisasm.deterministic;
 

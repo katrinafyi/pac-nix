@@ -23,5 +23,6 @@ buildDunePackage rec {
     homepage = "https://github.com/UQ-PAC/llvm-translator";
     description = "llvm-translator for comparison of lifter outputs (asl-translator component).";
     maintainers = with lib.maintainers; [ katrinafyi ];
+    broken = true;
   };
 }
