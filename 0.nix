@@ -139,13 +139,13 @@ nix-repl> { a.b.c = 3; a.b.d = 4; }
 }
 
 
-nix-repl> 4.0e1 / 2                        
+nix-repl> "4.0e1" / 2                        
 20
 
-nix-repl> 4.0e1/ 2
+nix-repl> "4.0e1"/ 2
 20
 
-nix-repl> 4.0e1 /2
+nix-repl> "4.0e1" /2
 error: attempt to call something which is not a function but a float: 40
        at «string»:1:1:
             1| 4.0e1 /2
@@ -157,3 +157,41 @@ nix-repl> /2
 nix-repl> 4.0e1/2  
 /home/rina/progs/pac-nix/4.0e1/2
 
+
+
+{ lib, ... }:
+let inherit (lib) type mkOption;
+in {
+  options.toyRouter.rules = mkOption {
+    description = ''
+      Rules for a fictional packet routing service.
+    '';
+    type = types.attrsOf (
+      types.attrTag {
+        bounce = mkOption {
+          description = "Send back a packet explaining why it wasn't forwarded.";
+          type = types.submodule {
+            options.errorMessage = mkOption { … };
+          };
+        };
+        forward = mkOption {
+          description = "Forward the packet.";
+          type = types.submodule {
+            options.destination = mkOption { … };
+          };
+        };
+        drop = types.mkOption {
+          description = "Drop the packet without sending anything back.";
+          type = types.submodule {};
+        };
+      });
+  };
+  config.toyRouter.rules = {
+    http = {
+      bounce = {
+        errorMessage = "Unencrypted HTTP is banned. You must always use https://.";
+      };
+    };
+    ssh = { drop = {}; };
+  };
+}
